@@ -1,179 +1,121 @@
 import * as React from "react";
-import { CssVarsProvider } from "@mui/joy/styles";
-import GlobalStyles from "@mui/joy/GlobalStyles";
-import CssBaseline from "@mui/joy/CssBaseline";
-import Box from "@mui/joy/Box";
-import Button from "@mui/joy/Button";
-import Checkbox from "@mui/joy/Checkbox";
-import Divider from "@mui/joy/Divider";
-import FormControl from "@mui/joy/FormControl";
-import FormLabel from "@mui/joy/FormLabel";
-import Link from "@mui/joy/Link";
-import Input from "@mui/joy/Input";
-import Typography from "@mui/joy/Typography";
-import Stack from "@mui/joy/Stack";
-
 import Image from "next/image";
 import logo1 from "../assets/logo/logoWhite.png";
+import Link from "next/link";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
   password: HTMLInputElement;
   persistent: HTMLInputElement;
 }
+
 interface SignInFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
 export default function JoySignInSideTemplate() {
+  const handleSubmit = (event: React.FormEvent<SignInFormElement>) => {
+    event.preventDefault();
+    const { email, password, persistent } = event.currentTarget.elements;
+    // Add your form submission logic here
+    console.log({
+      email: email.value,
+      password: password.value,
+      persistent: persistent.checked,
+    });
+  };
+
   return (
-    <CssVarsProvider defaultMode="dark" disableTransitionOnChange>
-      <CssBaseline />
-      <GlobalStyles
-        styles={{
-          ":root": {
-            "--Form-maxWidth": "800px",
-            "--Transition-duration": "0.4s", // set to `none` to disable transition
-          },
-        }}
-      />
-      <Box
-        sx={(theme) => ({
-          width: { xs: "100%", md: "50vw" },
-          transition: "width var(--Transition-duration)",
-          transitionDelay: "calc(var(--Transition-duration) + 0.1s)",
-          position: "relative",
-          zIndex: 1,
-          display: "flex",
-          justifyContent: "flex-end",
-          backdropFilter: "blur(12px)",
-          backgroundColor: "rgba(255 255 255 / 0.2)",
-          [theme.getColorSchemeSelector("dark")]: {
-            backgroundColor: "rgba(19 19 24 / 0.4)",
-          },
-        })}
-      >
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            minHeight: "100dvh",
-            width: "100%",
-            px: 2,
-          }}
-        >
-          <Box
-            component="header"
-            sx={{
-              py: 3,
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <Box sx={{ gap: 2, display: "flex", alignItems: "center" }}>
-              <div className="relative z-10 flex items-center gap-16">
-                <Link href="/">
-                  <Image className="mr-2" src={logo1} alt="Logo" width={150} />
+    <section className="bg-gray-50 dark:bg-gray-900">
+      <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+        <div className="relative z-10 flex items-center gap-16">
+          <Link href="/" legacyBehavior>
+            <a>
+              <Image className="mr-2" src={logo1} alt="Logo" width={150} />
+            </a>
+          </Link>
+        </div>
+        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+          <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
+            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+              Sign in to your account
+            </h1>
+            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Your email
+                </label>
+                <input
+                  type="email"
+                  name="email"
+                  id="email"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  placeholder="name@company.com"
+                  required
+                />
+              </div>
+              <div>
+                <label
+                  htmlFor="password"
+                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                >
+                  Password
+                </label>
+                <input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  required
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="persistent"
+                      name="persistent"
+                      type="checkbox"
+                      className="w-4 h-4 border border-gray-300 rounded bg-gray-50 focus:ring-3 focus:ring-primary-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-primary-600 dark:ring-offset-gray-800"
+                    />
+                  </div>
+                  <div className="ml-3 text-sm">
+                    <label
+                      htmlFor="persistent"
+                      className="text-gray-500 dark:text-gray-300"
+                    >
+                      Remember me
+                    </label>
+                  </div>
+                </div>
+                <Link href="#" legacyBehavior>
+                  <a className="text-sm font-medium text-primary-600 hover:underline dark:text-primary-500">
+                    Forgot password?
+                  </a>
                 </Link>
               </div>
-            </Box>
-          </Box>
-          <Box
-            component="main"
-            sx={{
-              my: "auto",
-              py: 2,
-              pb: 5,
-              display: "flex",
-              flexDirection: "column",
-              gap: 2,
-              width: 400,
-              maxWidth: "100%",
-              mx: "auto",
-              borderRadius: "sm",
-              "& form": {
-                display: "flex",
-                flexDirection: "column",
-                gap: 2,
-              },
-              [`& .MuiFormLabel-asterisk`]: {
-                visibility: "hidden",
-              },
-            }}
-          >
-            <Stack gap={4} sx={{ mb: 2 }}>
-              <Stack gap={1}>
-                <Typography component="h1" level="h1">
-                  Sign in
-                </Typography>
-              </Stack>
-            </Stack>
-
-            <Stack gap={4} sx={{ mt: 2 }}>
-              <form
-                onSubmit={(event: React.FormEvent<SignInFormElement>) => {
-                  event.preventDefault();
-                  const formElements = event.currentTarget.elements;
-                  const data = {
-                    email: formElements.email.value,
-                    password: formElements.password.value,
-                    persistent: formElements.persistent.checked,
-                  };
-                  alert(JSON.stringify(data, null, 2));
-                }}
+              <button
+                type="submit"
+                className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
               >
-                <FormControl required>
-                  <FormLabel>Email</FormLabel>
-                  <Input type="email" name="email" />
-                </FormControl>
-                <FormControl required>
-                  <FormLabel>Password</FormLabel>
-                  <Input type="password" name="password" />
-                </FormControl>
-                <Stack gap={4} sx={{ mt: 2 }}>
-                  <Box
-                    sx={{
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                    }}
-                  >
-                    <Checkbox size="sm" label="Remember me" name="persistent" />
-                  </Box>
-                  <Button type="submit" fullWidth>
-                    Sign in
-                  </Button>
-                </Stack>
-              </form>
-            </Stack>
-          </Box>
-          <Box component="footer" sx={{ py: 3 }}>
-            <Typography level="body-xs" textAlign="center">
-              © CHOOSE 2024
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-      <Box
-        sx={(theme) => ({
-          height: "100%",
-          position: "fixed",
-          right: 0,
-          top: 0,
-          bottom: 0,
-          left: { xs: 0, md: "50vw" },
-          transition:
-            "background-image var(--Transition-duration), left var(--Transition-duration) !important",
-          transitionDelay: "calc(var(--Transition-duration) + 0.1s)",
-          backgroundColor: "background.level1",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-
-          backgroundImage:
-            "url(https://images.unsplash.com/photo-1572072393749-3ca9c8ea0831?auto=format&w=1000&dpr=2)",
-        })}
-      />
-    </CssVarsProvider>
+                Sign in
+              </button>
+              <p className="text-sm font-light text-gray-500 dark:text-gray-400">
+                Don’t have an account yet?{" "}
+                <Link href="#" legacyBehavior>
+                  <a className="font-medium text-primary-600 hover:underline dark:text-primary-500">
+                    Sign up
+                  </a>
+                </Link>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

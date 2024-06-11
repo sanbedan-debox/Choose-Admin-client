@@ -1,39 +1,56 @@
-import * as React from "react";
-import type { AppProps } from "next/app";
-import { CacheProvider, EmotionCache } from "@emotion/react";
-import { ThemeProvider, CssBaseline, createTheme } from "@mui/material";
-
+import { AppProps } from "next/app";
 import Head from "next/head";
-import lightThemeOptions from "@/styles/darkThemeOptions";
-import createEmotionCache from "@/util/createEmotionCache";
-interface MyAppProps extends AppProps {
-  emotionCache?: EmotionCache;
-}
+import NextNProgress from "nextjs-progressbar";
+import localFont from "@next/font/local";
+// import { DefaultSeo } from "next-seo";
+import "../styles/global.css";
 
-const clientSideEmotionCache = createEmotionCache();
+const geologica = localFont({ src: "../public/fonts/geologica.ttf" });
 
-const darkTheme = createTheme(lightThemeOptions);
+// const seo = {
+//   title: "Choose POS - Best Restaurant POS in the USA",
+//   description:
+//     "A new age restaurant POS built on cutting edge technology using data and insights to drive real growth and customer engagement.",
+//   openGraph: {
+//     type: "website",
+//     locale: "en_US",
+//     url: "https://www.yourwebsite.com",
+//     site_name: "Choose POS",
+//     images: [
+//       {
+//         url: "https://www.yourwebsite.com/og-image.jpg",
+//         width: 800,
+//         height: 600,
+//         alt: "Og Image Alt",
+//       },
+//     ],
+//     canonical: "https://www.yourwebsite.com",
+//   },
+//   twitter: {
+//     handle: "@twitterhandle",
+//     site: "@site",
+//     cardType: "summary_large_image",
+//   },
+// };
 
-const MyApp: React.FunctionComponent<MyAppProps> = (props) => {
-  const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
+function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
+      <NextNProgress color="#162CF1" />
       <Head>
-        <link rel="shortcut icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/LogoWhite.ico" />
         <meta
           name="viewport"
-          content="width=device-width, height=device-height,  initial-scale=1.0, user-scalable=no, user-scalable=0"
+          content="width=device-width, height=device-height, initial-scale=1.0, user-scalable=no"
         />
-        {/* <title>{"InRadius - Dashboard"}</title> */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
       </Head>
-      <CacheProvider value={emotionCache}>
-        <ThemeProvider theme={darkTheme}>
-          <CssBaseline />
-          <Component {...pageProps} />
-        </ThemeProvider>
-      </CacheProvider>
+      {/* <DefaultSeo {...seo} /> */}
+      <main className={geologica.className}>
+        <Component {...pageProps} />
+      </main>
     </>
   );
-};
+}
 
 export default MyApp;
