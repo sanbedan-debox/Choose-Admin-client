@@ -1,39 +1,20 @@
+// MyApp.tsx
 import { AppProps } from "next/app";
 import Head from "next/head";
 import NextNProgress from "nextjs-progressbar";
 import localFont from "@next/font/local";
-// import { DefaultSeo } from "next-seo";
 import "../styles/global.css";
+import { getUserRole } from "@/util/auth";
+import Sidebar from "@/components/sidebar/sidebar";
+import Login from "@/pages/login"; // Import your Login component
 
 const geologica = localFont({ src: "../public/fonts/geologica.ttf" });
 
-// const seo = {
-//   title: "Choose POS - Best Restaurant POS in the USA",
-//   description:
-//     "A new age restaurant POS built on cutting edge technology using data and insights to drive real growth and customer engagement.",
-//   openGraph: {
-//     type: "website",
-//     locale: "en_US",
-//     url: "https://www.yourwebsite.com",
-//     site_name: "Choose POS",
-//     images: [
-//       {
-//         url: "https://www.yourwebsite.com/og-image.jpg",
-//         width: 800,
-//         height: 600,
-//         alt: "Og Image Alt",
-//       },
-//     ],
-//     canonical: "https://www.yourwebsite.com",
-//   },
-//   twitter: {
-//     handle: "@twitterhandle",
-//     site: "@site",
-//     cardType: "summary_large_image",
-//   },
-// };
-
 function MyApp({ Component, pageProps }: AppProps) {
+  const userRole = getUserRole();
+  // const authenticated = isAuthenticated();
+  const authenticated = true;
+
   return (
     <>
       <NextNProgress color="#162CF1" />
@@ -45,10 +26,17 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </Head>
-      {/* <DefaultSeo {...seo} /> */}
-      <main className={geologica.className}>
-        <Component {...pageProps} />
-      </main>
+
+      {authenticated ? (
+        <div className="flex">
+          <Sidebar userRole={userRole} />
+          <main className={geologica.className}>
+            <Component {...pageProps} />
+          </main>
+        </div>
+      ) : (
+        <Login />
+      )}
     </>
   );
 }
