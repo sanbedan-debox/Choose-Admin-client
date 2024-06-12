@@ -1,5 +1,5 @@
 export const getUserRole = (): string => {
-  return "worker"; // Simulated role
+  return "admin"; // Simulated role
 };
 
 export const setUserRole = (role: string): void => {

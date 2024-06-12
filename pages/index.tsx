@@ -1,8 +1,8 @@
+import Layout from "@/components/navigation/layout";
 import React from "react";
-import Layout from "@/components/layout";
 
 const HomePage: React.FC = () => {
-  return <Layout></Layout>;
+  return <Layout />;
 };
 
 export default HomePage;
