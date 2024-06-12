@@ -1,67 +1,50 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { CSVLink } from "react-csv";
+import { Menu } from "@headlessui/react";
+import { HiDotsVertical } from "react-icons/hi";
 
-interface Member {
-  id: number;
-  name: string;
-  email: string;
-  function: string;
-  status: string;
-  employed: string;
+interface Action {
+  label: string;
+  onClick: (id: number) => void;
 }
 
-const MembersList = () => {
+interface Heading {
+  title: string;
+  dataKey: string;
+}
+
+interface MembersListProps {
+  data: Array<Record<string, any>>;
+  itemsPerPage: number;
+  actions: Action[];
+  csvExport?: boolean;
+  fullCsv?: boolean;
+  csvFileName?: string;
+  headings: Heading[];
+  striped?: boolean;
+  bordered?: boolean;
+  hovered?: boolean;
+}
+
+const RoopTable: React.FC<MembersListProps> = ({
+  data,
+  itemsPerPage,
+  actions,
+  csvExport = true,
+  fullCsv = true,
+  csvFileName = "data.csv",
+  headings,
+  striped = false,
+  bordered = false,
+  hovered = false,
+}) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [members, setMembers] = useState<Member[]>([
-    {
-      id: 1,
-      name: "John Michael",
-      email: "john@creative-tim.com",
-      function: "Manager",
-      status: "ONLINE",
-      employed: "23/04/18",
-    },
-    {
-      id: 2,
-      name: "Alexa Liras",
-      email: "alexa@creative-tim.com",
-      function: "Programator",
-      status: "OFFLINE",
-      employed: "23/04/18",
-    },
-    {
-      id: 3,
-      name: "Laurent Perrier",
-      email: "laurent@creative-tim.com",
-      function: "Executive",
-      status: "OFFLINE",
-      employed: "19/09/17",
-    },
-    {
-      id: 4,
-      name: "Michael Levi",
-      email: "michael@creative-tim.com",
-      function: "Programator",
-      status: "ONLINE",
-      employed: "24/12/08",
-    },
-    {
-      id: 5,
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      function: "Manager",
-      status: "OFFLINE",
-      employed: "04/10/21",
-    },
-  ]);
 
-  const itemsPerPage = 2;
-
-  const filteredMembers = members.filter(
-    (member) =>
-      member.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      member.email.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredMembers = data.filter((member) =>
+    Object.values(member).some((val) =>
+      String(val).toLowerCase().includes(searchTerm.toLowerCase())
+    )
   );
 
   const totalPages = Math.ceil(filteredMembers.length / itemsPerPage);
@@ -70,64 +53,90 @@ const MembersList = () => {
     currentPage * itemsPerPage
   );
 
-  const handleDelete = (id: number) => {
-    setMembers(members.filter((member) => member.id !== id));
-  };
+  const csvData = fullCsv ? data : displayedMembers;
 
-  const handleRoleAccess = (id: number) => {
-    alert(`Access roles for member ID: ${id}`);
+  const csvHeaders = headings.map((heading) => ({
+    label: heading.title,
+    key: heading.dataKey,
+  }));
+
+  const rowClasses = (index: number) => {
+    let classes = "";
+    if (striped && index % 2 === 0) classes += "bg-slate-900 ";
+    if (bordered) classes += "border ";
+    if (hovered) classes += "hover:bg-slate-900 ";
+    return classes.trim();
   };
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4  rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <input
           type="text"
           placeholder="Search"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="border p-2 rounded"
+          className=" p-2 rounded-lg flex-wrap focus:border-none mr-5"
         />
-        <CSVLink
-          data={members}
-          filename={"members.csv"}
-          className="btn btn-primary"
-        >
-          Export to CSV
-        </CSVLink>
+        {csvExport && (
+          <CSVLink
+            data={csvData}
+            headers={csvHeaders}
+            filename={csvFileName}
+            className="bg-primary p-2 rounded"
+          >
+            Export to CSV
+          </CSVLink>
+        )}
       </div>
       <table className="min-w-full bg-transparent">
         <thead>
           <tr>
-            <th className="py-2">Name</th>
-            <th className="py-2">Email</th>
-            <th className="py-2">Function</th>
-            <th className="py-2">Status</th>
-            <th className="py-2">Employed</th>
+            {headings.map((heading, index) => (
+              <th key={index} className="py-2">
+                {heading.title}
+              </th>
+            ))}
             <th className="py-2">Actions</th>
           </tr>
         </thead>
         <tbody>
-          {displayedMembers.map((member) => (
-            <tr key={member.id} className="text-center">
-              <td className="py-2">{member.name}</td>
-              <td className="py-2">{member.email}</td>
-              <td className="py-2">{member.function}</td>
-              <td className="py-2">{member.status}</td>
-              <td className="py-2">{member.employed}</td>
-              <td className="py-2">
-                <button
-                  onClick={() => handleDelete(member.id)}
-                  className="bg-red-500 text-white px-2 py-1 rounded mr-2"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={() => handleRoleAccess(member.id)}
-                  className="bg-blue-500 text-white px-2 py-1 rounded"
-                >
-                  Access Roles
-                </button>
+          {displayedMembers.map((member, index) => (
+            <tr
+              key={index}
+              className={`text-center ${rowClasses(
+                index
+              )} border-b border-slate-900`}
+            >
+              {headings.map((heading, index) => (
+                <td key={index} className="py-4">
+                  {member[heading.dataKey]}
+                </td>
+              ))}
+              <td className="py-4">
+                <Menu as="div" className="relative inline-block text-left">
+                  <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                    <HiDotsVertical className="w-5 h-5" aria-hidden="true" />
+                  </Menu.Button>
+                  <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                    {actions.map((action, index) => (
+                      <div key={index} className="px-1 py-1">
+                        <Menu.Item>
+                          {({ active }) => (
+                            <button
+                              onClick={() => action.onClick(member.id)}
+                              className={`${
+                                active ? "bg-primary" : "text-gray-900"
+                              } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                            >
+                              {action.label}
+                            </button>
+                          )}
+                        </Menu.Item>
+                      </div>
+                    ))}
+                  </Menu.Items>
+                </Menu>
               </td>
             </tr>
           ))}
@@ -158,4 +167,4 @@ const MembersList = () => {
   );
 };
 
-export default MembersList;
+export default RoopTable;
