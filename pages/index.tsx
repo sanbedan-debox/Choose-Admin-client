@@ -1,13 +1,8 @@
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { getUserRole } from "@/util/auth";
-import Routes from "@/components/layout/layout";
+import React from "react";
+import Layout from "@/components/layout";
 
-const Home: NextPage = () => {
-  const router = useRouter();
-  const userRole = getUserRole();
-
-  return <Routes />;
+const HomePage: React.FC = () => {
+  return <Layout></Layout>;
 };
 
-export default Home;
+export default HomePage;
