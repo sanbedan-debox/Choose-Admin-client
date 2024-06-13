@@ -23,9 +23,7 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedModule }) => {
     <div className="h-screen bg-gray-800 text-white w-64">
       <div className="flex flex-col items-center mt-4">
         <Link href="/" legacyBehavior>
-          <a>
-            <Image className="mb-4" src={logo1} alt="Logo" width={150} />
-          </a>
+          <Image className="mb-4" src={logo1} alt="Logo" width={150} />
         </Link>
       </div>
       <ul className="mx-1">
@@ -36,10 +34,10 @@ const Sidebar: React.FC<SidebarProps> = ({ setSelectedModule }) => {
                 {module.subModules ? (
                   <li className=" cursor-pointer pr-2">
                     <div
-                      className="flex justify-between items-center"
+                      className="flex justify-between items-center hover:bg-gray-700 rounded-lg"
                       onClick={() => toggleDropdown(module.name)}
                     >
-                      <div className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group">
+                      <div className="flex items-center p-2 text-gray-900  dark:text-white  group">
                         <svg
                           className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
                           aria-hidden="true"

@@ -1,7 +1,7 @@
 import React from "react";
 import RoopTable from "@/components/common/table2/table";
 
-const Reports: React.FC = () => {
+const UserManagement: React.FC = () => {
   const members = [
     {
       id: 1,
@@ -54,7 +54,7 @@ const Reports: React.FC = () => {
       style: "bg-red-500",
     },
     {
-      label: "Access Roles",
+      label: "Access Email",
       onClick: (id: number) => {
         alert(`Access roles for member ID: ${id}`);
       },
@@ -72,8 +72,8 @@ const Reports: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Reports</h1>
-      <p>Welcome to the reports section!</p>
+      <h1 className="text-2xl font-bold">User Management</h1>
+      <p>Welcome to the User Management section!</p>
       <RoopTable
         data={members}
         itemsPerPage={5}
@@ -85,4 +85,4 @@ const Reports: React.FC = () => {
   );
 };
 
-export default Reports;
+export default UserManagement;

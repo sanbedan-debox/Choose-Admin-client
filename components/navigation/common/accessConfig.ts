@@ -1,9 +1,10 @@
-import Admin from "@/components/modules/admin/admin";
-import Campaigns from "@/components/modules/campaign/campaign";
-import Emails from "@/components/modules/campaign/emails";
-import Messg from "@/components/modules/campaign/messages";
-import Dashboard from "@/components/modules/dashboard/dashboard";
-import Reports from "@/components/modules/restaurant/reports";
+import Admin from "@/components/modules/adminManagement/admin";
+import Emails from "@/components/modules/campaign/email/emails";
+import Messg from "@/components/modules/campaign/messages/messages";
+import Dashboard from "@/components/modules/dashboard";
+import LaunchWaitlist from "@/components/modules/launchWaitlist";
+import Reports from "@/components/modules/restaurantManagement";
+import UserManagement from "@/components/modules/userManagement";
 
 export const modules = [
   {
@@ -12,16 +13,27 @@ export const modules = [
     component: Dashboard,
   },
   {
-    name: "Admin",
+    name: "Admin Management",
     roles: ["admin"],
     component: Admin,
   },
 
   {
-    name: "Reports",
+    name: "Restaurant Management",
     roles: ["admin", "worker"],
     component: Reports,
   },
+  {
+    name: "Users Management",
+    roles: ["admin", "worker"],
+    component: UserManagement,
+  },
+  {
+    name: "Launch Waitlist",
+    roles: ["admin", "worker"],
+    component: LaunchWaitlist,
+  },
+
   {
     name: "Campaigns",
     roles: ["admin", "worker"],

@@ -1,13 +1,15 @@
 import React, { useState } from "react";
 import Sidebar from "./sidebar";
 import { modules } from "@/components/navigation/common/accessConfig";
+import Dashboard from "../modules/dashboard";
+import useGlobalStore from "@/store/global";
 
 interface LayoutProps {
   children?: React.ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const [selectedModule, setSelectedModule] = useState<string>("Dashboard");
+  const { selectedModule, setSelectedModule } = useGlobalStore();
 
   const renderModule = () => {
     const selected = modules.find(
@@ -29,6 +31,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         const Component = selected.component;
         return <Component />;
       }
+    } else {
+      return <Dashboard />;
     }
     return null;
   };

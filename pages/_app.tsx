@@ -3,8 +3,12 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import NextNProgress from "nextjs-progressbar";
 import "../styles/globals.css";
+import { ApolloProvider } from "@apollo/client";
+import { useApollo } from "@/util/apolloClient";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  const client = useApollo(pageProps);
+
   return (
     <>
       <NextNProgress color="#162CF1" />
@@ -16,7 +20,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </Head>
-      <Component {...pageProps} />
+      <ApolloProvider client={client}>
+        <Component {...pageProps} />
+      </ApolloProvider>
     </>
   );
 }
