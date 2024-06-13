@@ -1,6 +1,6 @@
 import Admin from "@/components/modules/adminManagement/admin";
-import Emails from "@/components/modules/campaign/email/emails";
-import Messg from "@/components/modules/campaign/messages/messages";
+import { Emails } from "@/components/modules/campaign/email/emails";
+import { Message } from "@/components/modules/campaign/messages/messages";
 import Dashboard from "@/components/modules/dashboard";
 import LaunchWaitlist from "@/components/modules/launchWaitlist";
 import Reports from "@/components/modules/restaurantManagement";
@@ -17,7 +17,6 @@ export const modules = [
     roles: ["admin"],
     component: Admin,
   },
-
   {
     name: "Restaurant Management",
     roles: ["admin", "worker"],
@@ -41,7 +40,7 @@ export const modules = [
       {
         name: "Messages",
         roles: ["admin", "worker"],
-        component: Messg,
+        component: Message,
       },
       {
         name: "Emails",

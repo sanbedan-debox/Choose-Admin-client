@@ -1,5 +1,5 @@
 import React from "react";
-import RoopTable from "@/components/common/table2/table";
+import RoopTable from "@/components/common/CustomTable/table";
 
 const UserManagement: React.FC = () => {
   const members = [

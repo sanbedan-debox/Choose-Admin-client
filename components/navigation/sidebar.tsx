@@ -4,13 +4,12 @@ import { getUserRole } from "@/util/auth";
 import logo1 from "../../assets/logo/logoWhite.png";
 import Link from "next/link";
 import Image from "next/image";
+import useGlobalStore from "@/store/global";
 
-interface SidebarProps {
-  setSelectedModule: (module: string) => void;
-}
-
-const Sidebar: React.FC<SidebarProps> = ({ setSelectedModule }) => {
+const Sidebar: React.FC = () => {
+  const { setSelectedModule } = useGlobalStore();
   const userRole = getUserRole();
+
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   const hasAccess = (moduleRoles: string[]) => moduleRoles.includes(userRole);

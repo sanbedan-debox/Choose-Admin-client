@@ -1,5 +1,5 @@
 import React from "react";
-import RoopTable from "@/components/common/table2/table";
+import RoopTable from "@/components/common/CustomTable/table";
 
 const LaunchWaitlist: React.FC = () => {
   const members = [

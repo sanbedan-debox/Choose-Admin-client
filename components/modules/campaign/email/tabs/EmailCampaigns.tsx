@@ -1,7 +1,7 @@
 import React from "react";
 import RoopTable from "@/components/common/CustomTable/table";
 
-const Admin: React.FC = () => {
+const EmailCampaign: React.FC = () => {
   const members = [
     {
       id: 1,
@@ -174,8 +174,7 @@ const Admin: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Admin Panel</h1>
-      <p>Welcome to the admin panel!</p>
+      <h1 className="text-2xl font-bold">Cammpaign</h1>
       <RoopTable
         data={members}
         itemsPerPage={5}
@@ -193,4 +192,4 @@ const Admin: React.FC = () => {
   );
 };
 
-export default Admin;
+export default EmailCampaign;

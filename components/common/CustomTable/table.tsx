@@ -80,7 +80,7 @@ const RoopTable: React.FC<TableProps> = ({
   };
 
   return (
-    <div className="container mx-auto p-4 rounded-lg">
+    <div className="container mx-auto  rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <input
           type="text"

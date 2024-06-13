@@ -1,12 +1,34 @@
-import React from "react";
+"use client";
 
-const Emails: React.FC = () => {
+import { Tabs } from "@/components/common/tabs/tabs";
+import EmailTemplate from "./tabs/EmailTemplate";
+import EmailCampaign from "./tabs/EmailCampaigns";
+
+export function Emails() {
+  const tabs = [
+    {
+      title: "Campaign",
+      value: "campaign",
+      content: (
+        <div className="bg-black">
+          <EmailCampaign />
+        </div>
+      ),
+    },
+    {
+      title: "Email Template",
+      value: "emailTemplate",
+      content: (
+        <div className="bg-black max-w-7xl">
+          <EmailTemplate />
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Email</h1>
-      <p>Welcome to the Email!</p>
+    <div className="h-[20rem] md:h-[35rem] [perspective:1000px] relative b flex flex-col max-w-7xl mx-auto w-full  items-start justify-start mt-5">
+      <Tabs tabs={tabs} />
     </div>
   );
-};
-
-export default Emails;
+}
