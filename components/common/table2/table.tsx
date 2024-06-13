@@ -8,6 +8,11 @@ interface Action {
   onClick: (id: number) => void;
 }
 
+interface MainAction {
+  label: string;
+  onClick: () => void;
+}
+
 interface Heading {
   title: string;
   dataKey: string;
@@ -17,6 +22,7 @@ interface MembersListProps {
   data: Array<Record<string, any>>;
   itemsPerPage: number;
   actions: Action[];
+  mainActions?: MainAction[];
   csvExport?: boolean;
   fullCsv?: boolean;
   csvFileName?: string;
@@ -30,6 +36,7 @@ const RoopTable: React.FC<MembersListProps> = ({
   data,
   itemsPerPage,
   actions,
+  mainActions = [],
   csvExport = true,
   fullCsv = true,
   csvFileName = "data.csv",
@@ -78,26 +85,42 @@ const RoopTable: React.FC<MembersListProps> = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           className=" p-2 rounded-lg flex-wrap focus:border-none mr-5"
         />
-        {csvExport && (
-          <CSVLink
-            data={csvData}
-            headers={csvHeaders}
-            filename={csvFileName}
-            className="bg-primary p-2 rounded"
-          >
-            Export to CSV
-          </CSVLink>
-        )}
+        <div className="flex">
+          {mainActions.map((action, index) => (
+            <button
+              key={index}
+              onClick={action.onClick}
+              className="bg-primary p-2 mr-4 rounded"
+            >
+              {action.label}
+            </button>
+          ))}
+          {csvExport && (
+            <CSVLink
+              data={csvData}
+              headers={csvHeaders}
+              filename={csvFileName}
+              className="bg-primary p-2 rounded"
+            >
+              Export to CSV
+            </CSVLink>
+          )}
+        </div>
       </div>
-      <table className="min-w-full bg-transparent">
-        <thead>
+      <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
+        <thead className="bg-slate-900 text-white">
           <tr>
             {headings.map((heading, index) => (
-              <th key={index} className="py-2">
+              <th
+                key={index}
+                className="py-2 first:rounded-tl-lg last:rounded-tr-lg"
+              >
                 {heading.title}
               </th>
             ))}
-            <th className="py-2">Actions</th>
+            <th className="py-2 first:rounded-tl-lg last:rounded-tr-lg">
+              Actions
+            </th>
           </tr>
         </thead>
         <tbody>

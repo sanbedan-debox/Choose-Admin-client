@@ -74,7 +74,22 @@ const Admin: React.FC = () => {
       UpdatedAt: "1634567890",
     },
   ];
-
+  const mainActions = [
+    {
+      label: "Action 1",
+      onClick: () => {
+        // Define the action functionality
+        alert("Main Action 1 clicked");
+      },
+    },
+    {
+      label: "Action 2",
+      onClick: () => {
+        // Define the action functionality
+        alert("Main Action 2 clicked");
+      },
+    },
+  ];
   const actions = [
     {
       label: "Delete",
@@ -89,6 +104,14 @@ const Admin: React.FC = () => {
       },
     },
   ];
+  // const mainActions = [
+  //   {
+  //     label: "Add Member",
+  //     onClick: () => {
+  //       alert("Add new member action");
+  //     },
+  //   },
+  // ];
 
   const headings = [
     { title: "Name", dataKey: "name" },
@@ -108,8 +131,9 @@ const Admin: React.FC = () => {
         fullCsv
         csvFileName="admins_data.csv"
         headings={headings}
+        mainActions={mainActions}
         // striped
-        bordered
+        // bordered
         hovered
       />
     </div>
