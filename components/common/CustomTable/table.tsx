@@ -21,7 +21,7 @@ interface Heading {
 interface TableProps {
   data: Array<Record<string, any>>;
   itemsPerPage: number;
-  actions?: Action[]; // Make actions optional
+  actions?: Action[];
   mainActions?: MainAction[];
   csvExport?: boolean;
   fullCsv?: boolean;
@@ -80,7 +80,7 @@ const RoopTable: React.FC<TableProps> = ({
   };
 
   return (
-    <div className="container mx-auto  rounded-lg">
+    <div className="container mx-auto rounded-lg">
       <div className="flex justify-between items-center mb-4">
         <input
           type="text"
@@ -144,11 +144,11 @@ const RoopTable: React.FC<TableProps> = ({
               ))}
               {actions.length > 0 && (
                 <td className="py-4 ">
-                  <Menu as="div" className=" inline-block text-left">
+                  <Menu as="div" className="inline-block text-left">
                     <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                       <HiDotsVertical className="w-5 h-5" aria-hidden="true" />
                     </Menu.Button>
-                    <Menu.Items className=" absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                    <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                       {actions.map((action, index) => (
                         <div key={index} className="px-1 py-1">
                           <Menu.Item>
@@ -177,11 +177,13 @@ const RoopTable: React.FC<TableProps> = ({
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
           disabled={currentPage === 1}
-          className="bg-primary p-2 rounded"
+          className={`bg-primary p-2 rounded ${
+            currentPage === 1 ? "hidden" : ""
+          }`}
         >
           Previous
         </button>
-        <span>
+        <span className="flex-1 text-center">
           Page {currentPage} of {totalPages}
         </span>
         <button
@@ -189,7 +191,9 @@ const RoopTable: React.FC<TableProps> = ({
             setCurrentPage((prev) => Math.min(prev + 1, totalPages))
           }
           disabled={currentPage === totalPages}
-          className="bg-primary p-2 rounded"
+          className={`bg-primary p-2 rounded ${
+            currentPage === totalPages ? "hidden" : ""
+          }`}
         >
           Next
         </button>

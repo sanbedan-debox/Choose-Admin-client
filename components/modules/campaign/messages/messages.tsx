@@ -16,8 +16,8 @@ export function Message() {
       ),
     },
     {
-      title: "Email Template",
-      value: "emailTemplate",
+      title: "Message Template",
+      value: "messageTemplate",
       content: (
         <div className="bg-black max-w-7xl">
           <MssgTemplate />

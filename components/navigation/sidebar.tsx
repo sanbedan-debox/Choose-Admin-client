@@ -21,9 +21,13 @@ const Sidebar: React.FC = () => {
   return (
     <div className="h-screen bg-gray-800 text-white w-64">
       <div className="flex flex-col items-center mt-4">
-        <Link href="/" legacyBehavior>
-          <Image className="mb-4" src={logo1} alt="Logo" width={150} />
-        </Link>
+        <Image
+          className="mb-4 cursor-pointer"
+          src={logo1}
+          alt="Logo"
+          width={150}
+          onClick={() => setSelectedModule("Dashboard")}
+        />
       </div>
       <ul className="mx-1">
         {modules.map(
@@ -31,7 +35,7 @@ const Sidebar: React.FC = () => {
             hasAccess(module.roles) && (
               <React.Fragment key={module.name}>
                 {module.subModules ? (
-                  <li className=" cursor-pointer pr-2">
+                  <li className=" cursor-pointer ">
                     <div
                       className="flex justify-between items-center hover:bg-gray-700 rounded-lg"
                       onClick={() => toggleDropdown(module.name)}
@@ -51,7 +55,7 @@ const Sidebar: React.FC = () => {
                       </div>
                       {/* <span>{module.name}</span> */}
                       <svg
-                        className={`w-5 h-5 transition-transform duration-200 ${
+                        className={`w-5 h-5 transition-transform duration-200 mr-2 ${
                           openDropdown === module.name ? "rotate-180" : ""
                         }`}
                         xmlns="http://www.w3.org/2000/svg"

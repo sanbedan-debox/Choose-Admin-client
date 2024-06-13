@@ -137,13 +137,7 @@ const MssgCampaign: React.FC = () => {
 
   const mainActions = [
     {
-      label: "Action 1",
-      onClick: () => {
-        alert("Main Action 1 clicked");
-      },
-    },
-    {
-      label: "Action 2",
+      label: "Create",
       onClick: () => {
         alert("Main Action 2 clicked");
       },

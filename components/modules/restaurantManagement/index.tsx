@@ -62,6 +62,15 @@ const Reports: React.FC = () => {
     },
   ];
 
+  const mainActions = [
+    {
+      label: "Add Restaurant",
+      onClick: () => {
+        alert("Main Action 1 clicked");
+      },
+    },
+  ];
+
   const headings = [
     { title: "Name", dataKey: "name" },
     { title: "Email", dataKey: "email" },
@@ -79,6 +88,7 @@ const Reports: React.FC = () => {
         itemsPerPage={5}
         actions={actions}
         csvExport
+        mainActions={mainActions}
         headings={headings}
       />
     </div>

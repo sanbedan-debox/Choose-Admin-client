@@ -61,7 +61,14 @@ const UserManagement: React.FC = () => {
       style: "bg-blue-500",
     },
   ];
-
+  const mainActions = [
+    {
+      label: "Add User",
+      onClick: () => {
+        alert("Main Action 1 clicked");
+      },
+    },
+  ];
   const headings = [
     { title: "Name", dataKey: "name" },
     { title: "Email", dataKey: "email" },
@@ -78,6 +85,7 @@ const UserManagement: React.FC = () => {
         data={members}
         itemsPerPage={5}
         actions={actions}
+        mainActions={mainActions}
         csvExport
         headings={headings}
       />

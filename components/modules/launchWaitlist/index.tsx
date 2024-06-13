@@ -2,6 +2,14 @@ import React from "react";
 import RoopTable from "@/components/common/CustomTable/table";
 
 const LaunchWaitlist: React.FC = () => {
+  const mainActions = [
+    {
+      label: "Add",
+      onClick: () => {
+        alert("Main Action 2 clicked");
+      },
+    },
+  ];
   const members = [
     {
       id: 1,
@@ -62,6 +70,7 @@ const LaunchWaitlist: React.FC = () => {
         itemsPerPage={5}
         csvExport
         headings={headings}
+        mainActions={mainActions}
       />
     </div>
   );

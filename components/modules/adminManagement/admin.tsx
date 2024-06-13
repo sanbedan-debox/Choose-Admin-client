@@ -137,15 +137,9 @@ const Admin: React.FC = () => {
 
   const mainActions = [
     {
-      label: "Action 1",
+      label: "Add Admin",
       onClick: () => {
         alert("Main Action 1 clicked");
-      },
-    },
-    {
-      label: "Action 2",
-      onClick: () => {
-        alert("Main Action 2 clicked");
       },
     },
   ];
@@ -161,6 +155,12 @@ const Admin: React.FC = () => {
       label: "Reset Password",
       onClick: (id: number) => {
         alert(`Reset password for member ID: ${id}`);
+      },
+    },
+    {
+      label: "Change Role",
+      onClick: (id: number) => {
+        alert(`Role Changed for member ID: ${id}`);
       },
     },
   ];
