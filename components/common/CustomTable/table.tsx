@@ -143,12 +143,12 @@ const RoopTable: React.FC<TableProps> = ({
                 </td>
               ))}
               {actions.length > 0 && (
-                <td className="py-4">
-                  <Menu as="div" className="relative inline-block text-left">
+                <td className="py-4 ">
+                  <Menu as="div" className=" inline-block text-left">
                     <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                       <HiDotsVertical className="w-5 h-5" aria-hidden="true" />
                     </Menu.Button>
-                    <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                    <Menu.Items className=" absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
                       {actions.map((action, index) => (
                         <div key={index} className="px-1 py-1">
                           <Menu.Item>
