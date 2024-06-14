@@ -1,5 +1,7 @@
 import React from "react";
 import RoopTable from "@/components/common/CustomTable/table";
+import useGlobalStore from "@/store/global";
+import Modal from "@/components/common/modal/modal";
 
 const EmailCampaign: React.FC = () => {
   const members = [
@@ -10,11 +12,7 @@ const EmailCampaign: React.FC = () => {
       role: "superAdmin",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 2,
@@ -23,11 +21,7 @@ const EmailCampaign: React.FC = () => {
       role: "admin",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 3,
@@ -36,11 +30,7 @@ const EmailCampaign: React.FC = () => {
       role: "worker",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 4,
@@ -49,11 +39,7 @@ const EmailCampaign: React.FC = () => {
       role: "master",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 5,
@@ -62,11 +48,7 @@ const EmailCampaign: React.FC = () => {
       role: "superAdmin",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 6,
@@ -75,11 +57,7 @@ const EmailCampaign: React.FC = () => {
       role: "admin",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 7,
@@ -88,11 +66,7 @@ const EmailCampaign: React.FC = () => {
       role: "worker",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 8,
@@ -101,11 +75,7 @@ const EmailCampaign: React.FC = () => {
       role: "master",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 9,
@@ -114,11 +84,7 @@ const EmailCampaign: React.FC = () => {
       role: "superAdmin",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
     {
       id: 10,
@@ -127,20 +93,52 @@ const EmailCampaign: React.FC = () => {
       role: "admin",
       createdAt: "2021-10-18",
       UpdatedAt: "2021-10-18",
-      access: {
-        join: {
-          hello: "java",
-        },
-      },
+      access: { join: { hello: "java" } },
     },
   ];
+
+  const { setModalOpen, setModalData } = useGlobalStore((state) => ({
+    setModalOpen: state.setModalOpen,
+    setModalData: state.setModalData,
+  }));
+
+  const headings = [
+    { title: "Name", dataKey: "name" },
+    { title: "Email", dataKey: "email" },
+    { title: "Role", dataKey: "role" },
+    { title: "Join", dataKey: "access.join.hello" },
+  ];
+
+  const handleCreateClick = () => {
+    setModalData({
+      title: "Create Campaign",
+      inputs: [
+        { label: "Name", type: "text", placeholder: "Enter name" },
+        { label: "Email", type: "email", placeholder: "Enter email" },
+        { label: "Subject", type: "text", placeholder: "Enter subject" },
+        {
+          label: "Email Template",
+          type: "text",
+          placeholder: "Enter template",
+        },
+        {
+          label: "Schedule Type",
+          type: "text",
+          placeholder: "Enter schedule type",
+        },
+      ],
+      buttons: [
+        { label: "Cancel", onClick: () => setModalOpen(false) },
+        { label: "Send", onClick: () => alert("Send clicked") },
+      ],
+    });
+    setModalOpen(true);
+  };
 
   const mainActions = [
     {
       label: "Create",
-      onClick: () => {
-        alert("Main Action 2 clicked");
-      },
+      onClick: handleCreateClick,
     },
   ];
 
@@ -159,16 +157,9 @@ const EmailCampaign: React.FC = () => {
     },
   ];
 
-  const headings = [
-    { title: "Name", dataKey: "name" },
-    { title: "Email", dataKey: "email" },
-    { title: "Role", dataKey: "role" },
-    { title: "Join", dataKey: "access.join.hello" },
-  ];
-
   return (
     <div>
-      <h1 className="text-2xl font-bold">Cammpaign</h1>
+      <h1 className="text-2xl font-bold">Campaign</h1>
       <RoopTable
         data={members}
         itemsPerPage={5}
@@ -178,8 +169,6 @@ const EmailCampaign: React.FC = () => {
         csvFileName="admins_data.csv"
         headings={headings}
         mainActions={mainActions}
-        // striped
-        // bordered
         hovered
       />
     </div>

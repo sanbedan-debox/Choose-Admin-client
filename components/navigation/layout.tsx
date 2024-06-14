@@ -3,6 +3,7 @@ import Sidebar from "./sidebar";
 import { modules } from "@/components/navigation/common/accessConfig";
 import Dashboard from "../modules/dashboard";
 import useGlobalStore from "@/store/global";
+import Modal from "../common/modal/modal";
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -44,6 +45,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
         {renderModule()}
       </div>
+      <Modal />
     </div>
   );
 };
