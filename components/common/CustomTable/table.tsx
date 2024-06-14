@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import { Menu } from "@headlessui/react";
 import { HiDotsVertical } from "react-icons/hi";
-import { motion } from "framer-motion";
 import Select from "react-select";
 
 interface Action {
@@ -160,14 +159,11 @@ const RoopTable: React.FC<TableProps> = ({
   };
 
   return (
-    <motion.div
+    <div
       style={{
         background: "rgb(4,7,29)",
         backgroundColor:
           "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
-      }}
-      animate={{
-        y: [0, 40, 0],
       }}
       className={`container mx-auto rounded-lg p-4 ${
         hscroll ? "max-w-[76rem]" : ""
@@ -381,7 +377,7 @@ const RoopTable: React.FC<TableProps> = ({
           </button>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
