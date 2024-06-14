@@ -1,8 +1,9 @@
 import React, { Dispatch, SetStateAction, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { EditorRef, EmailEditorProps } from "react-email-editor";
-
 import default_template from "./defaultTemplate.json";
+import useGlobalStore from "@/store/global";
+
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
 });
@@ -13,6 +14,8 @@ interface IUnlayerEditorProps {
 }
 
 const UnlayerEditor = () => {
+  const { setEmailBuilderOpen } = useGlobalStore();
+
   // Loading & Error Handling
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -39,6 +42,7 @@ const UnlayerEditor = () => {
     setShowSaveDialog(false);
     setShowTestMailDialog(false);
     setTitle("");
+    setEmailBuilderOpen(false);
   };
 
   const handleTestMailDialogClose = () => {
@@ -75,80 +79,78 @@ const UnlayerEditor = () => {
   };
 
   return (
-    <div
-      style={{
-        // width: "100vw",
-        // height: "100vh",
-        padding: "20px",
-        boxSizing: "border-box",
-      }}
-    >
-      <div className="mb-10 flex">
-        <label style={{ display: "block", marginBottom: "5px" }}>Title:</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          style={{ padding: "8px", marginBottom: "10px" }}
-        />
-        <label style={{ display: "block", marginBottom: "5px" }}>Emails:</label>
-        <input
-          type="text"
-          value={emails}
-          onChange={(e) => setEmails(e.target.value)}
-          style={{ padding: "8px" }}
+    <div className="p-6 bg-black rounded-lg shadow-lg max-h-screen">
+      <div className="flex mb-6 space-x-4">
+        <div className="flex-1">
+          <label className="block text-gray-700 mb-2">Title:</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+            placeholder="Enter title"
+          />
+        </div>
+        <div className="flex-1">
+          <label className="block text-gray-700 mb-2">Emails:</label>
+          <input
+            type="text"
+            value={emails}
+            onChange={(e) => setEmails(e.target.value)}
+            className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+            placeholder="Enter emails"
+          />
+        </div>
+      </div>
+      <div className="rounded-lg shadow-md p-4 mb-6">
+        <EmailEditor
+          ref={emailEditorRef}
+          style={{ height: "70vh", width: "100%" }}
+          options={{
+            id: "editor-container",
+            displayMode: "email",
+            features: {
+              sendTestEmail: true,
+            },
+            projectId: 232765,
+            user: {
+              id: 1606,
+              email: "mehank@inradius.in",
+              name: "Mehank Jain",
+              signature:
+                "ab67acad136bf9f19eae476c070bd49e39faeb8cb1aec32616ed080b21d15738",
+            },
+            mergeTags: {
+              name: {
+                name: "name",
+                value: "{{name}}",
+              },
+            },
+            appearance: {
+              theme: "modern_dark",
+            },
+          }}
+          onLoad={onLoad}
+          onReady={onReady}
         />
       </div>
-      <EmailEditor
-        style={{
-          display: "flex",
-          minHeight: "70vh",
-          margin: "12px 16px 0 16px",
-          width: "100%",
-          backgroundColor: "black",
-        }}
-        ref={emailEditorRef}
-        options={{
-          id: "editor-container",
-          displayMode: "email",
-          features: {
-            sendTestEmail: true,
-          },
-          projectId: 232765,
-          user: {
-            id: 1606,
-            email: "mehank@inradius.in",
-            name: "Mehank Jain",
-            signature:
-              "ab67acad136bf9f19eae476c070bd49e39faeb8cb1aec32616ed080b21d15738",
-          },
-          mergeTags: {
-            name: {
-              name: "name",
-              value: "{{name}}",
-            },
-          },
-          appearance: {
-            theme: "modern_dark",
-          },
-        }}
-        onLoad={onLoad}
-        onReady={onReady}
-      />
-      <div style={{ marginTop: "20px", textAlign: "center" }}>
+      <div className="mt-6 text-center">
         <button
           onClick={handleSaveClick}
-          style={{ marginRight: "10px", padding: "10px 20px" }}
+          className="bg-primary p-2 mr-4 rounded"
         >
           Save
         </button>
         <button
           onClick={handleCloseClick}
-          style={{ marginRight: "10px", padding: "10px 20px" }}
+          className="bg-gray-300 text-gray-800 p-2 mr-4 rounded"
         >
           Close
         </button>
-        <button onClick={handleTestEmailClick} style={{ padding: "10px 20px" }}>
+        <button
+          onClick={handleTestEmailClick}
+          className="bg-green-500 text-white p-2 rounded"
+        >
           Test Email
         </button>
       </div>

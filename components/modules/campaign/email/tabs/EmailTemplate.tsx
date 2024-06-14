@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import RoopTable from "@/components/common/CustomTable/table";
 import UnlayerEditor from "../unlayer/editor";
+import useGlobalStore from "@/store/global";
 
 const EmailTemplate: React.FC = () => {
-  const [createEmail, setCreateEmail] = useState(false);
+  const { setEmailBuilderOpen } = useGlobalStore();
+
   const members = [
     {
       id: 1,
@@ -18,9 +20,7 @@ const EmailTemplate: React.FC = () => {
   const mainActions = [
     {
       label: "Add Email Template",
-      onClick: () => {
-        setCreateEmail(true);
-      },
+      onClick: () => setEmailBuilderOpen(true),
     },
   ];
 
@@ -49,7 +49,6 @@ const EmailTemplate: React.FC = () => {
 
   return (
     <div className="">
-      {createEmail ? <UnlayerEditor /> : <></>}
       <h1 className="text-2xl font-bold">Email Template</h1>
       <RoopTable
         data={members}
