@@ -40,9 +40,9 @@ const Sidebar: React.FC = () => {
                       className="flex justify-between items-center hover:bg-gray-700 rounded-lg"
                       onClick={() => toggleDropdown(module.name)}
                     >
-                      <div className="flex items-center p-2 text-gray-900  dark:text-white  group">
+                      <div className="flex items-center p-2   text-white  group">
                         <svg
-                          className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                          className="w-5 h-5  transition duration-75 text-gray-400  group-hover:text-white"
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="currentColor"
@@ -84,10 +84,10 @@ const Sidebar: React.FC = () => {
                                 onClick={() =>
                                   setSelectedModule(subModule.name)
                                 }
-                                className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                                className="flex items-center p-2  rounded-lg text-white  hover:bg-gray-700 group"
                               >
                                 <svg
-                                  className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                                  className="w-5 h-5  transition duration-75 text-gray-400  group-hover:text-white"
                                   aria-hidden="true"
                                   xmlns="http://www.w3.org/2000/svg"
                                   fill="currentColor"
@@ -107,10 +107,10 @@ const Sidebar: React.FC = () => {
                   <li key={module.name}>
                     <a
                       onClick={() => setSelectedModule(module.name)}
-                      className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
+                      className="flex items-center p-2 rounded-lg text-white  hover:bg-gray-700 group"
                     >
                       <svg
-                        className="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
+                        className="w-5 h-5  transition duration-75 text-gray-400  group-hover:text-white"
                         aria-hidden="true"
                         xmlns="http://www.w3.org/2000/svg"
                         fill="currentColor"

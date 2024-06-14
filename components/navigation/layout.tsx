@@ -40,7 +40,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 p-6 ">
+      <div className="flex-1 p-6 bg-black">
         {children}
         {renderModule()}
       </div>

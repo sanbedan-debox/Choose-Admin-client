@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { CSVLink } from "react-csv";
 import { Menu } from "@headlessui/react";
 import { HiDotsVertical } from "react-icons/hi";
+import { motion } from "framer-motion";
 
 interface Action {
   label: string;
@@ -80,125 +81,144 @@ const RoopTable: React.FC<TableProps> = ({
   };
 
   return (
-    <div className="container mx-auto rounded-lg">
-      <div className="flex justify-between items-center mb-4">
-        <input
-          type="text"
-          placeholder="Search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="p-2 rounded-lg flex-wrap focus:border-none mr-5"
-        />
-        <div className="flex">
-          {mainActions.map((action, index) => (
-            <button
-              key={index}
-              onClick={action.onClick}
-              className="bg-primary p-2 mr-4 rounded"
-            >
-              {action.label}
-            </button>
-          ))}
-          {csvExport && (
-            <CSVLink
-              data={csvData}
-              headers={csvHeaders}
-              filename={csvFileName}
-              className="bg-primary p-2 rounded"
-            >
-              Export to CSV
-            </CSVLink>
-          )}
+    <motion.div
+      style={{
+        background: "rgb(4,7,29)",
+        backgroundColor:
+          "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
+      }}
+      animate={{
+        y: [0, 40, 0],
+      }}
+      className="container mx-auto rounded-lg p-4 "
+    >
+      <div className=" bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
+        <div className="flex justify-between items-center mb-4 ">
+          <input
+            type="text"
+            placeholder="Search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none block  p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+          />
+          <div className="flex">
+            {mainActions.map((action, index) => (
+              <button
+                key={index}
+                onClick={action.onClick}
+                className="bg-primary p-2 mr-4 rounded"
+              >
+                {action.label}
+              </button>
+            ))}
+            {csvExport && (
+              <CSVLink
+                data={csvData}
+                headers={csvHeaders}
+                filename={csvFileName}
+                className="bg-primary p-2 rounded"
+              >
+                Export to CSV
+              </CSVLink>
+            )}
+          </div>
         </div>
       </div>
-      <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
-        <thead className="bg-slate-900 text-white">
-          <tr>
-            {headings.map((heading, index) => (
-              <th
-                key={index}
-                className="py-2 first:rounded-tl-lg last:rounded-tr-lg"
-              >
-                {heading.title}
-              </th>
-            ))}
-            {actions.length > 0 && (
-              <th className="py-2 first:rounded-tl-lg last:rounded-tr-lg">
-                Actions
-              </th>
-            )}
-          </tr>
-        </thead>
-        <tbody>
-          {displayedData.map((member, index) => (
-            <tr
-              key={index}
-              className={`text-center ${rowClasses(
-                index
-              )} border-b border-slate-900`}
-            >
+      <div className=" bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
+        <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
+          <thead className="bg-slate-900 text-white">
+            <tr>
               {headings.map((heading, index) => (
-                <td key={index} className="py-4">
-                  {getNestedValue(member, heading.dataKey)}
-                </td>
+                <th
+                  key={index}
+                  className="py-2 first:rounded-tl-lg last:rounded-tr-lg"
+                >
+                  {heading.title}
+                </th>
               ))}
               {actions.length > 0 && (
-                <td className="py-4 ">
-                  <Menu as="div" className="inline-block text-left">
-                    <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                      <HiDotsVertical className="w-5 h-5" aria-hidden="true" />
-                    </Menu.Button>
-                    <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                      {actions.map((action, index) => (
-                        <div key={index} className="px-1 py-1">
-                          <Menu.Item>
-                            {({ active }) => (
-                              <button
-                                onClick={() => action.onClick(member.id)}
-                                className={`${
-                                  active ? "bg-primary" : "text-gray-900"
-                                } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
-                              >
-                                {action.label}
-                              </button>
-                            )}
-                          </Menu.Item>
-                        </div>
-                      ))}
-                    </Menu.Items>
-                  </Menu>
-                </td>
+                <th className="py-2 first:rounded-tl-lg last:rounded-tr-lg">
+                  Actions
+                </th>
               )}
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <div className="flex justify-between items-center mt-4">
-        <button
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-          className={`bg-primary p-2 rounded ${
-            currentPage === 1 ? "hidden" : ""
-          }`}
-        >
-          Previous
-        </button>
-        <span className="flex-1 text-center">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-          className={`bg-primary p-2 rounded ${
-            currentPage === totalPages ? "hidden" : ""
-          }`}
-        >
-          Next
-        </button>
+          </thead>
+          <tbody>
+            {displayedData.map((member, index) => (
+              <tr
+                key={index}
+                className={`text-center ${rowClasses(
+                  index
+                )} border-b border-slate-900`}
+              >
+                {headings.map((heading, index) => (
+                  <td key={index} className="py-4">
+                    {getNestedValue(member, heading.dataKey)}
+                  </td>
+                ))}
+                {actions.length > 0 && (
+                  <td className="py-4 ">
+                    <Menu as="div" className="inline-block text-left">
+                      <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                        <HiDotsVertical
+                          className="w-5 h-5"
+                          aria-hidden="true"
+                        />
+                      </Menu.Button>
+                      <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                        {actions.map((action, index) => (
+                          <div key={index} className="px-1 py-1">
+                            <Menu.Item>
+                              {({ active }) => (
+                                <button
+                                  onClick={() => action.onClick(member.id)}
+                                  className={`${
+                                    active ? "bg-primary" : "text-gray-900"
+                                  } group flex rounded-md items-center w-full px-2 py-2 text-sm`}
+                                >
+                                  {action.label}
+                                </button>
+                              )}
+                            </Menu.Item>
+                          </div>
+                        ))}
+                      </Menu.Items>
+                    </Menu>
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
-    </div>
+      <div className=" bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
+        <div className="flex justify-between items-center mt-4">
+          <button
+            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            disabled={currentPage === 1}
+            className={`bg-primary p-2 rounded ${
+              currentPage === 1 ? "hidden" : ""
+            }`}
+          >
+            Previous
+          </button>
+          <span className="flex-1 text-center">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+            }
+            disabled={currentPage === totalPages}
+            className={`bg-primary p-2 rounded ${
+              currentPage === totalPages ? "hidden" : ""
+            }`}
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </motion.div>
   );
 };
 

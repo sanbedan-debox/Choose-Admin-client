@@ -37,9 +37,9 @@ export default function JoySignInSideTemplate() {
         <div className="relative z-10 flex items-center gap-16">
           <Image className="mb-4" src={logo1} alt="Logo" width={200} />
         </div>
-        <div className="w-full rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 bg-dot-white/[0.12] md:bg-dot-white/[0.15] border-gray-700">
+        <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-dot-white/[0.12] md:bg-dot-white/[0.15] border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
               Sign in to your account
             </h1>
             <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
@@ -54,14 +54,14 @@ export default function JoySignInSideTemplate() {
                   type="email"
                   name="email"
                   id="email"
-                  className="bg-secondary bg-opacity-30 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:outline-none focus:border-transparent block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-transparent"
+                  className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter your Email Address"
                 />
               </div>
               <div className="col-span-2">
                 <label
                   htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 text-sm font-medium  text-white"
                 >
                   Password
                 </label>
@@ -69,7 +69,7 @@ export default function JoySignInSideTemplate() {
                   type="password"
                   name="password"
                   id="password"
-                  className="bg-secondary bg-opacity-30 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:outline-none focus:border-transparent block w-full p-2.5 dark:border-gray-500 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-transparent"
+                  className="bg-secondary bg-opacity-30   text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter your Password"
                 />
               </div>
