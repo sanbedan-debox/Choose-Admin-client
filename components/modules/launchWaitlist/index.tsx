@@ -70,6 +70,7 @@ const LaunchWaitlist: React.FC = () => {
         itemsPerPage={5}
         csvExport
         headings={headings}
+        hovered
         mainActions={mainActions}
       />
     </div>

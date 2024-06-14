@@ -51,14 +51,12 @@ const UserManagement: React.FC = () => {
       onClick: (id: number) => {
         alert(`Delete member with ID: ${id}`);
       },
-      style: "bg-red-500",
     },
     {
       label: "Access Email",
       onClick: (id: number) => {
         alert(`Access roles for member ID: ${id}`);
       },
-      style: "bg-blue-500",
     },
   ];
   const mainActions = [
@@ -75,6 +73,9 @@ const UserManagement: React.FC = () => {
     { title: "Function", dataKey: "function" },
     { title: "Status", dataKey: "status" },
     { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
   ];
 
   return (
@@ -88,6 +89,8 @@ const UserManagement: React.FC = () => {
         mainActions={mainActions}
         csvExport
         headings={headings}
+        filterable
+        hovered
       />
     </div>
   );

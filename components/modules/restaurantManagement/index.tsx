@@ -10,6 +10,11 @@ const Reports: React.FC = () => {
       function: "Manager",
       status: "ONLINE",
       employed: "23/04/18",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
     },
     {
       id: 2,
@@ -18,6 +23,11 @@ const Reports: React.FC = () => {
       function: "Programator",
       status: "OFFLINE",
       employed: "23/04/18",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
     },
     {
       id: 3,
@@ -26,6 +36,11 @@ const Reports: React.FC = () => {
       function: "Executive",
       status: "OFFLINE",
       employed: "19/09/17",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
     },
     {
       id: 4,
@@ -34,6 +49,11 @@ const Reports: React.FC = () => {
       function: "Programator",
       status: "ONLINE",
       employed: "24/12/08",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
     },
     {
       id: 5,
@@ -42,6 +62,50 @@ const Reports: React.FC = () => {
       function: "Manager",
       status: "OFFLINE",
       employed: "04/10/21",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
+    },
+    {
+      id: 5,
+      name: "Richard Gran",
+      email: "richard@creative-tim.com",
+      function: "Manager",
+      status: "OFFLINE",
+      employed: "04/10/21",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
+    },
+    {
+      id: 5,
+      name: "Richard Gran",
+      email: "richard@creative-tim.com",
+      function: "Manager",
+      status: "OFFLINE",
+      employed: "04/10/21",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
+    },
+    {
+      id: 5,
+      name: "Richard Gran",
+      email: "richard@creative-tim.com",
+      function: "Manager",
+      status: "OFFLINE",
+      employed: "04/10/21",
+      data: "nil",
+      hello: "nil",
+      zuzu: "nil",
+      calm: "nil",
+      alien: "alien",
     },
   ];
 
@@ -51,14 +115,14 @@ const Reports: React.FC = () => {
       onClick: (id: number) => {
         alert(`Delete member with ID: ${id}`);
       },
-      style: "bg-red-500",
+      // style: "bg-red-500",
     },
     {
       label: "Access Email",
       onClick: (id: number) => {
         alert(`Access roles for member ID: ${id}`);
       },
-      style: "bg-blue-500",
+      // style: "bg-blue-500",
     },
   ];
 
@@ -77,6 +141,12 @@ const Reports: React.FC = () => {
     { title: "Function", dataKey: "function" },
     { title: "Status", dataKey: "status" },
     { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
+    { title: "Employed", dataKey: "employed" },
   ];
 
   return (
@@ -90,6 +160,8 @@ const Reports: React.FC = () => {
         csvExport
         mainActions={mainActions}
         headings={headings}
+        hovered
+        hscroll
       />
     </div>
   );

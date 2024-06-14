@@ -19,7 +19,14 @@ const Sidebar: React.FC = () => {
   };
 
   return (
-    <div className="h-screen bg-gray-800 text-white w-64">
+    <div
+      style={{
+        background: "rgb(4,7,29)",
+        backgroundColor:
+          "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
+      }}
+      className="h-screen  text-white w-64"
+    >
       <div className="flex flex-col items-center mt-4">
         <Image
           className="mb-4 cursor-pointer"
