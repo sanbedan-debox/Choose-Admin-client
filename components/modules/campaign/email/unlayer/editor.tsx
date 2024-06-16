@@ -3,6 +3,7 @@ import dynamic from "next/dynamic";
 import { EditorRef, EmailEditorProps } from "react-email-editor";
 import default_template from "./defaultTemplate.json";
 import useGlobalStore from "@/store/global";
+import RoundedButton from "@/components/common/Buttons/RoundedButton";
 
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
@@ -134,25 +135,10 @@ const UnlayerEditor = () => {
           onReady={onReady}
         />
       </div>
-      <div className="mt-6 text-center">
-        <button
-          onClick={handleSaveClick}
-          className="bg-primary p-2 mr-4 rounded"
-        >
-          Save
-        </button>
-        <button
-          onClick={handleCloseClick}
-          className="bg-gray-300 text-gray-800 p-2 mr-4 rounded"
-        >
-          Close
-        </button>
-        <button
-          onClick={handleTestEmailClick}
-          className="bg-green-500 text-white p-2 rounded"
-        >
-          Test Email
-        </button>
+      <div className=" text-center">
+        <RoundedButton onClick={handleSaveClick}>Save</RoundedButton>
+        <RoundedButton onClick={handleCloseClick}>Close</RoundedButton>
+        <RoundedButton onClick={handleTestEmailClick}>Test Email</RoundedButton>
       </div>
     </div>
   );

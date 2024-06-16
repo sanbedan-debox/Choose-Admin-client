@@ -3,11 +3,12 @@ import { CSVLink } from "react-csv";
 import { Menu } from "@headlessui/react";
 import { HiDotsVertical } from "react-icons/hi";
 import Select from "react-select";
+import RoundedButton from "../Buttons/RoundedButton";
 
 interface Action {
   label: string;
   onClick: (id: number) => void;
-  style?: string; // Optional style for action buttons
+  style?: string;
 }
 
 interface MainAction {
@@ -15,9 +16,12 @@ interface MainAction {
   onClick: () => void;
 }
 
+type RenderFunction = (data: any) => React.ReactNode;
+
 interface Heading {
   title: string;
   dataKey: string;
+  render?: RenderFunction;
 }
 
 interface TableProps {
@@ -58,7 +62,7 @@ const RoopTable: React.FC<TableProps> = ({
   const [filterColumn, setFilterColumn] = useState<string>("");
   const [operator, setOperator] = useState<string>("contains");
   const [filterValue, setFilterValue] = useState<string>("");
-  const [options, setOptions] = useState<any[]>([]); // Options for the filter dropdown
+  const [options, setOptions] = useState<any[]>([]);
 
   useEffect(() => {
     const columnOptions = headings.map((heading) => ({
@@ -147,10 +151,6 @@ const RoopTable: React.FC<TableProps> = ({
     return classes.trim();
   };
 
-  const applyFilter = () => {
-    setCurrentPage(1); // Reset page to 1 when applying filter
-  };
-
   const clearFilter = () => {
     setFilterColumn("");
     setOperator("contains");
@@ -181,12 +181,12 @@ const RoopTable: React.FC<TableProps> = ({
             />
             {filterable && (
               <div className="flex items-center ml-4">
-                <button
+                <RoundedButton
                   className="bg-primary p-2 mr-4 rounded"
                   onClick={() => setShowFilter((prev) => !prev)}
                 >
                   Filter
-                </button>
+                </RoundedButton>
                 {showFilter && (
                   <div className="flex items-center space-x-2">
                     <Select
@@ -244,12 +244,12 @@ const RoopTable: React.FC<TableProps> = ({
                       onChange={(e) => setFilterValue(e.target.value)}
                       className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
                     />
-                    <button
+                    <RoundedButton
                       onClick={clearFilter}
-                      className="bg-red-500 p-2 rounded ml-2"
+                      className="bg-red-500 p-2 rounded"
                     >
                       Clear
-                    </button>
+                    </RoundedButton>
                   </div>
                 )}
               </div>
@@ -258,20 +258,20 @@ const RoopTable: React.FC<TableProps> = ({
 
           <div className="flex">
             {mainActions.map((action, index) => (
-              <button
+              <RoundedButton
                 key={index}
                 onClick={action.onClick}
                 className="bg-primary p-2 mr-4 rounded"
               >
                 {action.label}
-              </button>
+              </RoundedButton>
             ))}
             {csvExport && (
               <CSVLink
                 data={csvData}
                 headers={csvHeaders}
                 filename={csvFileName}
-                className="bg-primary p-2 rounded"
+                className="h-10 px-4 py-2 m-1 text-white transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary focus:outline-none focus:bg-blue-400 md:w-auto w-32 ${className}"
               >
                 Export to CSV
               </CSVLink>
@@ -309,7 +309,11 @@ const RoopTable: React.FC<TableProps> = ({
                 >
                   {headings.map((heading, index) => (
                     <td key={index} className="py-4 px-4">
-                      {getNestedValue(member, heading.dataKey)}
+                      {heading.render
+                        ? heading.render(
+                            getNestedValue(member, heading.dataKey)
+                          )
+                        : getNestedValue(member, heading.dataKey)}
                     </td>
                   ))}
                   {actions.length > 0 && (
@@ -326,7 +330,7 @@ const RoopTable: React.FC<TableProps> = ({
                             <div key={index} className="px-1 py-1">
                               <Menu.Item>
                                 {({ active }) => (
-                                  <button
+                                  <RoundedButton
                                     onClick={() => action.onClick(member.id)}
                                     className={`${
                                       active ? "bg-primary" : "text-gray-900"
@@ -335,7 +339,7 @@ const RoopTable: React.FC<TableProps> = ({
                                     }`}
                                   >
                                     {action.label}
-                                  </button>
+                                  </RoundedButton>
                                 )}
                               </Menu.Item>
                             </div>
@@ -352,7 +356,7 @@ const RoopTable: React.FC<TableProps> = ({
       </div>
       <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
         <div className="flex justify-between items-center mt-4">
-          <button
+          <RoundedButton
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             className={`bg-primary p-2 rounded ${
@@ -360,11 +364,11 @@ const RoopTable: React.FC<TableProps> = ({
             }`}
           >
             Previous
-          </button>
+          </RoundedButton>
           <span className="flex-1 text-center">
             Page {currentPage} of {totalPages}
           </span>
-          <button
+          <RoundedButton
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
@@ -374,7 +378,7 @@ const RoopTable: React.FC<TableProps> = ({
             }`}
           >
             Next
-          </button>
+          </RoundedButton>
         </div>
       </div>
     </div>
