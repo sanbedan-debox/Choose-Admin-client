@@ -168,7 +168,6 @@ const MssgCampaign: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Cammpaign</h1>
       <RoopTable
         data={members}
         itemsPerPage={5}

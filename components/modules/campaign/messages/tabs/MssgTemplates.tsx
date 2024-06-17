@@ -174,7 +174,6 @@ const MssgTemplate: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Message Template</h1>
       <RoopTable
         data={members}
         itemsPerPage={5}

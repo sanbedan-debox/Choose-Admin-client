@@ -49,7 +49,6 @@ const EmailTemplate: React.FC = () => {
 
   return (
     <div className="">
-      <h1 className="text-2xl font-bold">Email Template</h1>
       <RoopTable
         data={members}
         itemsPerPage={5}

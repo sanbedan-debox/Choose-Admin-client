@@ -1,5 +1,6 @@
 import React from "react";
 import RoopTable from "@/components/common/CustomTable/table";
+import Heading from "@/components/common/Headings/Heading";
 
 const LaunchWaitlist: React.FC = () => {
   const mainActions = [
@@ -62,9 +63,8 @@ const LaunchWaitlist: React.FC = () => {
   ];
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Launch Waitlist</h1>
-      <p>Launch Waitlist!</p>
+    <div className="container mx-auto px-2">
+      <Heading highlight="Launch Waitlist" />
       <RoopTable
         data={members}
         itemsPerPage={5}

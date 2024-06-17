@@ -159,7 +159,6 @@ const EmailCampaign: React.FC = () => {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold">Campaign</h1>
       <RoopTable
         data={members}
         itemsPerPage={5}

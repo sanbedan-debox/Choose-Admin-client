@@ -1,5 +1,6 @@
 import React from "react";
 import RoopTable from "@/components/common/CustomTable/table";
+import Heading from "@/components/common/Headings/Heading";
 
 const Admin: React.FC = () => {
   const members = [
@@ -173,9 +174,8 @@ const Admin: React.FC = () => {
   ];
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Admin Panel</h1>
-      <p>Welcome to the admin panel!</p>
+    <div className="container mx-auto px-2">
+      <Heading highlight="Admin Panel" />
       <RoopTable
         data={members}
         itemsPerPage={5}

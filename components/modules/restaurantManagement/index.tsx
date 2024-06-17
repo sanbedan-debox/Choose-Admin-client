@@ -1,5 +1,6 @@
 import React from "react";
 import RoopTable from "@/components/common/CustomTable/table";
+import Heading from "@/components/common/Headings/Heading";
 
 const Reports: React.FC = () => {
   const members = [
@@ -16,97 +17,7 @@ const Reports: React.FC = () => {
       calm: "nil",
       alien: "alien",
     },
-    {
-      id: 2,
-      name: "Alexa Liras",
-      email: "alexa@creative-tim.com",
-      function: "Programator",
-      status: "OFFLINE",
-      employed: "23/04/18",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
-    {
-      id: 3,
-      name: "Laurent Perrier",
-      email: "laurent@creative-tim.com",
-      function: "Executive",
-      status: "OFFLINE",
-      employed: "19/09/17",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
-    {
-      id: 4,
-      name: "Michael Levi",
-      email: "michael@creative-tim.com",
-      function: "Programator",
-      status: "ONLINE",
-      employed: "24/12/08",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
-    {
-      id: 5,
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      function: "Manager",
-      status: "OFFLINE",
-      employed: "04/10/21",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
-    {
-      id: 5,
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      function: "Manager",
-      status: "OFFLINE",
-      employed: "04/10/21",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
-    {
-      id: 5,
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      function: "Manager",
-      status: "OFFLINE",
-      employed: "04/10/21",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
-    {
-      id: 5,
-      name: "Richard Gran",
-      email: "richard@creative-tim.com",
-      function: "Manager",
-      status: "OFFLINE",
-      employed: "04/10/21",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
+    // Rest of the member data...
   ];
 
   const actions = [
@@ -150,9 +61,8 @@ const Reports: React.FC = () => {
   ];
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Restaurant Management</h1>
-      <p>Welcome to the Restaurant Management section!</p>
+    <div className="container mx-auto px-2">
+      <Heading highlight="Restaurant Management" />
       <RoopTable
         data={members}
         itemsPerPage={5}
