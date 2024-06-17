@@ -145,11 +145,8 @@ const RoopTable: React.FC<TableProps> = ({
               className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
             />
             {filterable && (
-              <div className="flex items-center ml-4">
-                <RoundedButton
-                  className="bg-primary p-2 mr-4 rounded"
-                  onClick={() => setShowFilter((prev) => !prev)}
-                >
+              <div className="flex items-center ml-4 max-h-10">
+                <RoundedButton onClick={() => setShowFilter((prev) => !prev)}>
                   Filter
                 </RoundedButton>
                 {showFilter && (
