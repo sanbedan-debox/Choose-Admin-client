@@ -1,16 +1,18 @@
 import React, { useState } from "react";
 import { modules } from "@/components/navigation/common/accessConfig";
-import { getUserRole } from "@/util/auth"; // Import getUserName and logout functions
 import logo1 from "../../assets/logo/logoWhite.png";
-import Link from "next/link";
 import Image from "next/image";
 import useGlobalStore from "@/store/global";
 import RoundedButton from "../common/button/RoundedButton";
+import useAuthStore from "@/store/auth";
+import { sdk } from "@/util/graphqlClient";
+import { useRouter } from "next/router";
 
 const Sidebar: React.FC = () => {
   const { setSelectedModule } = useGlobalStore();
-  const userRole = getUserRole();
-  // const userName = getUserName(); // Get the username
+  const router = useRouter();
+
+  const { userRole, userName } = useAuthStore();
 
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -20,8 +22,13 @@ const Sidebar: React.FC = () => {
     setOpenDropdown((prev) => (prev === moduleName ? null : moduleName));
   };
 
-  const handleLogout = () => {
-    // logout();
+  const handleLogout = async () => {
+    try {
+      await sdk.AdminLogout();
+      router.replace("/login");
+    } catch (error) {
+      console.error("Logout failed", error);
+    }
   };
 
   return (
@@ -147,8 +154,8 @@ const Sidebar: React.FC = () => {
       </div>
       <div className="mx-1 my-4">
         <div className="flex items-center justify-between p-2 bg-gray-800 rounded-lg">
-          {/* <span>{userName}</span> */}
-          <span>Sanbedan Paul</span>
+          <span>{userName}</span>
+          {/* <span>Sanbedan Paul</span> */}
           <RoundedButton onClick={handleLogout}>Logout</RoundedButton>
         </div>
       </div>

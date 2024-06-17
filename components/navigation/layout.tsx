@@ -10,7 +10,7 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { selectedModule, setSelectedModule } = useGlobalStore();
+  const { selectedModule } = useGlobalStore();
 
   const renderModule = () => {
     const selected = modules.find(

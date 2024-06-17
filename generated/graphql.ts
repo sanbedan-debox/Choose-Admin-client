@@ -123,6 +123,14 @@ export type DeleteAdminMutationVariables = Exact<{
 
 export type DeleteAdminMutation = { __typename?: 'Mutation', deleteAdmin: boolean };
 
+export type ResetPasswordAdminQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type ResetPasswordAdminQuery = { __typename?: 'Query', resetPasswordAdmin: boolean };
+
 export type ChangeRoleMutationVariables = Exact<{
   id: Scalars['String']['input'];
   role: AdminRole;
@@ -130,6 +138,11 @@ export type ChangeRoleMutationVariables = Exact<{
 
 
 export type ChangeRoleMutation = { __typename?: 'Mutation', changeRole: boolean };
+
+export type AdminLogoutQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type AdminLogoutQuery = { __typename?: 'Query', adminLogout: boolean };
 
 
 export const MeDocument = gql`
@@ -169,9 +182,19 @@ export const DeleteAdminDocument = gql`
   deleteAdmin(id: $id)
 }
     `;
+export const ResetPasswordAdminDocument = gql`
+    query ResetPasswordAdmin($id: String!, $password: String!) {
+  resetPasswordAdmin(id: $id, password: $password)
+}
+    `;
 export const ChangeRoleDocument = gql`
     mutation ChangeRole($id: String!, $role: AdminRole!) {
   changeRole(id: $id, role: $role)
+}
+    `;
+export const AdminLogoutDocument = gql`
+    query AdminLogout {
+  adminLogout
 }
     `;
 
@@ -197,8 +220,14 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     DeleteAdmin(variables: DeleteAdminMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteAdminMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteAdminMutation>(DeleteAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteAdmin', 'mutation', variables);
     },
+    ResetPasswordAdmin(variables: ResetPasswordAdminQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ResetPasswordAdminQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ResetPasswordAdminQuery>(ResetPasswordAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ResetPasswordAdmin', 'query', variables);
+    },
     ChangeRole(variables: ChangeRoleMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ChangeRoleMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ChangeRoleMutation>(ChangeRoleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ChangeRole', 'mutation', variables);
+    },
+    AdminLogout(variables?: AdminLogoutQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AdminLogoutQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AdminLogoutQuery>(AdminLogoutDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AdminLogout', 'query', variables);
     }
   };
 }

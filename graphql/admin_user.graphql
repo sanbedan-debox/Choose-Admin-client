@@ -39,17 +39,17 @@ mutation DeleteAdmin($id: String!) {
   deleteAdmin(id: $id)
 }
 
-# # Mutation to reset an admin's password
-# mutation ResetPasswordAdmin($id: String!, $password: String!) {
-#   resetPasswordAdmin(id: $id, password: $password)
-# }
+# Mutation to reset an admin's password
+query ResetPasswordAdmin($id: String!, $password: String!) {
+  resetPasswordAdmin(id: $id, password: $password)
+}
 
 # Mutation to change an admin's role
 mutation ChangeRole($id: String!, $role: AdminRole!) {
   changeRole(id: $id, role: $role)
 }
 
-# # Mutation to log out the admin
-# mutation AdminLogout {
-#   adminLogout
-# }
+# Mutation to log out the admin
+query AdminLogout {
+  adminLogout
+}

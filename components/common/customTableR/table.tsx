@@ -296,7 +296,7 @@ const RoopTable: React.FC<TableProps> = ({
                               <Menu.Item>
                                 {({ active }) => (
                                   <button
-                                    onClick={() => action.onClick(member.id)}
+                                    onClick={() => action.onClick(member._id)}
                                     className={`${
                                       active ? "bg-primary" : "text-gray-900"
                                     } group flex rounded-md items-center w-full px-2 py-2 text-sm ${

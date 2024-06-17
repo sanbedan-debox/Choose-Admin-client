@@ -9,42 +9,42 @@ import UserManagement from "@/components/modules/userManagement";
 export const modules = [
   {
     name: "Dashboard",
-    roles: ["admin", "worker"],
+    roles: ["admin", "master", "normal"],
     component: Dashboard,
   },
   {
     name: "Admin Management",
-    roles: ["admin"],
+    roles: ["admin", "normal", "master"],
     component: Admin,
   },
   {
     name: "Restaurant Management",
-    roles: ["admin", "worker"],
+    roles: ["admin", "normal", "master"],
     component: Reports,
   },
   {
     name: "Users Management",
-    roles: ["admin", "worker"],
+    roles: ["admin", "normal", "master"],
     component: UserManagement,
   },
   {
     name: "Launch Waitlist",
-    roles: ["admin", "worker"],
+    roles: ["admin", "master", "normal"],
     component: LaunchWaitlist,
   },
 
   {
     name: "Campaigns",
-    roles: ["admin", "worker"],
+    roles: ["admin", "master", "normal"],
     subModules: [
       {
         name: "Messages",
-        roles: ["admin", "worker"],
+        roles: ["admin", "master", "normal"],
         component: Message,
       },
       {
         name: "Emails",
-        roles: ["admin", "worker"],
+        roles: ["admin", "master", "normal"],
         component: Emails,
       },
     ],

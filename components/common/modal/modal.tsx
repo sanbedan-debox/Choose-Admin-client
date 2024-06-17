@@ -1,25 +1,47 @@
-import React from "react";
-import useGlobalStore from "@/store/global";
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom";
 
-const Modal: React.FC = () => {
-  const { isModalOpen, setModalOpen, modalData } = useGlobalStore((state) => ({
-    isModalOpen: state.isModalOpen,
-    setModalOpen: state.setModalOpen,
-    modalData: state.modalData,
-  }));
+interface ModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  children: React.ReactNode;
+  width?: "sm" | "md" | "lg";
+}
 
-  const handleClickOutside = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) {
-      setModalOpen(false);
+const ReusableModal: React.FC<ModalProps> = ({
+  isOpen,
+  onClose,
+  children,
+  width = "md",
+}) => {
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if ((event.target as Element).classList.contains("modal-overlay")) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("click", handleOutsideClick);
+    } else {
+      document.removeEventListener("click", handleOutsideClick);
     }
+
+    return () => document.removeEventListener("click", handleOutsideClick);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  const widthClasses = {
+    sm: "w-1/4",
+    md: "w-1/2",
+    lg: "w-3/4",
   };
 
-  if (!isModalOpen || !modalData) return null;
-
-  return (
+  return ReactDOM.createPortal(
     <div
-      className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
-      onClick={handleClickOutside}
+      className="modal-overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50"
+      onClick={onClose}
     >
       <div
         style={{
@@ -27,36 +49,16 @@ const Modal: React.FC = () => {
           backgroundColor:
             "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
         }}
-        className="rounded shadow-lg max-w-md w-full z-10"
+        className={`rounded shadow-lg ${widthClasses[width]} w-full z-10`}
         onClick={(e) => e.stopPropagation()}
       >
         <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.15] p-6">
-          <h2 className="text-xl mb-4 text-white">{modalData.title}</h2>
-          {modalData.inputs.map((input, index) => (
-            <div key={index} className="mb-4">
-              <label className="block text-white">{input.label}</label>
-              <input
-                type={input.type}
-                placeholder={input.placeholder}
-                className="bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
-              />
-            </div>
-          ))}
-          <div className="flex justify-end mt-4">
-            {modalData.buttons.map((button, index) => (
-              <button
-                key={index}
-                className="ml-2 px-4 py-2 bg-blue-500 text-white rounded"
-                onClick={button.onClick}
-              >
-                {button.label}
-              </button>
-            ))}
-          </div>
+          {children}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 
-export default Modal;
+export default ReusableModal;

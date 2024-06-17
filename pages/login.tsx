@@ -1,7 +1,8 @@
 import * as React from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import logo1 from "../assets/logo/logoWhite.png";
-import Link from "next/link";
+import { sdk } from "@/util/graphqlClient";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -13,16 +14,35 @@ interface SignInFormElement extends HTMLFormElement {
   readonly elements: FormElements;
 }
 
-export default function JoySignInSideTemplate() {
-  const handleSubmit = (event: React.FormEvent<SignInFormElement>) => {
+export default function Login() {
+  const router = useRouter();
+
+  const handleSubmit = async (event: React.FormEvent<SignInFormElement>) => {
     event.preventDefault();
     const { email, password, persistent } = event.currentTarget.elements;
-    // Add your form submission logic here
-    console.log({
-      email: email.value,
-      password: password.value,
-      persistent: persistent.checked,
-    });
+
+    // Email validation regex
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+      console.error("Invalid email address");
+      return;
+    }
+
+    try {
+      const response = await sdk.AdminLogin({
+        email: email.value,
+        password: password.value,
+      });
+
+      if (response) {
+        console.log("Login successful:", response);
+        // Redirect to the home page upon successful login
+        router.replace("/");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      // Handle login failure (e.g., show error message)
+    }
   };
 
   return (
@@ -61,7 +81,7 @@ export default function JoySignInSideTemplate() {
               <div className="col-span-2">
                 <label
                   htmlFor="password"
-                  className="block mb-2 text-sm font-medium  text-white"
+                  className="block mb-2 text-sm font-medium text-white"
                 >
                   Password
                 </label>
@@ -69,7 +89,7 @@ export default function JoySignInSideTemplate() {
                   type="password"
                   name="password"
                   id="password"
-                  className="bg-secondary bg-opacity-30   text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                  className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
                   placeholder="Enter your Password"
                 />
               </div>
