@@ -5,7 +5,7 @@ import logo1 from "../../assets/logo/logoWhite.png";
 import Link from "next/link";
 import Image from "next/image";
 import useGlobalStore from "@/store/global";
-import RoundedButton from "../common/Buttons/RoundedButton";
+import RoundedButton from "../common/button/RoundedButton";
 
 const Sidebar: React.FC = () => {
   const { setSelectedModule } = useGlobalStore();
@@ -22,7 +22,6 @@ const Sidebar: React.FC = () => {
 
   const handleLogout = () => {
     // logout();
-    // Redirect to login page or perform other actions after logout
   };
 
   return (

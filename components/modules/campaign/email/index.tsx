@@ -3,7 +3,7 @@
 import { Tabs } from "@/components/common/tabs/tabs";
 import EmailTemplate from "./tabs/EmailTemplate";
 import EmailCampaign from "./tabs/EmailCampaigns";
-import Heading from "@/components/common/Headings/Heading";
+import Heading from "@/components/common/heading/Heading";
 
 export function Emails() {
   const tabs = [

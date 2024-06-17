@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import RoopTable from "@/components/common/CustomTable/table";
+import RoopTable from "@/components/common/customTableR/table";
 import UnlayerEditor from "../unlayer/editor";
 import useGlobalStore from "@/store/global";
 

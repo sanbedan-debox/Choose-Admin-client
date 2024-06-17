@@ -3,7 +3,7 @@
 import { Tabs } from "@/components/common/tabs/tabs";
 import MssgCampaign from "./tabs/MssgCampaigns";
 import MssgTemplate from "./tabs/MssgTemplates";
-import Heading from "@/components/common/Headings/Heading";
+import Heading from "@/components/common/heading/Heading";
 
 export function Message() {
   const tabs = [

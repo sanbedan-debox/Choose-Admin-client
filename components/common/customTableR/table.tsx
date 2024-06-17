@@ -3,42 +3,7 @@ import { CSVLink } from "react-csv";
 import { Menu } from "@headlessui/react";
 import { HiDotsVertical } from "react-icons/hi";
 import Select from "react-select";
-import RoundedButton from "../Buttons/RoundedButton";
-
-interface Action {
-  label: string;
-  onClick: (id: number) => void;
-  style?: string;
-}
-
-interface MainAction {
-  label: string;
-  onClick: () => void;
-}
-
-type RenderFunction = (data: any) => React.ReactNode;
-
-interface Heading {
-  title: string;
-  dataKey: string;
-  render?: RenderFunction;
-}
-
-interface TableProps {
-  data: Array<Record<string, any>>;
-  itemsPerPage: number;
-  actions?: Action[];
-  mainActions?: MainAction[];
-  csvExport?: boolean;
-  fullCsv?: boolean;
-  csvFileName?: string;
-  headings: Heading[];
-  striped?: boolean;
-  bordered?: boolean;
-  hovered?: boolean;
-  hscroll?: boolean;
-  filterable?: boolean;
-}
+import RoundedButton from "../button/RoundedButton";
 
 const RoopTable: React.FC<TableProps> = ({
   data,
@@ -330,7 +295,7 @@ const RoopTable: React.FC<TableProps> = ({
                             <div key={index} className="px-1 py-1">
                               <Menu.Item>
                                 {({ active }) => (
-                                  <RoundedButton
+                                  <button
                                     onClick={() => action.onClick(member.id)}
                                     className={`${
                                       active ? "bg-primary" : "text-gray-900"
@@ -339,7 +304,7 @@ const RoopTable: React.FC<TableProps> = ({
                                     }`}
                                   >
                                     {action.label}
-                                  </RoundedButton>
+                                  </button>
                                 )}
                               </Menu.Item>
                             </div>

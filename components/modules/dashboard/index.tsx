@@ -1,5 +1,5 @@
-import CardDataStats from "@/components/common/CardDataStats/CardDataStats";
-import Heading from "@/components/common/Headings/Heading";
+import CardDataStats from "@/components/common/cardDataStat/CardDataStats";
+import Heading from "@/components/common/heading/Heading";
 import React from "react";
 
 const Dashboard: React.FC = () => {

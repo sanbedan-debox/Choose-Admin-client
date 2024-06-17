@@ -1,6 +1,6 @@
-import Admin from "@/components/modules/adminManagement/admin";
-import { Emails } from "@/components/modules/campaign/email/emails";
-import { Message } from "@/components/modules/campaign/messages/messages";
+import Admin from "@/components/modules/adminManagement";
+import { Emails } from "@/components/modules/campaign/email";
+import { Message } from "@/components/modules/campaign/messages";
 import Dashboard from "@/components/modules/dashboard";
 import LaunchWaitlist from "@/components/modules/launchWaitlist";
 import Reports from "@/components/modules/restaurantManagement";

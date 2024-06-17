@@ -1,5 +1,5 @@
 import React from "react";
-import RoopTable from "@/components/common/CustomTable/table";
+import RoopTable from "@/components/common/customTableR/table";
 
 const MssgTemplate: React.FC = () => {
   const members = [

@@ -1,6 +1,6 @@
 import React from "react";
-import RoopTable from "@/components/common/CustomTable/table";
-import Heading from "@/components/common/Headings/Heading";
+import RoopTable from "@/components/common/customTableR/table";
+import Heading from "@/components/common/heading/Heading";
 
 const Admin: React.FC = () => {
   const members = [

@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { EditorRef, EmailEditorProps } from "react-email-editor";
 import default_template from "./defaultTemplate.json";
 import useGlobalStore from "@/store/global";
-import RoundedButton from "@/components/common/Buttons/RoundedButton";
+import RoundedButton from "@/components/common/button/RoundedButton";
 
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
