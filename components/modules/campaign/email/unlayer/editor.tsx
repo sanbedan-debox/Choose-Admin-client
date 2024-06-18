@@ -4,6 +4,8 @@ import { EditorRef, EmailEditorProps } from "react-email-editor";
 import default_template from "./defaultTemplate.json";
 import useGlobalStore from "@/store/global";
 import PrimaryButton from "@/components/common/button/PrimaryButton";
+import ConfirmButton from "@/components/common/button/ConfirmButton";
+import OutlinedButton from "@/components/common/button/OutlineButton";
 
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
@@ -83,7 +85,7 @@ const UnlayerEditor = () => {
     <div className="p-6 bg-black rounded-lg shadow-lg max-h-screen">
       <div className="flex mb-6 space-x-4">
         <div className="flex-1">
-          <label className="block text-gray-700 mb-2">Title:</label>
+          <label className="block text-white-700 mb-2">Title:</label>
           <input
             type="text"
             value={title}
@@ -93,7 +95,7 @@ const UnlayerEditor = () => {
           />
         </div>
         <div className="flex-1">
-          <label className="block text-gray-700 mb-2">Emails:</label>
+          <label className="block text-white-700 mb-2">Emails:</label>
           <input
             type="text"
             value={emails}
@@ -135,10 +137,12 @@ const UnlayerEditor = () => {
           onReady={onReady}
         />
       </div>
-      <div className=" text-center">
-        <PrimaryButton onClick={handleSaveClick}>Save</PrimaryButton>
-        <PrimaryButton onClick={handleCloseClick}>Close</PrimaryButton>
-        <PrimaryButton onClick={handleTestEmailClick}>Test Email</PrimaryButton>
+      <div className=" text-center flex float-end">
+        <OutlinedButton onClick={handleCloseClick}>Close</OutlinedButton>
+        <OutlinedButton onClick={handleTestEmailClick}>
+          Test Email
+        </OutlinedButton>
+        <ConfirmButton onClick={handleSaveClick}>Save</ConfirmButton>
       </div>
     </div>
   );

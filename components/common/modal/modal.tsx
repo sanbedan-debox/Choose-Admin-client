@@ -5,7 +5,7 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  width?: "sm" | "md" | "lg";
+  width?: "xs" | "sm" | "md" | "lg" | "xl";
   title: string;
 }
 
@@ -35,13 +35,15 @@ const ReusableModal: React.FC<ModalProps> = ({
   if (!isOpen) return null;
 
   const widthClasses = {
+    xs: "w-1/5",
     sm: "w-1/4",
-    md: "w-1/2",
+    md: "w-1/3",
     lg: "w-3/4",
+    xl: "w-full",
   };
 
   return ReactDOM.createPortal(
-    <div className="modal-overlay fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+    <div className="modal-overlay fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
       <div
         style={{
           background: "rgb(4,7,29)",

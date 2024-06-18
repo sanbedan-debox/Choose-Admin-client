@@ -9,6 +9,7 @@ import { AdminRole } from "@/generated/graphql";
 import PrimaryButton from "@/components/common/button/PrimaryButton";
 import WarningButton from "@/components/common/button/WarningButton";
 import OutlinedButton from "@/components/common/button/OutlineButton";
+import ConfirmButton from "@/components/common/button/ConfirmButton";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -29,6 +30,18 @@ const Admin: React.FC = () => {
   const [adminToDelete, setAdminToDelete] = useState<AdminInterface | null>(
     null
   );
+  useEffect(() => {
+    setName("");
+    setEmail("");
+    setPassword("");
+    setChangePassword("");
+    setRole(null);
+  }, [
+    isChangeRoleModalOpen,
+    isDeleteModalOpen,
+    isChangePassModalOpen,
+    isAddModalOpen,
+  ]);
 
   const fetchAdmins = async () => {
     setLoading(true);
@@ -130,7 +143,7 @@ const Admin: React.FC = () => {
       onClick: (data: AdminInterface) => openDeleteModal(data),
     },
     {
-      label: "Reset Password",
+      label: "Change Password",
       onClick: (data: AdminInterface) => openChangePassModal(data._id),
     },
     {
@@ -235,66 +248,58 @@ const Admin: React.FC = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <PrimaryButton
+            <OutlinedButton
               type="button"
               onClick={() => setIsAddModalOpen(false)}
             >
               Cancel
-            </PrimaryButton>
-            <PrimaryButton type="submit">Add Admin</PrimaryButton>
+            </OutlinedButton>
+            <ConfirmButton type="submit">Add Admin</ConfirmButton>
           </div>
         </form>
       </ReusableModal>
+
       <ReusableModal
         title="Change Password"
         isOpen={isChangePassModalOpen}
         onClose={() => setIsChangePassModalOpen(false)}
-        width="lg"
+        width="md"
       >
         <>
-          <div className="flex justify-between items-center">
-            <div className="w-1/2 flex flex-col bg-secondary bg-opacity-30 p-4 rounded-lg">
-              <h3 className="text-lg font-bold text-white mb-2">
-                Randomly Generated Password
-              </h3>
-              <p className="text-white break-words">{randomPassword}</p>
-            </div>
-            <div className="w-px h-full bg-white mx-4"></div>
-            <div className="w-1/2 flex flex-col">
-              <h3 className="text-lg font-bold mb-2 text-white">
-                Enter Your Desired Password
-              </h3>
-              <form
-                onSubmit={(e: FormEvent<HTMLFormElement>) => {
-                  e.preventDefault();
-                  handleChangePassword();
-                }}
-              >
-                <div className="mb-4">
-                  <label className="block text-white">Password</label>
-                  <input
-                    type="password"
-                    value={changePass}
-                    onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                      setChangePassword(e.target.value)
-                    }
-                    className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="flex justify-end mt-4">
-                  <PrimaryButton
-                    type="button"
-                    onClick={() => setIsChangePassModalOpen(false)}
-                  >
-                    Cancel
-                  </PrimaryButton>
-                  <PrimaryButton type="submit">Change Password</PrimaryButton>
-                </div>
-              </form>
-            </div>
+          <div className="mb-4">
+            <h3 className="font-bold mb-2 text-white">
+              Generate or Enter New Password
+            </h3>
+            <input
+              type="text"
+              value={changePass}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                setChangePassword(e.target.value)
+              }
+              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+            />
+          </div>
+          <div className="flex justify-end mt-4">
+            <OutlinedButton
+              type="button"
+              onClick={() => setChangePassword(generateRandomPassword())}
+            >
+              Generate Password
+            </OutlinedButton>
+
+            <OutlinedButton
+              type="button"
+              onClick={() => setIsChangePassModalOpen(false)}
+            >
+              Cancel
+            </OutlinedButton>
+            <ConfirmButton type="button" onClick={handleChangePassword}>
+              Change Password
+            </ConfirmButton>
           </div>
         </>
       </ReusableModal>
+
       <ReusableModal
         title="Change Admin Role"
         isOpen={isChangeRoleModalOpen}
