@@ -6,11 +6,10 @@ import ReusableModal from "@/components/common/modal/modal";
 import { AdminInterface, RoleOption, roleOptions } from "./interface";
 import { generateRandomPassword } from "@/util/generatePassword";
 import { AdminRole } from "@/generated/graphql";
-import PrimaryButton from "@/components/common/button/PrimaryButton";
-import WarningButton from "@/components/common/button/WarningButton";
-import OutlinedButton from "@/components/common/button/OutlineButton";
-import ConfirmButton from "@/components/common/button/ConfirmButton";
+
 import useGlobalStore from "@/store/global";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -283,10 +282,13 @@ const Admin: React.FC = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <OutlinedButton onClick={() => setIsAddModalOpen(false)}>
+            <CButton
+              type={ButtonType.Outlined}
+              onClick={() => setIsAddModalOpen(false)}
+            >
               Cancel
-            </OutlinedButton>
-            <ConfirmButton>Add Admin</ConfirmButton>
+            </CButton>
+            <CButton type={ButtonType.Confirm}>Add Admin</CButton>
           </div>
         </form>
       </ReusableModal>
@@ -313,18 +315,22 @@ const Admin: React.FC = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <OutlinedButton
+            <CButton
+              type={ButtonType.Outlined}
               onClick={() => setChangePassword(generateRandomPassword())}
             >
               Generate Password
-            </OutlinedButton>
+            </CButton>
 
-            <OutlinedButton onClick={() => setIsChangePassModalOpen(false)}>
+            <CButton
+              type={ButtonType.Outlined}
+              onClick={() => setIsChangePassModalOpen(false)}
+            >
               Cancel
-            </OutlinedButton>
-            <ConfirmButton onClick={handleChangePassword}>
+            </CButton>
+            <CButton type={ButtonType.Confirm} onClick={handleChangePassword}>
               Change Password
-            </ConfirmButton>
+            </CButton>
           </div>
         </>
       </ReusableModal>
@@ -358,10 +364,15 @@ const Admin: React.FC = () => {
           />
         </div>
         <div className="flex justify-end mt-4">
-          <PrimaryButton onClick={() => setIsChangeRoleModalOpen(false)}>
+          <CButton
+            type={ButtonType.Primary}
+            onClick={() => setIsChangeRoleModalOpen(false)}
+          >
             Cancel
-          </PrimaryButton>
-          <PrimaryButton onClick={handleChangeRole}>Change Role</PrimaryButton>
+          </CButton>
+          <CButton type={ButtonType.Primary} onClick={handleChangeRole}>
+            Change Role
+          </CButton>
         </div>
       </ReusableModal>
       <ReusableModal
@@ -374,10 +385,15 @@ const Admin: React.FC = () => {
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
-          <OutlinedButton onClick={() => setIsDeleteModalOpen(false)}>
+          <CButton
+            type={ButtonType.Outlined}
+            onClick={() => setIsDeleteModalOpen(false)}
+          >
             No
-          </OutlinedButton>
-          <WarningButton onClick={handleDeleteAdmin}>Yes</WarningButton>
+          </CButton>
+          <CButton type={ButtonType.Warning} onClick={handleDeleteAdmin}>
+            Yes
+          </CButton>
         </div>
       </ReusableModal>
     </div>

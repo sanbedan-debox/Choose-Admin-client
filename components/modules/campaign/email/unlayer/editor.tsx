@@ -3,9 +3,8 @@ import dynamic from "next/dynamic";
 import { EditorRef, EmailEditorProps } from "react-email-editor";
 import default_template from "./defaultTemplate.json";
 import useGlobalStore from "@/store/global";
-import PrimaryButton from "@/components/common/button/PrimaryButton";
-import ConfirmButton from "@/components/common/button/ConfirmButton";
-import OutlinedButton from "@/components/common/button/OutlineButton";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
 
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
@@ -138,11 +137,15 @@ const UnlayerEditor = () => {
         />
       </div>
       <div className=" text-center flex float-end">
-        <OutlinedButton onClick={handleCloseClick}>Close</OutlinedButton>
-        <OutlinedButton onClick={handleTestEmailClick}>
+        <CButton type={ButtonType.Outlined} onClick={handleCloseClick}>
+          Close
+        </CButton>
+        <CButton type={ButtonType.Outlined} onClick={handleTestEmailClick}>
           Test Email
-        </OutlinedButton>
-        <ConfirmButton onClick={handleSaveClick}>Save</ConfirmButton>
+        </CButton>
+        <CButton type={ButtonType.Confirm} onClick={handleSaveClick}>
+          Save
+        </CButton>
       </div>
     </div>
   );

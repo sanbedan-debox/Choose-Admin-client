@@ -3,10 +3,9 @@ import { CSVLink } from "react-csv";
 import { Menu } from "@headlessui/react";
 import { HiDotsVertical } from "react-icons/hi";
 import Select from "react-select";
-import PrimaryButton from "../button/PrimaryButton";
 import useGlobalStore from "@/store/global";
-import WarningButton from "../button/WarningButton";
-import OutlinedButton from "../button/OutlineButton";
+import CButton from "../button/button";
+import { ButtonType } from "../button/interface";
 
 const RoopTable: React.FC<TableProps> = ({
   data,
@@ -156,9 +155,12 @@ const RoopTable: React.FC<TableProps> = ({
             />
             {filterable && (
               <div className="flex items-center ml-4 max-h-10">
-                <PrimaryButton onClick={() => setShowFilter((prev) => !prev)}>
+                <CButton
+                  type={ButtonType.Primary}
+                  onClick={() => setShowFilter((prev) => !prev)}
+                >
                   Filter
-                </PrimaryButton>
+                </CButton>
                 {showFilter && (
                   <div className="flex items-center space-x-2">
                     <Select
@@ -216,7 +218,9 @@ const RoopTable: React.FC<TableProps> = ({
                       onChange={(e) => setFilterValue(e.target.value)}
                       className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
                     />
-                    <WarningButton onClick={clearFilter}>Clear</WarningButton>
+                    <CButton type={ButtonType.Warning} onClick={clearFilter}>
+                      Clear
+                    </CButton>
                   </div>
                 )}
               </div>
@@ -225,9 +229,13 @@ const RoopTable: React.FC<TableProps> = ({
 
           <div className="flex">
             {mainActions.map((action, index) => (
-              <OutlinedButton key={index} onClick={action.onClick}>
+              <CButton
+                type={ButtonType.Outlined}
+                key={index}
+                onClick={action.onClick}
+              >
                 {action.label}
-              </OutlinedButton>
+              </CButton>
             ))}
             {csvExport && (
               <CSVLink
@@ -326,17 +334,19 @@ const RoopTable: React.FC<TableProps> = ({
       </div>
       <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
         <div className="flex justify-between items-center mt-4">
-          <OutlinedButton
+          <CButton
+            type={ButtonType.Outlined}
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
             className={` ${currentPage === 1 ? "hidden" : ""}`}
           >
             Previous
-          </OutlinedButton>
+          </CButton>
           <span className="flex-1 text-center">
             Page {currentPage} of {totalPages}
           </span>
-          <OutlinedButton
+          <CButton
+            type={ButtonType.Outlined}
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
@@ -344,7 +354,7 @@ const RoopTable: React.FC<TableProps> = ({
             className={` ${currentPage === totalPages ? "hidden" : ""}`}
           >
             Next
-          </OutlinedButton>
+          </CButton>
         </div>
       </div>
     </div>

@@ -3,8 +3,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import logo1 from "../assets/logo/logoWhite.png";
 import { sdk } from "@/util/graphqlClient";
-import PrimaryButton from "@/components/common/button/PrimaryButton";
 import useGlobalStore from "@/store/global";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
 
 interface FormElements extends HTMLFormControlsCollection {
   email: HTMLInputElement;
@@ -98,7 +99,7 @@ export default function Login() {
                 />
               </div>
               <div className="flex justify-end">
-                <PrimaryButton>Sign In</PrimaryButton>
+                <CButton type={ButtonType.Primary}>Sign In</CButton>
               </div>
             </form>
           </div>

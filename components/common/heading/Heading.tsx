@@ -1,8 +1,9 @@
 import React from "react";
 import { useRouter } from "next/router";
 import { sdk } from "@/util/graphqlClient";
-import PrimaryButton from "../button/PrimaryButton";
 import useGlobalStore from "@/store/global";
+import CButton from "../button/button";
+import { ButtonType } from "../button/interface";
 
 interface HeadingProps {
   title?: string;
@@ -39,7 +40,9 @@ const Heading: React.FC<HeadingProps> = ({ title }) => {
       <h1 className="text-xl md:text-xl sm:text-xl lg:text-2xl  font-semibold">
         {title && <>{title} </>}
       </h1>
-      <PrimaryButton onClick={handleLogout}>Log Out</PrimaryButton>
+      <CButton type={ButtonType.Primary} onClick={handleLogout}>
+        Log Out
+      </CButton>
     </div>
   );
 };
