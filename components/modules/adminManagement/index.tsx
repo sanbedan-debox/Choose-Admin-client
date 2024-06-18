@@ -10,6 +10,7 @@ import PrimaryButton from "@/components/common/button/PrimaryButton";
 import WarningButton from "@/components/common/button/WarningButton";
 import OutlinedButton from "@/components/common/button/OutlineButton";
 import ConfirmButton from "@/components/common/button/ConfirmButton";
+import useGlobalStore from "@/store/global";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -30,6 +31,8 @@ const Admin: React.FC = () => {
   const [adminToDelete, setAdminToDelete] = useState<AdminInterface | null>(
     null
   );
+  const { setToastData } = useGlobalStore(); // Import this from where you manage global state
+
   useEffect(() => {
     setName("");
     setEmail("");
@@ -61,20 +64,44 @@ const Admin: React.FC = () => {
     fetchAdmins();
   }, []);
 
+  const validateForm = () => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!name || !email || !password || !role) {
+      setToastData({ message: "Please fill in all fields", type: "error" });
+      return false;
+    }
+
+    if (!emailRegex.test(email)) {
+      setToastData({
+        message: "Please enter a valid email address",
+        type: "error",
+      });
+      return false;
+    }
+
+    return true;
+  };
+
   const handleAddAdmin = async () => {
+    if (!validateForm()) return;
+
     try {
       const input = { name, email, password, type: role || "" };
       const response = await sdk.AddAdmin({ input });
       console.log("Admin added successfully:", response);
       setIsAddModalOpen(false);
       fetchAdmins();
+      setToastData({ message: "Admin added successfully", type: "success" });
     } catch (error) {
       console.error("Failed to add admin:", error);
+      setToastData({ message: "Failed to add admin", type: "error" });
     }
   };
 
   const handleChangeRole = async () => {
     if (!selectedAdminId || !role) return;
+
     try {
       const response = await sdk.ChangeRole({
         id: selectedAdminId,
@@ -83,9 +110,10 @@ const Admin: React.FC = () => {
       console.log("Role changed successfully:", response);
       setIsChangeRoleModalOpen(false);
       fetchAdmins();
+      setToastData({ message: "Role changed successfully", type: "success" });
     } catch (error) {
       console.error("Failed to change role:", error);
-      setIsChangeRoleModalOpen(false);
+      setToastData({ message: "Failed to change role", type: "error" });
     }
   };
 
@@ -101,21 +129,26 @@ const Admin: React.FC = () => {
       console.log("Password reset successfully:", response);
       setIsChangePassModalOpen(false);
       fetchAdmins();
+      setToastData({ message: "Password reset successfully", type: "success" });
     } catch (error) {
       console.error("Failed to reset password:", error);
+      setToastData({ message: "Failed to reset password", type: "error" });
     }
   };
 
   const handleDeleteAdmin = async () => {
     if (!adminToDelete) return;
+
     try {
       const response = await sdk.DeleteAdmin({ id: adminToDelete._id });
       console.log("Admin deleted successfully:", response);
       setIsDeleteModalOpen(false);
       setAdminToDelete(null);
       fetchAdmins();
+      setToastData({ message: "Admin deleted successfully", type: "success" });
     } catch (error) {
       console.error("Failed to delete admin:", error);
+      setToastData({ message: "Failed to delete admin", type: "error" });
     }
   };
 

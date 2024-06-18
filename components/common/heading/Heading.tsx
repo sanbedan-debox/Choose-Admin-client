@@ -2,19 +2,28 @@ import React from "react";
 import { useRouter } from "next/router";
 import { sdk } from "@/util/graphqlClient";
 import PrimaryButton from "../button/PrimaryButton";
+import useGlobalStore from "@/store/global";
 
 interface HeadingProps {
   title?: string;
 }
 
 const Heading: React.FC<HeadingProps> = ({ title }) => {
+  const { setToastData } = useGlobalStore();
   const router = useRouter();
   const handleLogout = async () => {
     try {
       await sdk.AdminLogout();
       router.replace("/login");
+      setToastData({
+        message: "Sucessfully Logged Out",
+        type: "success",
+      });
     } catch (error) {
-      console.error("Logout failed", error);
+      setToastData({
+        message: "Please enter a valid email address",
+        type: "error",
+      });
     }
   };
 
