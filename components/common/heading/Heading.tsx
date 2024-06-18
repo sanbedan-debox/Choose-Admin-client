@@ -1,4 +1,5 @@
 import React from "react";
+import RoundedButton from "../button/RoundedButton";
 
 interface HeadingProps {
   title?: string;
@@ -11,15 +12,18 @@ const Heading: React.FC<HeadingProps> = ({ title, highlight }) => {
   }
 
   return (
-    <div className="text-center">
-      <h2 className="text-3xl md:text-3xl sm:text-4xl lg:text-5xl md:mt-0 mb-10 md:mb-10 font-semibold">
-        {title && <>{title} </>}
-        {highlight && (
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary">
-            {highlight}
-          </span>
-        )}
-      </h2>
+    <div
+      style={{
+        background: "rgb(4,7,29)",
+        backgroundColor:
+          "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%) ",
+      }}
+      className="justify-between items-center px-5 flex  w-[100%]  mb-10 rounded-lg py-4"
+    >
+      <h1 className="text-xl md:text-3xl sm:text-2xl lg:text-4xl  font-semibold">
+        {highlight && <>{highlight} </>}
+      </h1>
+      <RoundedButton>Log Out</RoundedButton>
     </div>
   );
 };

@@ -4,11 +4,10 @@ import RoopTable from "@/components/common/customTableR/table";
 import Heading from "@/components/common/heading/Heading";
 import { sdk } from "@/util/graphqlClient";
 import ReusableModal from "@/components/common/modal/modal";
-import { confirmAlert } from "react-confirm-alert";
-import "react-confirm-alert/src/react-confirm-alert.css";
 import RoundedButton from "@/components/common/button/RoundedButton";
-import { AdminInterface, AdminRole, RoleOption } from "./interface";
+import { AdminInterface, RoleOption, roleOptions } from "./interface";
 import { generateRandomPassword } from "@/util/generatePassword";
+import { AdminRole } from "@/generated/graphql";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -25,6 +24,10 @@ const Admin: React.FC = () => {
   );
   const [role, setRole] = useState<AdminRole | null>(null);
   const [isChangeRoleModalOpen, setIsChangeRoleModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [adminToDelete, setAdminToDelete] = useState<AdminInterface | null>(
+    null
+  );
 
   const fetchAdmins = async () => {
     setLoading(true);
@@ -89,28 +92,22 @@ const Admin: React.FC = () => {
     }
   };
 
-  const handleDeleteAdmin = async (admin: AdminInterface) => {
-    confirmAlert({
-      title: "Confirm Deletion",
-      message: "Are you sure you want to delete this admin?",
-      buttons: [
-        {
-          label: "Yes",
-          onClick: async () => {
-            try {
-              const response = await sdk.DeleteAdmin({ id: admin._id });
-              console.log("Admin deleted successfully:", response);
-              fetchAdmins();
-            } catch (error) {
-              console.error("Failed to delete admin:", error);
-            }
-          },
-        },
-        {
-          label: "No",
-        },
-      ],
-    });
+  const handleDeleteAdmin = async () => {
+    if (!adminToDelete) return;
+    try {
+      const response = await sdk.DeleteAdmin({ id: adminToDelete._id });
+      console.log("Admin deleted successfully:", response);
+      setIsDeleteModalOpen(false);
+      setAdminToDelete(null);
+      fetchAdmins();
+    } catch (error) {
+      console.error("Failed to delete admin:", error);
+    }
+  };
+
+  const openDeleteModal = (admin: AdminInterface) => {
+    setAdminToDelete(admin);
+    setIsDeleteModalOpen(true);
   };
 
   const openChangePassModal = (adminId: string) => {
@@ -126,19 +123,19 @@ const Admin: React.FC = () => {
     },
   ];
 
-  const actions = [
+  const Actions = [
     {
       label: "Delete",
-      onClick: (member: AdminInterface) => handleDeleteAdmin(member),
+      onClick: (data: AdminInterface) => openDeleteModal(data),
     },
     {
       label: "Reset Password",
-      onClick: (member: AdminInterface) => openChangePassModal(member._id),
+      onClick: (data: AdminInterface) => openChangePassModal(data._id),
     },
     {
       label: "Change Role",
-      onClick: (member: AdminInterface) => {
-        setSelectedAdminId(member._id);
+      onClick: (data: AdminInterface) => {
+        setSelectedAdminId(data._id);
         setIsChangeRoleModalOpen(true);
       },
     },
@@ -150,13 +147,6 @@ const Admin: React.FC = () => {
     { title: "Role", dataKey: "type" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
-    { title: "ID", dataKey: "_id" },
-  ];
-
-  const roleOptions: RoleOption[] = [
-    { value: AdminRole.Admin, label: "Admin" },
-    { value: AdminRole.Master, label: "Master" },
-    { value: AdminRole.Normal, label: "Normal" },
   ];
 
   return (
@@ -168,7 +158,7 @@ const Admin: React.FC = () => {
         <RoopTable
           data={members}
           itemsPerPage={5}
-          actions={actions}
+          actions={Actions}
           csvExport
           fullCsv
           csvFileName="admins_data.csv"
@@ -342,6 +332,27 @@ const Admin: React.FC = () => {
           </RoundedButton>
           <RoundedButton type="button" onClick={handleChangeRole}>
             Change Role
+          </RoundedButton>
+        </div>
+      </ReusableModal>
+      <ReusableModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        width="md"
+      >
+        <h2 className="text-xl font-bold mb-4 text-white">Confirm Deletion</h2>
+        <p className="text-white mb-4">
+          Are you sure you want to delete this admin?
+        </p>
+        <div className="flex justify-end mt-4">
+          <RoundedButton
+            type="button"
+            onClick={() => setIsDeleteModalOpen(false)}
+          >
+            No
+          </RoundedButton>
+          <RoundedButton type="button" onClick={handleDeleteAdmin}>
+            Yes
           </RoundedButton>
         </div>
       </ReusableModal>
