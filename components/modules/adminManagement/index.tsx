@@ -196,6 +196,7 @@ const Admin: React.FC = () => {
             <label className="block text-white">Name</label>
             <input
               type="text"
+              placeholder="Enter Name..."
               value={name}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setName(e.target.value)
@@ -206,8 +207,8 @@ const Admin: React.FC = () => {
           <div className="mb-4">
             <label className="block text-white">Email</label>
             <input
-              type="email"
               value={email}
+              placeholder="Enter Email..."
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setEmail(e.target.value)
               }
@@ -218,6 +219,7 @@ const Admin: React.FC = () => {
             <label className="block text-white">Password</label>
             <input
               type="password"
+              placeholder="Enter Password..."
               value={password}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
                 setPassword(e.target.value)
@@ -248,13 +250,10 @@ const Admin: React.FC = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <OutlinedButton
-              type="button"
-              onClick={() => setIsAddModalOpen(false)}
-            >
+            <OutlinedButton onClick={() => setIsAddModalOpen(false)}>
               Cancel
             </OutlinedButton>
-            <ConfirmButton type="submit">Add Admin</ConfirmButton>
+            <ConfirmButton>Add Admin</ConfirmButton>
           </div>
         </form>
       </ReusableModal>
@@ -271,6 +270,7 @@ const Admin: React.FC = () => {
               Generate or Enter New Password
             </h3>
             <input
+              placeholder="Enter Password..."
               type="text"
               value={changePass}
               onChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -281,19 +281,15 @@ const Admin: React.FC = () => {
           </div>
           <div className="flex justify-end mt-4">
             <OutlinedButton
-              type="button"
               onClick={() => setChangePassword(generateRandomPassword())}
             >
               Generate Password
             </OutlinedButton>
 
-            <OutlinedButton
-              type="button"
-              onClick={() => setIsChangePassModalOpen(false)}
-            >
+            <OutlinedButton onClick={() => setIsChangePassModalOpen(false)}>
               Cancel
             </OutlinedButton>
-            <ConfirmButton type="button" onClick={handleChangePassword}>
+            <ConfirmButton onClick={handleChangePassword}>
               Change Password
             </ConfirmButton>
           </div>
@@ -329,15 +325,10 @@ const Admin: React.FC = () => {
           />
         </div>
         <div className="flex justify-end mt-4">
-          <PrimaryButton
-            type="button"
-            onClick={() => setIsChangeRoleModalOpen(false)}
-          >
+          <PrimaryButton onClick={() => setIsChangeRoleModalOpen(false)}>
             Cancel
           </PrimaryButton>
-          <PrimaryButton type="button" onClick={handleChangeRole}>
-            Change Role
-          </PrimaryButton>
+          <PrimaryButton onClick={handleChangeRole}>Change Role</PrimaryButton>
         </div>
       </ReusableModal>
       <ReusableModal
@@ -350,10 +341,7 @@ const Admin: React.FC = () => {
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
-          <OutlinedButton
-            type="button"
-            onClick={() => setIsDeleteModalOpen(false)}
-          >
+          <OutlinedButton onClick={() => setIsDeleteModalOpen(false)}>
             No
           </OutlinedButton>
           <WarningButton type="button" onClick={handleDeleteAdmin}>

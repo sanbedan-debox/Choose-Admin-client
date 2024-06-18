@@ -6,6 +6,12 @@ type ModalData = {
   buttons: { label: string; onClick: () => void }[];
 };
 
+type ToastData = {
+  message: string;
+  type: "success" | "error" | "warning";
+  title?: string; // Make title property optional
+};
+
 type Store = {
   selectedModule: string;
   setSelectedModule: (moduleSelected: string) => void;
@@ -17,6 +23,8 @@ type Store = {
   setModalData: (data: ModalData) => void;
   isSidebarExpanded: boolean;
   setisSidebarExpanded: (open: boolean) => void;
+  toastData: ToastData | null;
+  setToastData: (data: ToastData | null) => void;
 };
 
 const useGlobalStore = create<Store>((set) => ({
@@ -31,6 +39,8 @@ const useGlobalStore = create<Store>((set) => ({
   setModalData: (data: ModalData) => set({ modalData: data }),
   isSidebarExpanded: true,
   setisSidebarExpanded: (open: boolean) => set({ isSidebarExpanded: open }),
+  toastData: null,
+  setToastData: (data: ToastData | null) => set({ toastData: data }),
 }));
 
 export default useGlobalStore;

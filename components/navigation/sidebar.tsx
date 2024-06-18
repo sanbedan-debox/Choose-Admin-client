@@ -34,12 +34,12 @@ const Sidebar: React.FC = () => {
         isSidebarExpanded ? "w-64" : "w-20"
       }`}
     >
-      <div className="flex flex-col items-center mt-4">
+      <div className="flex flex-col items-center">
         {/* User Info */}
         <div
           className={`flex items-center ${
-            isSidebarExpanded ? "justify-between" : "justify-center"
-          }  w-full px-4 py-2 bg-gray-800`}
+            isSidebarExpanded ? "justify-between  py-4" : "justify-center py-6"
+          }  w-full px-4 bg-gray-800`}
         >
           {isSidebarExpanded && (
             <div className="flex items-center">

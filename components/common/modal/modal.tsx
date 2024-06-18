@@ -53,7 +53,7 @@ const ReusableModal: React.FC<ModalProps> = ({
         className={`rounded shadow-lg ${widthClasses[width]} z-10`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.15] p-6">
+        <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.15] py-5 px-6">
           <div className="flex items-start justify-between py-2 mb-4 rounded-t dark:border-gray-600">
             <div className="flex items-center space-x-4">
               <h2 className="text-2xl font-bold text-white">{title}</h2>
