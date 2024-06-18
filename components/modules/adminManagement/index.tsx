@@ -377,9 +377,7 @@ const Admin: React.FC = () => {
           <OutlinedButton onClick={() => setIsDeleteModalOpen(false)}>
             No
           </OutlinedButton>
-          <WarningButton type="button" onClick={handleDeleteAdmin}>
-            Yes
-          </WarningButton>
+          <WarningButton onClick={handleDeleteAdmin}>Yes</WarningButton>
         </div>
       </ReusableModal>
     </div>

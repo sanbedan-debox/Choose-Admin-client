@@ -3,7 +3,6 @@
 import { Tabs } from "@/components/common/tabs/tabs";
 import EmailTemplate from "./tabs/EmailTemplate";
 import EmailCampaign from "./tabs/EmailCampaigns";
-import Heading from "@/components/common/heading/Heading";
 
 export function Emails() {
   const tabs = [
@@ -29,7 +28,7 @@ export function Emails() {
 
   return (
     <div className="container mx-auto px-2">
-      <div className="h-[20rem] md:h-[35rem] [perspective:1000px] relative b flex flex-col max-w-7xl mx-auto w-full  items-start justify-start mt-5">
+      <div className="h-[20rem] md:h-[35rem] [perspective:1000px] relative b flex flex-col max-w-7xl mx-auto w-full  items-start justify-start  ">
         <Tabs tabs={tabs} />
       </div>
     </div>
