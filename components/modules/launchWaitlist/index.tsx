@@ -64,7 +64,6 @@ const LaunchWaitlist: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      <Heading highlight="Launch Waitlist" />
       <RoopTable
         data={members}
         itemsPerPage={5}

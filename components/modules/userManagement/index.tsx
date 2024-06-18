@@ -9,7 +9,6 @@ const data = [
     status: "active",
   },
   { id: 2, name: "Jane Smith", status: "inactive" },
-  // More data...
 ];
 
 const headings = [
@@ -37,7 +36,6 @@ const headings = [
 const App = () => {
   return (
     <div className="container mx-auto px-2">
-      <Heading highlight="User Management" />
       <RoopTable
         data={data}
         itemsPerPage={5}

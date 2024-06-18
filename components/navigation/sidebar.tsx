@@ -3,18 +3,15 @@ import { modules } from "@/components/navigation/common/accessConfig";
 import logo1 from "../../assets/logo/logoWhite.png";
 import Image from "next/image";
 import useGlobalStore from "@/store/global";
-import RoundedButton from "../common/button/RoundedButton";
 import useAuthStore from "@/store/auth";
-import { sdk } from "@/util/graphqlClient";
 import { useRouter } from "next/router";
 
 const Sidebar: React.FC = () => {
   const { setSelectedModule } = useGlobalStore();
-  const router = useRouter();
-
   const { userRole, userName } = useAuthStore();
-
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
+
+  const { isSidebarExpanded, setisSidebarExpanded } = useGlobalStore();
 
   const hasAccess = (moduleRoles: string[]) => moduleRoles.includes(userRole);
 
@@ -22,13 +19,8 @@ const Sidebar: React.FC = () => {
     setOpenDropdown((prev) => (prev === moduleName ? null : moduleName));
   };
 
-  const handleLogout = async () => {
-    try {
-      await sdk.AdminLogout();
-      router.replace("/login");
-    } catch (error) {
-      console.error("Logout failed", error);
-    }
+  const toggleSidebar = () => {
+    setisSidebarExpanded(!isSidebarExpanded);
   };
 
   return (
@@ -38,18 +30,59 @@ const Sidebar: React.FC = () => {
         backgroundColor:
           "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
       }}
-      className="h-screen flex flex-col justify-between text-white w-64"
+      className={`h-screen flex flex-col text-white transition-all duration-300 ${
+        isSidebarExpanded ? "w-64" : "w-20"
+      }`}
     >
-      <div>
-        <div className="flex flex-col items-center mt-4">
-          <Image
-            className="mb-4 cursor-pointer"
-            src={logo1}
-            alt="Logo"
-            width={150}
-            onClick={() => setSelectedModule("Dashboard")}
-          />
+      <div className="flex flex-col items-center mt-4">
+        {/* User Info */}
+        <div
+          className={`flex items-center ${
+            isSidebarExpanded ? "justify-between" : "justify-center"
+          }  w-full px-4 py-2 bg-gray-800`}
+        >
+          {isSidebarExpanded && (
+            <div className="flex items-center">
+              <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-lg font-semibold text-white">
+                {userName.charAt(0).toUpperCase()}
+              </div>
+              <span className="ml-2">{userName}</span>
+            </div>
+          )}
+          <button
+            type="button"
+            title={isSidebarExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
+            onClick={toggleSidebar}
+            className="text-gray-400 hover:text-white flex items-center justify-center"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              {isSidebarExpanded ? (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 19l-7-7 7-7"
+                />
+              ) : (
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 5l7 7-7 7"
+                />
+              )}
+            </svg>
+          </button>
         </div>
+        {/* Divider */}
+        <hr className="border-gray-600 my-2" />
+        {/* Navigation List */}
         <ul className="mx-1">
           {modules.map(
             (module) =>
@@ -72,38 +105,41 @@ const Sidebar: React.FC = () => {
                             <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                             <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                           </svg>
-                          <span className="ms-3">{module.name}</span>
+                          {isSidebarExpanded && (
+                            <span className="ms-3">{module.name}</span>
+                          )}
                         </div>
-                        <svg
-                          className={`w-5 h-5 transition-transform duration-200 mr-2 ${
-                            openDropdown === module.name ? "rotate-180" : ""
-                          }`}
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth="2"
-                            d="M19 9l-7 7-7-7"
-                          />
-                        </svg>
+                        {isSidebarExpanded && (
+                          <svg
+                            className={`w-5 h-5 transition-transform duration-200 mr-2 ${
+                              openDropdown === module.name ? "rotate-180" : ""
+                            }`}
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke="currentColor"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M19 9l-7 7-7-7"
+                            />
+                          </svg>
+                        )}
                       </div>
                       <ul
-                        className={`ml-4 ${
+                        className={` ${
                           openDropdown === module.name ? "block" : "hidden"
-                        }`}
+                        }
+                          ${isSidebarExpanded ? "ml-4" : "ml-0"}
+
+                        `}
                       >
                         {module.subModules.map(
                           (subModule) =>
                             hasAccess(subModule.roles) && (
-                              <li
-                                className="mb-1"
-                                key={subModule.name}
-                                // className="cursor-pointer"
-                              >
+                              <li className="mb-1" key={subModule.name}>
                                 <a
                                   onClick={() =>
                                     setSelectedModule(subModule.name)
@@ -120,7 +156,11 @@ const Sidebar: React.FC = () => {
                                     <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                                     <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                                   </svg>
-                                  <span className="ms-3">{subModule.name}</span>
+                                  {isSidebarExpanded && (
+                                    <span className="ms-3">
+                                      {subModule.name}
+                                    </span>
+                                  )}
                                 </a>
                               </li>
                             )
@@ -143,7 +183,9 @@ const Sidebar: React.FC = () => {
                           <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
                           <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
                         </svg>
-                        <span className="ms-3">{module.name}</span>
+                        {isSidebarExpanded && (
+                          <span className="ms-3">{module.name}</span>
+                        )}
                       </a>
                     </li>
                   )}
@@ -151,13 +193,6 @@ const Sidebar: React.FC = () => {
               )
           )}
         </ul>
-      </div>
-      <div className="mx-1 my-4">
-        <div className="flex items-center justify-between p-2 bg-gray-800 rounded-lg">
-          <span>{userName}</span>
-          {/* <span>Sanbedan Paul</span> */}
-          <RoundedButton onClick={handleLogout}>Logout</RoundedButton>
-        </div>
       </div>
     </div>
   );

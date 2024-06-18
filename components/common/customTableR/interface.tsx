@@ -1,6 +1,6 @@
 interface Action {
   label: string;
-  onClick: (id: number) => void;
+  onClick: (data: any) => void;
   style?: string;
 }
 

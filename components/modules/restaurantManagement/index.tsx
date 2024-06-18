@@ -51,18 +51,23 @@ const Reports: React.FC = () => {
     { title: "Email", dataKey: "email" },
     { title: "Function", dataKey: "function" },
     { title: "Status", dataKey: "status" },
-    { title: "Employed", dataKey: "employed" },
-    { title: "Employed", dataKey: "employed" },
-    { title: "Employed", dataKey: "employed" },
-    { title: "Employed", dataKey: "employed" },
-    { title: "Employed", dataKey: "employed" },
-    { title: "Employed", dataKey: "employed" },
-    { title: "Employed", dataKey: "employed" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
+    { title: "Status", dataKey: "status" },
   ];
 
   return (
     <div className="container mx-auto px-2">
-      <Heading highlight="Restaurant Management" />
       <RoopTable
         data={members}
         itemsPerPage={5}
@@ -71,7 +76,7 @@ const Reports: React.FC = () => {
         mainActions={mainActions}
         headings={headings}
         hovered
-        hscroll
+        // hscroll
       />
     </div>
   );

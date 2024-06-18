@@ -3,7 +3,7 @@ import Sidebar from "./sidebar";
 import { modules } from "@/components/navigation/common/accessConfig";
 import Dashboard from "../modules/dashboard";
 import useGlobalStore from "@/store/global";
-import Modal from "../common/modal/modal";
+import Heading from "../common/heading/Heading";
 
 interface LayoutProps {
   children?: React.ReactNode;
@@ -41,11 +41,13 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex">
       <Sidebar />
-      <div className="flex-1 p-6 bg-black">
-        {children}
-        {renderModule()}
+      <div className="flex-1 bg-black ">
+        <Heading title={selectedModule} />
+        <div className="flex p-6 bg-black">
+          {children}
+          {renderModule()}
+        </div>
       </div>
-      {/* <Modal /> */}
     </div>
   );
 };

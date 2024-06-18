@@ -3,7 +3,10 @@ import { CSVLink } from "react-csv";
 import { Menu } from "@headlessui/react";
 import { HiDotsVertical } from "react-icons/hi";
 import Select from "react-select";
-import RoundedButton from "../button/RoundedButton";
+import PrimaryButton from "../button/PrimaryButton";
+import useGlobalStore from "@/store/global";
+import WarningButton from "../button/WarningButton";
+import OutlinedButton from "../button/OutlineButton";
 
 const RoopTable: React.FC<TableProps> = ({
   data,
@@ -17,7 +20,6 @@ const RoopTable: React.FC<TableProps> = ({
   striped = false,
   bordered = false,
   hovered = false,
-  hscroll = false,
   filterable = false,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -28,6 +30,7 @@ const RoopTable: React.FC<TableProps> = ({
   const [operator, setOperator] = useState<string>("contains");
   const [filterValue, setFilterValue] = useState<string>("");
   const [options, setOptions] = useState<any[]>([]);
+  const { isSidebarExpanded } = useGlobalStore();
 
   useEffect(() => {
     const columnOptions = headings.map((heading) => ({
@@ -123,6 +126,13 @@ const RoopTable: React.FC<TableProps> = ({
     setCurrentPage(1);
   };
 
+  const truncateString = (str: string, maxLength: number) => {
+    if (str.length > maxLength) {
+      return str.substring(0, maxLength) + "...";
+    }
+    return str;
+  };
+
   return (
     <div
       style={{
@@ -131,7 +141,7 @@ const RoopTable: React.FC<TableProps> = ({
           "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
       }}
       className={`container mx-auto rounded-lg p-4 ${
-        hscroll ? "max-w-[76rem]" : ""
+        isSidebarExpanded ? "max-w-[76rem]" : "max-w-[85rem]"
       }`}
     >
       <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
@@ -146,9 +156,9 @@ const RoopTable: React.FC<TableProps> = ({
             />
             {filterable && (
               <div className="flex items-center ml-4 max-h-10">
-                <RoundedButton onClick={() => setShowFilter((prev) => !prev)}>
+                <PrimaryButton onClick={() => setShowFilter((prev) => !prev)}>
                   Filter
-                </RoundedButton>
+                </PrimaryButton>
                 {showFilter && (
                   <div className="flex items-center space-x-2">
                     <Select
@@ -206,12 +216,7 @@ const RoopTable: React.FC<TableProps> = ({
                       onChange={(e) => setFilterValue(e.target.value)}
                       className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
                     />
-                    <RoundedButton
-                      onClick={clearFilter}
-                      className="bg-red-500 p-2 rounded"
-                    >
-                      Clear
-                    </RoundedButton>
+                    <WarningButton onClick={clearFilter}>Clear</WarningButton>
                   </div>
                 )}
               </div>
@@ -220,20 +225,16 @@ const RoopTable: React.FC<TableProps> = ({
 
           <div className="flex">
             {mainActions.map((action, index) => (
-              <RoundedButton
-                key={index}
-                onClick={action.onClick}
-                className="bg-primary p-2 mr-4 rounded"
-              >
+              <OutlinedButton key={index} onClick={action.onClick}>
                 {action.label}
-              </RoundedButton>
+              </OutlinedButton>
             ))}
             {csvExport && (
               <CSVLink
                 data={csvData}
                 headers={csvHeaders}
                 filename={csvFileName}
-                className="h-10 px-4 py-2 m-1 text-white transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary focus:outline-none focus:bg-blue-400 md:w-auto w-32"
+                className="h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary focus:outline-none focus:bg-blue-400 md:w-auto w-32"
               >
                 Export to CSV
               </CSVLink>
@@ -272,10 +273,19 @@ const RoopTable: React.FC<TableProps> = ({
                   {headings.map((heading, index) => (
                     <td key={index} className="py-4 px-4">
                       {heading.render
-                        ? heading.render(getNestedValue(data, heading.dataKey))
-                        : getNestedValue(data, heading.dataKey)}
+                        ? heading.render(
+                            truncateString(
+                              getNestedValue(data, heading.dataKey),
+                              65
+                            )
+                          )
+                        : truncateString(
+                            getNestedValue(data, heading.dataKey),
+                            65
+                          )}
                     </td>
                   ))}
+
                   {actions.length > 0 && (
                     <td className="py-4 px-4">
                       <Menu as="div" className="inline-block text-left">
@@ -316,29 +326,25 @@ const RoopTable: React.FC<TableProps> = ({
       </div>
       <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
         <div className="flex justify-between items-center mt-4">
-          <RoundedButton
+          <OutlinedButton
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className={`bg-primary p-2 rounded ${
-              currentPage === 1 ? "hidden" : ""
-            }`}
+            className={` ${currentPage === 1 ? "hidden" : ""}`}
           >
             Previous
-          </RoundedButton>
+          </OutlinedButton>
           <span className="flex-1 text-center">
             Page {currentPage} of {totalPages}
           </span>
-          <RoundedButton
+          <OutlinedButton
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
             disabled={currentPage === totalPages}
-            className={`bg-primary p-2 rounded ${
-              currentPage === totalPages ? "hidden" : ""
-            }`}
+            className={` ${currentPage === totalPages ? "hidden" : ""}`}
           >
             Next
-          </RoundedButton>
+          </OutlinedButton>
         </div>
       </div>
     </div>

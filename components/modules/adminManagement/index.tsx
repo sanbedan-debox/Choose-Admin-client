@@ -1,13 +1,14 @@
 import React, { useEffect, useState, ChangeEvent, FormEvent } from "react";
 import Select, { SingleValue } from "react-select";
 import RoopTable from "@/components/common/customTableR/table";
-import Heading from "@/components/common/heading/Heading";
 import { sdk } from "@/util/graphqlClient";
 import ReusableModal from "@/components/common/modal/modal";
-import RoundedButton from "@/components/common/button/RoundedButton";
 import { AdminInterface, RoleOption, roleOptions } from "./interface";
 import { generateRandomPassword } from "@/util/generatePassword";
 import { AdminRole } from "@/generated/graphql";
+import PrimaryButton from "@/components/common/button/PrimaryButton";
+import WarningButton from "@/components/common/button/WarningButton";
+import OutlinedButton from "@/components/common/button/OutlineButton";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -151,7 +152,6 @@ const Admin: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      <Heading highlight="Admin Panel" />
       {loading ? (
         <div className="loader">Loading...</div>
       ) : (
@@ -168,11 +168,11 @@ const Admin: React.FC = () => {
         />
       )}
       <ReusableModal
+        title="Add New Admin"
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
         width="md"
       >
-        <h2 className="text-xl font-bold mb-4 text-white">Add New Admin</h2>
         <form
           onSubmit={(e: FormEvent<HTMLFormElement>) => {
             e.preventDefault();
@@ -235,23 +235,23 @@ const Admin: React.FC = () => {
             />
           </div>
           <div className="flex justify-end mt-4">
-            <RoundedButton
+            <PrimaryButton
               type="button"
               onClick={() => setIsAddModalOpen(false)}
             >
               Cancel
-            </RoundedButton>
-            <RoundedButton type="submit">Add Admin</RoundedButton>
+            </PrimaryButton>
+            <PrimaryButton type="submit">Add Admin</PrimaryButton>
           </div>
         </form>
       </ReusableModal>
       <ReusableModal
+        title="Change Password"
         isOpen={isChangePassModalOpen}
         onClose={() => setIsChangePassModalOpen(false)}
         width="lg"
       >
         <>
-          <h2 className="text-xl font-bold mb-4 text-white">Change Password</h2>
           <div className="flex justify-between items-center">
             <div className="w-1/2 flex flex-col bg-secondary bg-opacity-30 p-4 rounded-lg">
               <h3 className="text-lg font-bold text-white mb-2">
@@ -282,13 +282,13 @@ const Admin: React.FC = () => {
                   />
                 </div>
                 <div className="flex justify-end mt-4">
-                  <RoundedButton
+                  <PrimaryButton
                     type="button"
                     onClick={() => setIsChangePassModalOpen(false)}
                   >
                     Cancel
-                  </RoundedButton>
-                  <RoundedButton type="submit">Change Password</RoundedButton>
+                  </PrimaryButton>
+                  <PrimaryButton type="submit">Change Password</PrimaryButton>
                 </div>
               </form>
             </div>
@@ -296,11 +296,11 @@ const Admin: React.FC = () => {
         </>
       </ReusableModal>
       <ReusableModal
+        title="Change Admin Role"
         isOpen={isChangeRoleModalOpen}
         onClose={() => setIsChangeRoleModalOpen(false)}
         width="md"
       >
-        <h2 className="text-xl font-bold mb-4 text-white">Change Admin Role</h2>
         <div className="mb-4">
           <label className="block text-white">Select Role</label>
           <Select
@@ -324,36 +324,36 @@ const Admin: React.FC = () => {
           />
         </div>
         <div className="flex justify-end mt-4">
-          <RoundedButton
+          <PrimaryButton
             type="button"
             onClick={() => setIsChangeRoleModalOpen(false)}
           >
             Cancel
-          </RoundedButton>
-          <RoundedButton type="button" onClick={handleChangeRole}>
+          </PrimaryButton>
+          <PrimaryButton type="button" onClick={handleChangeRole}>
             Change Role
-          </RoundedButton>
+          </PrimaryButton>
         </div>
       </ReusableModal>
       <ReusableModal
+        title="Confirm Deletion"
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         width="md"
       >
-        <h2 className="text-xl font-bold mb-4 text-white">Confirm Deletion</h2>
         <p className="text-white mb-4">
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
-          <RoundedButton
+          <OutlinedButton
             type="button"
             onClick={() => setIsDeleteModalOpen(false)}
           >
             No
-          </RoundedButton>
-          <RoundedButton type="button" onClick={handleDeleteAdmin}>
+          </OutlinedButton>
+          <WarningButton type="button" onClick={handleDeleteAdmin}>
             Yes
-          </RoundedButton>
+          </WarningButton>
         </div>
       </ReusableModal>
     </div>
