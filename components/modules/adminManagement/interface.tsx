@@ -1,9 +1,19 @@
-interface Admin {
+export enum AdminRole {
+  Admin = "admin",
+  Master = "master",
+  Normal = "normal",
+}
+
+export interface AdminInterface {
   _id: string;
   name: string;
   email: string;
-  type: string; // Adjust the type as necessary, such as 'superAdmin', 'admin', etc.
-  numberOfResetPassword: number;
+  type: AdminRole;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface RoleOption {
+  value: AdminRole;
+  label: string;
 }

@@ -45,7 +45,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         {children}
         {renderModule()}
       </div>
-      <Modal />
+      {/* <Modal /> */}
     </div>
   );
 };

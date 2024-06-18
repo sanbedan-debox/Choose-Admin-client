@@ -1,6 +1,6 @@
 # Queries
 
-# Query to get the currently logged-in admin's details
+# Query to get the currently logged-in admin's details//
 query Me {
   me {
     _id
@@ -9,7 +9,7 @@ query Me {
   }
 }
 
-# Query to get a list of all admins
+# Query to get a list of all admins//
 query GetAdmins {
   getAdmins {
     _id
@@ -22,24 +22,24 @@ query GetAdmins {
   }
 }
 
-# Query to log in an admin
+# Query to log in an admin//
 query AdminLogin($email: String!, $password: String!) {
   adminLogin(email: $email, password: $password)
 }
 
 # Mutations
 
-# Mutation to add a new admin
+# Mutation to add a new admin//
 mutation AddAdmin($input: AddAdminInput!) {
   addAdmin(input: $input)
 }
 
-# Mutation to delete an admin by ID
+# Mutation to delete an admin by ID//
 mutation DeleteAdmin($id: String!) {
   deleteAdmin(id: $id)
 }
 
-# Mutation to reset an admin's password
+# Mutation to reset an admin's password//
 query ResetPasswordAdmin($id: String!, $password: String!) {
   resetPasswordAdmin(id: $id, password: $password)
 }
@@ -49,7 +49,7 @@ mutation ChangeRole($id: String!, $role: AdminRole!) {
   changeRole(id: $id, role: $role)
 }
 
-# Mutation to log out the admin
+# Mutation to log out the admin//
 query AdminLogout {
   adminLogout
 }
