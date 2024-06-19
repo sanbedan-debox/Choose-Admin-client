@@ -6,6 +6,7 @@ import Select from "react-select";
 import useGlobalStore from "@/store/global";
 import CButton from "../button/button";
 import { ButtonType } from "../button/interface";
+import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
 
 const RoopTable: React.FC<TableProps> = ({
   data,
@@ -332,7 +333,7 @@ const RoopTable: React.FC<TableProps> = ({
           </table>
         </div>
       </div>
-      <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
+      {/* <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
         <div className="flex justify-between items-center mt-4">
           <CButton
             type={ButtonType.Outlined}
@@ -355,6 +356,27 @@ const RoopTable: React.FC<TableProps> = ({
           >
             Next
           </CButton>
+        </div>
+      </div> */}
+      <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
+        <div className="flex justify-between items-center mt-4">
+          {currentPage !== 1 && (
+            <HiChevronLeft
+              className="cursor-pointer text-white text-2xl"
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            />
+          )}
+          <span className="flex-1 text-center">
+            Page {currentPage} of {totalPages}
+          </span>
+          {currentPage !== totalPages && (
+            <HiChevronRight
+              className="cursor-pointer text-white text-2xl"
+              onClick={() =>
+                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              }
+            />
+          )}
         </div>
       </div>
     </div>
