@@ -40,6 +40,10 @@ const RoopTable: React.FC<TableProps> = ({
     setOptions(columnOptions);
   }, [headings]);
 
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filterValue, searchTerm]);
+
   const operatorOptions = [
     { value: "contains", label: "Contains" },
     { value: "equals", label: "Equals" },

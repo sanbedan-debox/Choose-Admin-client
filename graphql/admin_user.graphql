@@ -29,10 +29,10 @@ query AdminLogin($email: String!, $password: String!) {
 
 # Mutations
 
-# Mutation to add a new admin//
-mutation AddAdmin($input: AddAdminInput!) {
-  addAdmin(input: $input)
-}
+# Mutation to add a new admin
+# mutation AddAdmin($input: AddAdminInput!) {
+#   addAdmin(input: $input)
+# }
 
 # Mutation to delete an admin by ID//
 mutation DeleteAdmin($id: String!) {

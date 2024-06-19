@@ -3,28 +3,18 @@ import Select, { SingleValue } from "react-select";
 import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
 import ReusableModal from "@/components/common/modal/modal";
-import { AdminInterface, RoleOption, roleOptions } from "./interface";
+import {
+  AddAdminFormInputs,
+  AdminInterface,
+  ChangePasswordInputs,
+  ChangeRoleInputs,
+  roleOptions,
+} from "./interface";
 import { generateRandomPassword } from "@/util/generatePassword";
-import { AdminRole } from "@/generated/graphql";
 import useGlobalStore from "@/store/global";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-
-interface AddAdminFormInputs {
-  name: string;
-  email: string;
-  password: string;
-  role: RoleOption | null;
-}
-
-interface ChangePasswordInputs {
-  newPassword: string;
-}
-
-interface ChangeRoleInputs {
-  role: RoleOption | null;
-}
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -49,6 +39,7 @@ const Admin: React.FC = () => {
     formState: { errors },
     control,
   } = useForm<AddAdminFormInputs>();
+
   const {
     register: registerPass,
     handleSubmit: handleSubmitPass,
@@ -241,7 +232,6 @@ const Admin: React.FC = () => {
           <div className="mb-4">
             <label className="block text-white">Email</label>
             <input
-              type="email"
               placeholder="Enter Email..."
               {...register("email", {
                 required: "Email is required",
@@ -317,121 +307,62 @@ const Admin: React.FC = () => {
           </div>
         </form>
       </ReusableModal>
-      {/* 
+
       <ReusableModal
         title="Change Password"
         isOpen={isChangePassModalOpen}
         onClose={() => setIsChangePassModalOpen(false)}
         width="md"
       >
-        <>
-          <form onSubmit={handleSubmitPass(handleChangePassword)}>
-            <div className="mb-4">
-              <h3 className="font-bold mb-2 text-white">
-                Generate or Enter New Password
-              </h3>
-              <Controller
-                name="newPassword"
-                control={controlPass}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    placeholder="Enter Password..."
-                    type="text"
-                    className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
-                  />
-                )}
-              />
-              {errorsPass.newPassword && (
-                <p className="text-red-500 text-sm">
-                  {errorsPass.newPassword.message}
-                </p>
+        <form onSubmit={handleSubmitPass(handleChangePassword)}>
+          <div className="mb-4">
+            <h3 className="font-bold mb-2 text-white">
+              Generate or Enter New Password
+            </h3>
+            <Controller
+              name="newPassword"
+              control={controlPass}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  placeholder="Enter Password..."
+                  type="text"
+                  className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                />
               )}
-            </div>
-            <div className="flex justify-end mt-4">
-              <CButton
-                type={ButtonType.Outlined}
-                onClick={() => {
-                  const newPassword = generateRandomPassword();
-                  setRandomPassword(newPassword);
-                  setValuePass("newPassword", newPassword);
-                }}
-              >
-                Generate Password
-              </CButton>
-              <CButton
-                type={ButtonType.Outlined}
-                onClick={() => setIsChangePassModalOpen(false)}
-              >
-                Cancel
-              </CButton>
-              <CButton
-                type={ButtonType.Confirm}
-                onClick={handleSubmitPass(handleChangePassword)}
-              >
-                Change Password
-              </CButton>
-            </div>
-          </form>
-        </>
-      </ReusableModal> */}
-      <ReusableModal
-        title="Change Password"
-        isOpen={isChangePassModalOpen}
-        onClose={() => setIsChangePassModalOpen(false)}
-        width="md"
-      >
-        <>
-          <form onSubmit={handleSubmitPass(handleChangePassword)}>
-            <div className="mb-4">
-              <h3 className="font-bold mb-2 text-white">
-                Generate or Enter New Password
-              </h3>
-              <Controller
-                name="newPassword"
-                control={controlPass}
-                render={({ field }) => (
-                  <input
-                    {...field}
-                    placeholder="Enter Password..."
-                    type="text"
-                    className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
-                  />
-                )}
-              />
-              {errorsPass.newPassword && (
-                <p className="text-red-500 text-sm">
-                  {errorsPass.newPassword.message}
-                </p>
-              )}
-            </div>
-            <div className="flex justify-end mt-4">
-              <CButton
-                type={ButtonType.Outlined}
-                onClick={(e) => {
-                  e.preventDefault();
-                  const newPassword = generateRandomPassword();
-                  setRandomPassword(newPassword);
-                  setValuePass("newPassword", newPassword);
-                }}
-              >
-                Generate Password
-              </CButton>
-              <CButton
-                type={ButtonType.Outlined}
-                onClick={() => setIsChangePassModalOpen(false)}
-              >
-                Cancel
-              </CButton>
-              <CButton
-                type={ButtonType.Confirm}
-                onClick={handleSubmitPass(handleChangePassword)}
-              >
-                Change Password
-              </CButton>
-            </div>
-          </form>
-        </>
+            />
+            {errorsPass.newPassword && (
+              <p className="text-red-500 text-sm">
+                {errorsPass.newPassword.message}
+              </p>
+            )}
+          </div>
+          <div className="flex justify-end mt-4">
+            <CButton
+              type={ButtonType.Outlined}
+              onClick={(e) => {
+                e.preventDefault();
+                const newPassword = generateRandomPassword();
+                setRandomPassword(newPassword);
+                setValuePass("newPassword", newPassword);
+              }}
+            >
+              Generate Password
+            </CButton>
+            <CButton
+              type={ButtonType.Outlined}
+              onClick={() => setIsChangePassModalOpen(false)}
+            >
+              Cancel
+            </CButton>
+            <CButton
+              type={ButtonType.Confirm}
+              onClick={handleSubmitPass(handleChangePassword)}
+            >
+              Change Password
+            </CButton>
+          </div>
+        </form>
       </ReusableModal>
 
       <ReusableModal
