@@ -1,7 +1,5 @@
 export const getUserRole = (): string => {
-    // Simulate user role (for demonstration purposes)
-    // For now, let's assume the user is an admin/worker
-    return "worker";
+    return "admin"; // Simulated role
 };
 
 export const setUserRole = (role: string): void => {

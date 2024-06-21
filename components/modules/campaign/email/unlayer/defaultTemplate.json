@@ -1,0 +1,160 @@
+{
+  "body": {
+    "counters": {
+      "u_column": 1,
+      "u_row": 1,
+      "u_content_image": 0,
+      "u_content_button": 0,
+      "u_content_heading": 0,
+      "u_content_text": 0,
+      "u_content_divider": 0
+    },
+    "body": {
+      "id": "XDY_7CQd-z",
+      "rows": [
+        {
+          "id": "lWjgtsTw4q",
+          "cells": [1],
+          "columns": [
+            {
+              "id": "SyTyF54w0V",
+              "contents": [],
+              "values": {
+                "backgroundColor": "",
+                "padding": "26px",
+                "border": {
+                  "borderTopWidth": "1px",
+                  "borderTopStyle": "solid",
+                  "borderTopColor": "#eaeaea",
+                  "borderLeftWidth": "1px",
+                  "borderLeftStyle": "solid",
+                  "borderLeftColor": "#eaeaea",
+                  "borderRightWidth": "1px",
+                  "borderRightStyle": "solid",
+                  "borderRightColor": "#eaeaea",
+                  "borderBottomWidth": "1px",
+                  "borderBottomStyle": "solid",
+                  "borderBottomColor": "#eaeaea"
+                },
+                "borderRadius": "0px",
+                "_meta": {
+                  "htmlID": "u_column_1",
+                  "htmlClassNames": "u_column"
+                },
+                "_override": {
+                  "mobile": {
+                    "padding": "2px",
+                    "border": {
+                      "borderTopWidth": "1px",
+                      "borderTopStyle": "solid",
+                      "borderTopColor": "#eaeaea",
+                      "borderLeftWidth": "1px",
+                      "borderLeftStyle": "solid",
+                      "borderLeftColor": "#eaeaea",
+                      "borderRightWidth": "1px",
+                      "borderRightStyle": "solid",
+                      "borderRightColor": "#eaeaea",
+                      "borderBottomWidth": "1px",
+                      "borderBottomStyle": "solid",
+                      "borderBottomColor": "#eaeaea"
+                    }
+                  }
+                }
+              }
+            }
+          ],
+          "values": {
+            "displayCondition": null,
+            "columns": false,
+            "backgroundColor": "#ffffff",
+            "columnsBackgroundColor": "#ffffff",
+            "backgroundImage": {
+              "url": "",
+              "fullWidth": true,
+              "repeat": "no-repeat",
+              "size": "custom",
+              "position": "center",
+              "customPosition": ["50%", "50%"]
+            },
+            "padding": "16px",
+            "anchor": "",
+            "hideDesktop": false,
+            "_meta": {
+              "htmlID": "u_row_1",
+              "htmlClassNames": "u_row"
+            },
+            "selectable": true,
+            "draggable": true,
+            "duplicatable": true,
+            "deletable": true,
+            "hideable": true,
+            "_override": {
+              "mobile": {
+                "padding": "28px",
+                "noStackMobile": false
+              }
+            }
+          }
+        }
+      ],
+      "headers": [],
+      "footers": [],
+      "values": {
+        "popupPosition": "center",
+        "popupWidth": "600px",
+        "popupHeight": "auto",
+        "borderRadius": "10px",
+        "contentAlign": "center",
+        "contentVerticalAlign": "center",
+        "contentWidth": 480,
+        "fontFamily": {
+          "label": "Arial",
+          "value": "arial,helvetica,sans-serif"
+        },
+        "textColor": "#000000",
+        "popupBackgroundColor": "#FFFFFF",
+        "popupBackgroundImage": {
+          "url": "",
+          "fullWidth": true,
+          "repeat": "no-repeat",
+          "size": "cover",
+          "position": "center"
+        },
+        "popupOverlay_backgroundColor": "rgba(0, 0, 0, 0.1)",
+        "popupCloseButton_position": "top-right",
+        "popupCloseButton_backgroundColor": "#DDDDDD",
+        "popupCloseButton_iconColor": "#000000",
+        "popupCloseButton_borderRadius": "0px",
+        "popupCloseButton_margin": "0px",
+        "popupCloseButton_action": {
+          "name": "close_popup",
+          "attrs": {
+            "onClick": "document.querySelector('.u-popup-container').style.display = 'none';"
+          }
+        },
+        "backgroundColor": "#ffffff",
+        "backgroundImage": {
+          "url": "",
+          "fullWidth": true,
+          "repeat": "no-repeat",
+          "size": "custom",
+          "position": "center"
+        },
+        "preheaderText": "",
+        "linkStyle": {
+          "body": true,
+          "linkColor": "#0000ee",
+          "linkHoverColor": "#0000ee",
+          "linkUnderline": false,
+          "linkHoverUnderline": true,
+          "inherit": false
+        },
+        "_meta": {
+          "htmlID": "u_body",
+          "htmlClassNames": "u_body"
+        }
+      }
+    },
+    "schemaVersion": 16
+  }
+}

@@ -1,85 +1,120 @@
 import * as React from "react";
 import Image from "next/image";
+import { useRouter } from "next/router";
 import logo1 from "../assets/logo/logoWhite.png";
-import Link from "next/link";
+import { sdk } from "@/util/graphqlClient";
+import useGlobalStore from "@/store/global";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
+import { useForm, SubmitHandler } from "react-hook-form";
 
-interface FormElements extends HTMLFormControlsCollection {
-  email: HTMLInputElement;
-  password: HTMLInputElement;
-  persistent: HTMLInputElement;
+interface IFormInput {
+  email: string;
+  password: string;
+  persistent: boolean;
 }
 
-interface SignInFormElement extends HTMLFormElement {
-  readonly elements: FormElements;
-}
+export default function Login() {
+  const router = useRouter();
+  const { setToastData } = useGlobalStore();
 
-export default function JoySignInSideTemplate() {
-  const handleSubmit = (event: React.FormEvent<SignInFormElement>) => {
-    event.preventDefault();
-    const { email, password, persistent } = event.currentTarget.elements;
-    // Add your form submission logic here
-    console.log({
-      email: email.value,
-      password: password.value,
-      persistent: persistent.checked,
-    });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<IFormInput>();
+
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    const { email, password } = data;
+
+    try {
+      const response = await sdk.AdminLogin({
+        email: email,
+        password: password,
+      });
+
+      if (response) {
+        console.log("Login successful:", response);
+        setToastData({ message: "Login Successful", type: "success" });
+
+        router.replace("/");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      setToastData({ message: "Login Failed", type: "error" });
+    }
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900">
+    <section
+      style={{
+        background: "rgb(4,7,29)",
+        backgroundColor:
+          "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
+      }}
+    >
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="relative z-10 flex items-center gap-16">
-          <Link href="/" legacyBehavior>
-            <a>
-              <Image className="mb-4" src={logo1} alt="Logo" width={200} />
-            </a>
-          </Link>
-        </div>
-        <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+        <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-dot-white/[0.12] md:bg-dot-white/[0.15] border-gray-700">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+            <div className="relative z-10 flex items-center gap-16 justify-center">
+              <Image className="mb-4" src={logo1} alt="Logo" width={200} />
+            </div>
+            <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
               Sign in to your account
             </h1>
-            <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit}>
-              <div>
+            <form
+              className="space-y-4 md:space-y-6"
+              onSubmit={handleSubmit(onSubmit)}
+            >
+              <div className="col-span-2">
                 <label
                   htmlFor="email"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 text-sm font-medium text-white"
                 >
-                  Your email
+                  Email Address
                 </label>
                 <input
                   type="email"
-                  name="email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                      message: "Invalid email address",
+                    },
+                  })}
                   id="email"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  placeholder="name@company.com"
-                  required
+                  className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Enter your Email Address"
                 />
+                {errors.email && (
+                  <p className="text-red-500 text-sm">{errors.email.message}</p>
+                )}
               </div>
-              <div>
+              <div className="col-span-2">
                 <label
                   htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+                  className="block mb-2 text-sm font-medium text-white"
                 >
                   Password
                 </label>
                 <input
                   type="password"
-                  name="password"
+                  {...register("password", {
+                    required: "Password is required",
+                  })}
                   id="password"
-                  placeholder="••••••••"
-                  className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                  required
+                  className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                  placeholder="Enter your Password"
                 />
+                {errors.password && (
+                  <p className="text-red-500 text-sm">
+                    {errors.password.message}
+                  </p>
+                )}
               </div>
-
-              <button
-                type="submit"
-                className="w-full text-white bg-primary hover:bg-primary-700 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-              >
-                Sign in
-              </button>
+              <div className="flex justify-end">
+                <CButton type={ButtonType.Primary}>Sign In</CButton>
+              </div>
             </form>
           </div>
         </div>

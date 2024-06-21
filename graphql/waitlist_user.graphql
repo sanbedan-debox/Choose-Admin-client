@@ -1,0 +1,21 @@
+# waitlist.graphql
+
+# Queries
+
+# Query to get a list of all waitlist users
+query GetWaitListUsers {
+  getWaitListUsers {
+    _id
+    name
+    email
+    createdAt
+    updatedAt
+  }
+}
+
+# Mutations
+
+# # Mutation to add a new waitlist user
+# mutation AddWaitListUser($input: AddWaitListUserInput!) {
+#   addWaitListUser(input: $input)
+# }

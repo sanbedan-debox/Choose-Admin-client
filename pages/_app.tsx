@@ -1,19 +1,13 @@
-// MyApp.tsx
+import React from "react";
 import { AppProps } from "next/app";
 import Head from "next/head";
 import NextNProgress from "nextjs-progressbar";
-import localFont from "@next/font/local";
-import "../styles/global.css";
-import { getUserRole } from "@/util/auth";
-import Sidebar from "@/components/sidebar/sidebar";
-import Login from "@/pages/login"; // Import your Login component
-
-const geologica = localFont({ src: "../public/fonts/geologica.ttf" });
+import "../styles/globals.css";
+import useGlobalStore from "@/store/global";
+import Toast from "@/components/common/toast/toast";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const userRole = getUserRole();
-  // const authenticated = isAuthenticated();
-  const authenticated = true;
+  const { toastData } = useGlobalStore();
 
   return (
     <>
@@ -26,17 +20,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         />
         <meta name="apple-mobile-web-app-capable" content="yes" />
       </Head>
-
-      {authenticated ? (
-        <div className="flex">
-          <Sidebar userRole={userRole} />
-          <main className={geologica.className}>
-            <Component {...pageProps} />
-          </main>
-        </div>
-      ) : (
-        <Login />
-      )}
+      <Component {...pageProps} />
+      {toastData && <Toast message={toastData.message} type={toastData.type} />}
     </>
   );
 }
