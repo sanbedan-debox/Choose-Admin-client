@@ -77,24 +77,24 @@ const Admin: React.FC = () => {
     }
   };
 
-  const handleAddAdmin: SubmitHandler<AddAdminFormInputs> = async (data) => {
-    try {
-      const input = {
-        name: data.name,
-        email: data.email,
-        password: data.password,
-        type: data.role?.value || "",
-      };
-      const response = await sdk.AddAdmin({ input });
-      console.log("Admin added successfully:", response);
-      setIsAddModalOpen(false);
-      fetchAdmins();
-      setToastData({ message: "Admin added successfully", type: "success" });
-    } catch (error) {
-      console.error("Failed to add admin:", error);
-      setToastData({ message: "Failed to add admin", type: "error" });
-    }
-  };
+  // const handleAddAdmin: SubmitHandler<AddAdminFormInputs> = async (data) => {
+  //   try {
+  //     const input = {
+  //       name: data.name,
+  //       email: data.email,
+  //       password: data.password,
+  //       type: data.role?.value || "",
+  //     };
+  //     const response = await sdk.AddAdmin({ input });
+  //     console.log("Admin added successfully:", response);
+  //     setIsAddModalOpen(false);
+  //     fetchAdmins();
+  //     setToastData({ message: "Admin added successfully", type: "success" });
+  //   } catch (error) {
+  //     console.error("Failed to add admin:", error);
+  //     setToastData({ message: "Failed to add admin", type: "error" });
+  //   }
+  // };
 
   const handleChangePassword: SubmitHandler<ChangePasswordInputs> = async (
     data
@@ -184,12 +184,12 @@ const Admin: React.FC = () => {
     </div>
   );
 
-  const mainActions = [
-    {
-      label: "Add Admin",
-      onClick: () => setIsAddModalOpen(true),
-    },
-  ];
+  // const mainActions = [
+  //   {
+  //     label: "Add Admin",
+  //     onClick: () => setIsAddModalOpen(true),
+  //   },
+  // ];
 
   const headings = [
     { title: "Name", dataKey: "name" },
@@ -212,11 +212,10 @@ const Admin: React.FC = () => {
           fullCsv
           csvFileName="admins_data.csv"
           headings={headings}
-          mainActions={mainActions}
           hovered
         />
       )}
-      <ReusableModal
+      {/* <ReusableModal
         title="Add New Admin"
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -312,7 +311,7 @@ const Admin: React.FC = () => {
             <CButton type={ButtonType.Confirm}>Add Admin</CButton>
           </div>
         </form>
-      </ReusableModal>
+      </ReusableModal> */}
 
       <ReusableModal
         title="Change Password"
