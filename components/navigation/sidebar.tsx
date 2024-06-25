@@ -30,7 +30,7 @@ const Sidebar: React.FC = () => {
         backgroundColor:
           "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
       }}
-      className={`h-screen flex flex-col text-white transition-all duration-300 ${
+      className={`max-h-none flex flex-col text-white transition-all duration-300 ${
         isSidebarExpanded ? "w-64" : "w-20"
       }`}
     >

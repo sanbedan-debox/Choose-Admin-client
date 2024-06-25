@@ -1,12 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { CSVLink } from "react-csv";
 import { Menu } from "@headlessui/react";
-import { HiDotsVertical } from "react-icons/hi";
+import { HiDotsVertical, HiChevronLeft, HiChevronRight } from "react-icons/hi";
 import Select from "react-select";
 import useGlobalStore from "@/store/global";
 import CButton from "../button/button";
 import { ButtonType } from "../button/interface";
-import { HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import ReusableModal from "../modal/modal";
+
+interface TableProps {
+  data: any[];
+  itemsPerPage: number;
+  actions?: { label: string; onClick: (data: any) => void; style?: string }[];
+  mainActions?: { label: string; onClick: () => void }[];
+  csvExport?: boolean;
+  fullCsv?: boolean;
+  csvFileName?: string;
+  headings: {
+    title: string;
+    dataKey: string;
+    render?: (value: any) => React.ReactNode;
+  }[];
+  striped?: boolean;
+  bordered?: boolean;
+  hovered?: boolean;
+  filterable?: boolean;
+}
 
 const RoopTable: React.FC<TableProps> = ({
   data,
@@ -24,13 +43,15 @@ const RoopTable: React.FC<TableProps> = ({
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [showFilter, setShowFilter] = useState(false);
+  const [showFilterModal, setShowFilterModal] = useState(false);
+  const [showExportModal, setShowExportModal] = useState(false); // State to control export modal visibility
 
   const [filterColumn, setFilterColumn] = useState<string>("");
   const [operator, setOperator] = useState<string>("contains");
   const [filterValue, setFilterValue] = useState<string>("");
   const [options, setOptions] = useState<any[]>([]);
   const { isSidebarExpanded } = useGlobalStore();
+  const [isFilterApplied, setIsFilterApplied] = useState<boolean>(false); // Track if filter is applied
 
   useEffect(() => {
     const columnOptions = headings.map((heading) => ({
@@ -42,7 +63,8 @@ const RoopTable: React.FC<TableProps> = ({
 
   useEffect(() => {
     setCurrentPage(1);
-  }, [filterValue, searchTerm]);
+    setIsFilterApplied(!!filterColumn && !!filterValue); // Set filter applied state
+  }, [filterColumn, filterValue, searchTerm]);
 
   const operatorOptions = [
     { value: "contains", label: "Contains" },
@@ -128,6 +150,7 @@ const RoopTable: React.FC<TableProps> = ({
     setOperator("contains");
     setFilterValue("");
     setCurrentPage(1);
+    setIsFilterApplied(false); // Clear filter applied state
   };
 
   const truncateString = (str: string, maxLength: number) => {
@@ -137,11 +160,24 @@ const RoopTable: React.FC<TableProps> = ({
     return str;
   };
 
+  const applyFilter = () => {
+    setShowFilterModal(false);
+    setCurrentPage(1);
+    setIsFilterApplied(true);
+  };
+
+  const handleExportClick = () => {
+    if (isFilterApplied) {
+      setShowExportModal(true);
+    } else {
+      document.getElementById("csvLink")?.click();
+    }
+  };
+
   return (
     <div
       style={{
-        background: "rgb(4,7,29)",
-        backgroundColor:
+        background:
           "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
       }}
       className={`container mx-auto rounded-lg p-4 ${
@@ -156,77 +192,18 @@ const RoopTable: React.FC<TableProps> = ({
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+              className="bg-secondary bg-opacity-30 text-sm rounded-lg block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent w-96"
             />
+
             {filterable && (
-              <div className="flex items-center ml-4 max-h-10">
+              <div className="flex items-center ml-4">
                 <CButton
                   type={ButtonType.Primary}
-                  onClick={() => setShowFilter((prev) => !prev)}
+                  onClick={() => setShowFilterModal(true)}
+                  className="h-[2rem]"
                 >
                   Filter
                 </CButton>
-                {showFilter && (
-                  <div className="flex items-center space-x-2">
-                    <Select
-                      classNames={{
-                        placeholder: (state) => "!text-gray-400",
-                        control: (state) =>
-                          "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg  !w-full  transition duration-150 ease-in-out !shadow-none ",
-                        menu: (state) => "z-[100] !bg-[#142D5F] ",
-                        singleValue: (state) => "!text-white",
-                        option: (state) =>
-                          `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent  ${
-                            state.isFocused || state.isSelected
-                              ? "!bg-transparent"
-                              : ""
-                          }`,
-                      }}
-                      classNamePrefix="react-select"
-                      options={options}
-                      value={options.find(
-                        (option) => option.value === filterColumn
-                      )}
-                      onChange={(selectedOption) =>
-                        setFilterColumn(selectedOption?.value || "")
-                      }
-                    />
-                    <Select
-                      classNames={{
-                        placeholder: (state) => "!text-gray-400",
-                        control: (state) =>
-                          "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg  !w-full  transition duration-150 ease-in-out !shadow-none ",
-                        menu: (state) => "z-[100] !bg-[#142D5F] ",
-                        singleValue: (state) => "!text-white",
-                        option: (state) =>
-                          `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent  ${
-                            state.isFocused || state.isSelected
-                              ? "!bg-transparent"
-                              : ""
-                          }`,
-                      }}
-                      classNamePrefix="react-select"
-                      options={operatorOptions}
-                      value={operatorOptions.find(
-                        (option) => option.value === operator
-                      )}
-                      onChange={(selectedOption) =>
-                        setOperator(selectedOption?.value || "")
-                      }
-                    />
-                    {/* Filter value input */}
-                    <input
-                      type="text"
-                      placeholder="Filter Value"
-                      value={filterValue}
-                      onChange={(e) => setFilterValue(e.target.value)}
-                      className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
-                    />
-                    <CButton type={ButtonType.Warning} onClick={clearFilter}>
-                      Clear
-                    </CButton>
-                  </div>
-                )}
               </div>
             )}
           </div>
@@ -234,22 +211,27 @@ const RoopTable: React.FC<TableProps> = ({
           <div className="flex">
             {mainActions.map((action, index) => (
               <CButton
-                type={ButtonType.Outlined}
                 key={index}
+                type={ButtonType.Outlined}
                 onClick={action.onClick}
               >
                 {action.label}
               </CButton>
             ))}
             {csvExport && (
-              <CSVLink
-                data={csvData}
-                headers={csvHeaders}
-                filename={csvFileName}
-                className="h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary focus:outline-none focus:bg-blue-400 md:w-auto w-32"
-              >
-                Export to CSV
-              </CSVLink>
+              <div className="flex space-x-2">
+                <CButton type={ButtonType.Primary} onClick={handleExportClick}>
+                  Export to CSV
+                </CButton>
+                {/* Hidden CSVLink for full data export */}
+                <CSVLink
+                  id="csvLink"
+                  data={data}
+                  headers={csvHeaders}
+                  filename={csvFileName}
+                  className="hidden"
+                />
+              </div>
             )}
           </div>
         </div>
@@ -301,13 +283,13 @@ const RoopTable: React.FC<TableProps> = ({
                   {actions.length > 0 && (
                     <td className="py-4 px-4">
                       <Menu as="div" className="inline-block text-left">
-                        <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
+                        <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30  focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
                           <HiDotsVertical
                             className="w-5 h-5"
                             aria-hidden="true"
                           />
                         </Menu.Button>
-                        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
+                        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5  z-10">
                           {actions.map((action, index) => (
                             <div key={index} className="px-1 py-1">
                               <Menu.Item>
@@ -315,7 +297,9 @@ const RoopTable: React.FC<TableProps> = ({
                                   <button
                                     onClick={() => action.onClick(data)}
                                     className={`${
-                                      active ? "bg-primary" : "text-gray-900"
+                                      active
+                                        ? "bg-primary text-white"
+                                        : "text-gray-900"
                                     } group flex rounded-md items-center w-full px-2 py-2 text-sm ${
                                       action.style
                                     }`}
@@ -336,31 +320,94 @@ const RoopTable: React.FC<TableProps> = ({
           </table>
         </div>
       </div>
-      {/* <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
-        <div className="flex justify-between items-center mt-4">
-          <CButton
-            type={ButtonType.Outlined}
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            disabled={currentPage === 1}
-            className={` ${currentPage === 1 ? "hidden" : ""}`}
-          >
-            Previous
-          </CButton>
-          <span className="flex-1 text-center">
-            Page {currentPage} of {totalPages}
-          </span>
-          <CButton
-            type={ButtonType.Outlined}
-            onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+      <ReusableModal
+        isOpen={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+        title="Filter Data"
+        width="md"
+      >
+        <div className="flex items-center space-x-2">
+          <Select
+            classNames={{
+              placeholder: (state) => "!text-gray-400",
+              control: (state) =>
+                "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg  !w-full  transition duration-150 ease-in-out !shadow-none ",
+              menu: (state) => "z-[100] !bg-[#142D5F] ",
+              singleValue: (state) => "!text-white",
+              option: (state) =>
+                `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent  ${
+                  state.isFocused || state.isSelected ? "!bg-transparent" : ""
+                }`,
+            }}
+            classNamePrefix="react-select"
+            options={options}
+            value={options.find((option) => option.value === filterColumn)}
+            onChange={(selectedOption) =>
+              setFilterColumn(selectedOption?.value || "")
             }
-            disabled={currentPage === totalPages}
-            className={` ${currentPage === totalPages ? "hidden" : ""}`}
-          >
-            Next
+          />
+          <Select
+            classNames={{
+              placeholder: (state) => "!text-gray-400",
+              control: (state) =>
+                "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg  !w-full  transition duration-150 ease-in-out !shadow-none ",
+              menu: (state) => "z-[100] !bg-[#142D5F] ",
+              singleValue: (state) => "!text-white",
+              option: (state) =>
+                `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent  ${
+                  state.isFocused || state.isSelected ? "!bg-transparent" : ""
+                }`,
+            }}
+            classNamePrefix="react-select"
+            options={operatorOptions}
+            value={operatorOptions.find((option) => option.value === operator)}
+            onChange={(selectedOption) =>
+              setOperator(selectedOption?.value || "")
+            }
+          />
+          {/* Filter value input */}
+          <input
+            type="text"
+            placeholder="Filter Value"
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+            className="bg-secondary bg-opacity-30 text-sm rounded-lg  p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+          />
+          <CButton type={ButtonType.Warning} onClick={clearFilter}>
+            Clear
           </CButton>
         </div>
-      </div> */}
+        <div className="flex justify-end mt-4">
+          <CButton type={ButtonType.Primary} onClick={applyFilter}>
+            Apply Filter
+          </CButton>
+        </div>
+      </ReusableModal>
+      <ReusableModal
+        isOpen={showExportModal}
+        onClose={() => setShowExportModal(false)}
+        title="Export Data"
+        width="md"
+      >
+        <div className="flex flex-col space-y-4">
+          <CSVLink
+            data={data}
+            headers={csvHeaders}
+            filename={csvFileName}
+            className="flex items-center justify-center h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary  md:w-auto w-32"
+          >
+            Export Full Table
+          </CSVLink>
+          <CSVLink
+            data={filteredMembers}
+            headers={csvHeaders}
+            filename={`filtered_${csvFileName}`}
+            className="h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary "
+          >
+            Export Filtered Table
+          </CSVLink>
+        </div>
+      </ReusableModal>
       <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
         <div className="flex justify-between items-center mt-4">
           {currentPage !== 1 && (

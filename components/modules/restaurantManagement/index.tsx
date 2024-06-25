@@ -1,82 +1,56 @@
-import React from "react";
-import RoopTable from "@/components/common/customTableR/table";
-import Heading from "@/components/common/heading/Heading";
+import React, { useEffect, useState } from "react";
+import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
+import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
 
 const Reports: React.FC = () => {
-  const members = [
-    {
-      id: 1,
-      name: "John Michael",
-      email: "john@creative-tim.com",
-      function: "Manager",
-      status: "ONLINE",
-      employed: "23/04/18",
-      data: "nil",
-      hello: "nil",
-      zuzu: "nil",
-      calm: "nil",
-      alien: "alien",
-    },
-    // Rest of the member data...
-  ];
+  const [restaurants, setRestaurants] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const actions = [
-    {
-      label: "Delete",
-      onClick: (id: number) => {
-        alert(`Delete member with ID: ${id}`);
-      },
-      // style: "bg-red-500",
-    },
-    {
-      label: "Access Email",
-      onClick: (id: number) => {
-        alert(`Access roles for member ID: ${id}`);
-      },
-      // style: "bg-blue-500",
-    },
-  ];
+  useEffect(() => {
+    fetchRestaurants();
+  }, []);
 
-  const mainActions = [
-    {
-      label: "Add Restaurant",
-      onClick: () => {
-        alert("Main Action 1 clicked");
-      },
-    },
-  ];
+  const fetchRestaurants = async () => {
+    setLoading(true);
+    try {
+      const response = await sdk.GetAllRestaurants();
+      if (response && response.getAllRestaurants) {
+        setRestaurants(response.getAllRestaurants);
+      }
+    } catch (error) {
+      console.error("Failed to fetch restaurants:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const headings = [
-    { title: "Name", dataKey: "name" },
-    { title: "Email", dataKey: "email" },
-    { title: "Function", dataKey: "function" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
-    { title: "Status", dataKey: "status" },
+    { title: "id", dataKey: "_id" },
+    // { title: "Address", dataKey: "address.value" },
+    // { title: "Status", dataKey: "status" },
+    // { title: "State", dataKey: "state.value" },
+    // { title: "City", dataKey: "city.value" },
+    // {
+    //   title: "Restaurant User",
+    //   dataKey: "restaurantUser",
+    //   render: (restaurantUser: any) => (
+    //     <div>
+    //       <div>{restaurantUser.name}</div>
+    //       <div>{restaurantUser.email}</div>
+    //       <div>{restaurantUser.phone}</div>
+    //     </div>
+    //   ),
+    // },
   ];
 
   return (
     <div className="container mx-auto px-2">
       <RoopTable
-        data={members}
-        itemsPerPage={5}
-        actions={actions}
-        csvExport
-        mainActions={mainActions}
+        data={restaurants}
+        itemsPerPage={10}
         headings={headings}
         hovered
-        // hscroll
+        csvExport
       />
     </div>
   );

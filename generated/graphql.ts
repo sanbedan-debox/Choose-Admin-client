@@ -30,7 +30,7 @@ export type AddEmailCampaignInput = {
   csvDataUrl?: InputMaybe<Scalars['String']['input']>;
   customLink?: InputMaybe<Scalars['String']['input']>;
   emailSubject: Scalars['String']['input'];
-  emailTemplate?: InputMaybe<Scalars['String']['input']>;
+  emailTemplate: Scalars['String']['input'];
   scheduleTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
   scheduleType: EmailCampaignScheduleTypes;
   target: EmailCampaignTargetTypes;
@@ -44,20 +44,25 @@ export type AddEmailTemplateInput = {
 };
 
 export type AddRestaurantInput = {
-  address?: InputMaybe<Scalars['String']['input']>;
-  availability?: InputMaybe<Array<AvailabilityDateInput>>;
-  city?: InputMaybe<Scalars['String']['input']>;
-  name?: InputMaybe<Scalars['String']['input']>;
-  state?: InputMaybe<Scalars['String']['input']>;
-  tax_rate?: InputMaybe<Scalars['Float']['input']>;
-  zip_code?: InputMaybe<Scalars['Float']['input']>;
+  address?: InputMaybe<MasterCommonInput>;
+  availability: Array<AvailabilityDateInput>;
+  city?: InputMaybe<MasterCommonInput>;
+  name: MasterCommonInput;
+  state?: InputMaybe<MasterCommonInput>;
+  taxRate?: InputMaybe<MasterCommonInputNumber>;
+  zipCode?: InputMaybe<MasterCommonInputNumber>;
+};
+
+export type AddRestaurantUser = {
+  __typename?: 'AddRestaurantUser';
+  emailOtpVerifyKey: Scalars['String']['output'];
+  numberOtpVerifyKey: Scalars['String']['output'];
 };
 
 export type AddRestaurantUserInput = {
-  communication: Array<CommunicationPreferenceInput>;
+  communication: CommunicationPreferenceInput;
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
-  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
 };
 
@@ -72,6 +77,7 @@ export type AddWaitListUserInput = {
 export type Admin = {
   __typename?: 'Admin';
   _id: Scalars['ID']['output'];
+  blockedBy: Admin;
   createdAt: Scalars['DateTimeISO']['output'];
   createdBy: Admin;
   devices: Array<Device>;
@@ -81,6 +87,8 @@ export type Admin = {
   name: Scalars['String']['output'];
   numberOfResetPassword: Scalars['Float']['output'];
   role: AdminRole;
+  status: PlantFormStatus;
+  unBlockedBy: Admin;
   updatedAt: Scalars['DateTimeISO']['output'];
   updatedBy: Admin;
 };
@@ -92,28 +100,32 @@ export enum AdminRole {
   Normal = 'normal'
 }
 
+export type AvailabilityDate = {
+  __typename?: 'AvailabilityDate';
+  _id: Scalars['ID']['output'];
+  day: Scalars['String']['output'];
+  end: Scalars['DateTimeISO']['output'];
+  start: Scalars['DateTimeISO']['output'];
+  status?: Maybe<RestaurantStatus>;
+};
+
 export type AvailabilityDateInput = {
   day: Day;
   end: Scalars['DateTimeISO']['input'];
   start: Scalars['DateTimeISO']['input'];
+  status?: InputMaybe<RestaurantStatus>;
 };
 
 export type CommunicationPreference = {
   __typename?: 'CommunicationPreference';
-  resp: Scalars['Boolean']['output'];
-  type: CommunicationType;
+  email: Scalars['Boolean']['output'];
+  whatsApp: Scalars['Boolean']['output'];
 };
 
 export type CommunicationPreferenceInput = {
-  resp: Scalars['Boolean']['input'];
-  type: CommunicationType;
+  email: Scalars['Boolean']['input'];
+  whatsApp: Scalars['Boolean']['input'];
 };
-
-/** User communication preference */
-export enum CommunicationType {
-  Email = 'Email',
-  WhatsApp = 'WhatsApp'
-}
 
 /** The day */
 export enum Day {
@@ -213,20 +225,66 @@ export type EmailTemplatesObject = {
   updatedBy: Admin;
 };
 
+export type LocationCommon = {
+  __typename?: 'LocationCommon';
+  coordinates: Array<Scalars['Float']['output']>;
+  type: Scalars['String']['output'];
+};
+
+export type LocationCommonInput = {
+  coordinates: Array<Scalars['Float']['input']>;
+  type?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type MasterCommon = {
+  __typename?: 'MasterCommon';
+  _id: Scalars['ID']['output'];
+  value: Scalars['String']['output'];
+};
+
+export type MasterCommonInput = {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  value: Scalars['String']['input'];
+};
+
+export type MasterCommonInputNumber = {
+  _id?: InputMaybe<Scalars['ID']['input']>;
+  value: Scalars['Float']['input'];
+};
+
+export type MasterCommonNumber = {
+  __typename?: 'MasterCommonNumber';
+  _id: Scalars['ID']['output'];
+  value: Scalars['Float']['output'];
+};
+
+export type Menu = {
+  __typename?: 'Menu';
+  _id: Scalars['ID']['output'];
+  availability: Array<AvailabilityDate>;
+  master: Scalars['Boolean']['output'];
+  name: Scalars['String']['output'];
+  status: Scalars['String']['output'];
+  visibility: Visibility;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  addAdmin: ResultUnion;
+  addAdmin: Scalars['Boolean']['output'];
   addRestaurant: Scalars['Boolean']['output'];
+  addRestaurantUser: AddRestaurantUser;
   addWaitListUser: Scalars['Boolean']['output'];
+  blockAdmin: Scalars['Boolean']['output'];
   changeRole: Scalars['Boolean']['output'];
   createEmailCampaign: Scalars['Boolean']['output'];
   createEmailTemplate: Scalars['Boolean']['output'];
   deleteAdmin: Scalars['Boolean']['output'];
   deleteEmailTemplate: Scalars['Boolean']['output'];
-  registerUser: Scalars['Boolean']['output'];
   removeRestaurant: Scalars['Boolean']['output'];
   sendTestEmails: Scalars['Boolean']['output'];
+  updateRestaurant: Scalars['Boolean']['output'];
   updateRestaurantUserProfile: Scalars['Boolean']['output'];
+  verifyRestaurantUserDetails: Scalars['Boolean']['output'];
 };
 
 
@@ -240,8 +298,19 @@ export type MutationAddRestaurantArgs = {
 };
 
 
+export type MutationAddRestaurantUserArgs = {
+  input: AddRestaurantUserInput;
+};
+
+
 export type MutationAddWaitListUserArgs = {
   input: AddWaitListUserInput;
+};
+
+
+export type MutationBlockAdminArgs = {
+  id: Scalars['String']['input'];
+  updateStatus: PlantFormStatus;
 };
 
 
@@ -271,11 +340,6 @@ export type MutationDeleteEmailTemplateArgs = {
 };
 
 
-export type MutationRegisterUserArgs = {
-  input: AddRestaurantUserInput;
-};
-
-
 export type MutationRemoveRestaurantArgs = {
   id: Scalars['String']['input'];
 };
@@ -286,9 +350,25 @@ export type MutationSendTestEmailsArgs = {
 };
 
 
+export type MutationUpdateRestaurantArgs = {
+  input: UpdateRestaurantInput;
+};
+
+
 export type MutationUpdateRestaurantUserProfileArgs = {
   input: UpdateUserProfileInput;
 };
+
+
+export type MutationVerifyRestaurantUserDetailsArgs = {
+  input: VerifyRestaurantUserDetails;
+};
+
+/** Restaurant user status */
+export enum PlantFormStatus {
+  Active = 'active',
+  Blocked = 'blocked'
+}
 
 export type Query = {
   __typename?: 'Query';
@@ -296,17 +376,19 @@ export type Query = {
   adminLogout: Scalars['Boolean']['output'];
   emailOtpVerification: Scalars['Boolean']['output'];
   generateOtpForEmailVerification: Scalars['String']['output'];
+  generateOtpForLogin: Scalars['String']['output'];
   generateOtpForNumberVerification: Scalars['String']['output'];
   getAdmins: Array<Admin>;
   getAllEmailCampaigns: Array<EmailCampaignsObject>;
   getAllEmailTemplates: Array<EmailTemplatesObject>;
   getAllRestaurantUsers: Array<RestaurantUser>;
+  getAllRestaurants: Array<Restaurant>;
   getWaitListUsers: Array<WaitListUser>;
-  login: Scalars['String']['output'];
   logout: Scalars['Boolean']['output'];
   me: Admin;
   mobileNumberOtpVerification: Scalars['Boolean']['output'];
   resetPasswordAdmin: Scalars['Boolean']['output'];
+  verifyOtpForLogin: Scalars['Boolean']['output'];
 };
 
 
@@ -328,14 +410,13 @@ export type QueryGenerateOtpForEmailVerificationArgs = {
 };
 
 
-export type QueryGenerateOtpForNumberVerificationArgs = {
-  number: Scalars['String']['input'];
+export type QueryGenerateOtpForLoginArgs = {
+  input: Scalars['String']['input'];
 };
 
 
-export type QueryLoginArgs = {
-  email: Scalars['String']['input'];
-  password: Scalars['String']['input'];
+export type QueryGenerateOtpForNumberVerificationArgs = {
+  number: Scalars['String']['input'];
 };
 
 
@@ -351,41 +432,55 @@ export type QueryResetPasswordAdminArgs = {
   password: Scalars['String']['input'];
 };
 
+
+export type QueryVerifyOtpForLoginArgs = {
+  input: Scalars['String']['input'];
+  key: Scalars['String']['input'];
+  otp: Scalars['String']['input'];
+};
+
+export type Restaurant = {
+  __typename?: 'Restaurant';
+  _id: Scalars['ID']['output'];
+  address?: Maybe<MasterCommon>;
+  availability: Array<AvailabilityDate>;
+  city?: Maybe<MasterCommon>;
+  location?: Maybe<LocationCommon>;
+  menus?: Maybe<Array<Menu>>;
+  name: MasterCommon;
+  restaurantUser: RestaurantUser;
+  state?: Maybe<MasterCommon>;
+  status: RestaurantStatus;
+  taxRate?: Maybe<MasterCommonNumber>;
+  zipCode?: Maybe<MasterCommonNumber>;
+};
+
 export type RestaurantInfo = {
   __typename?: 'RestaurantInfo';
-  _id: Scalars['ID']['output'];
-  restaurantId: Scalars['ID']['output'];
+  city?: Maybe<MasterCommon>;
+  name: MasterCommon;
+  status: RestaurantStatus;
 };
+
+/** Restaurant status enum. */
+export enum RestaurantStatus {
+  Closed = 'Closed',
+  Open = 'Open'
+}
 
 export type RestaurantUser = {
   __typename?: 'RestaurantUser';
   _id: Scalars['ID']['output'];
-  communicationPreference?: Maybe<Array<CommunicationPreference>>;
+  communication?: Maybe<CommunicationPreference>;
   createdAt: Scalars['DateTimeISO']['output'];
   deviceDetails: Array<Device>;
   email: Scalars['String']['output'];
   name: Scalars['String']['output'];
-  phone: Scalars['Float']['output'];
-  profileStatus: UserOnboardingStatus;
-  restaurants: Array<RestaurantInfo>;
-  status: RestaurantUserStatus;
+  phone: Scalars['String']['output'];
+  restaurants?: Maybe<Array<RestaurantInfo>>;
+  status: PlantFormStatus;
   updatedAt: Scalars['DateTimeISO']['output'];
 };
-
-/** Restaurant user status */
-export enum RestaurantUserStatus {
-  Active = 'active',
-  Blocked = 'blocked',
-  Deactive = 'deactive'
-}
-
-export type Result = {
-  __typename?: 'Result';
-  message: Scalars['String']['output'];
-  success: Scalars['Boolean']['output'];
-};
-
-export type ResultUnion = Result;
 
 /** Types of SoftWare Enum */
 export enum SoftWareEnum {
@@ -401,17 +496,40 @@ export type TestEmailInput = {
   subject: Scalars['String']['input'];
 };
 
+export type UpdateRestaurantInput = {
+  address?: InputMaybe<MasterCommonInput>;
+  availability?: InputMaybe<Array<AvailabilityDateInput>>;
+  city?: InputMaybe<MasterCommonInput>;
+  location?: InputMaybe<LocationCommonInput>;
+  restaurantId: Scalars['String']['input'];
+  state?: InputMaybe<MasterCommonInput>;
+  status?: InputMaybe<RestaurantStatus>;
+  taxRate?: InputMaybe<MasterCommonInputNumber>;
+  zipCode?: InputMaybe<MasterCommonInputNumber>;
+};
+
 export type UpdateUserProfileInput = {
   communication?: InputMaybe<Array<CommunicationPreferenceInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
   restaurantIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
 
-/** User onboarding status */
-export enum UserOnboardingStatus {
-  Completed = 'completed',
-  EmailPending = 'emailPending',
-  PhonePending = 'phonePending'
+export type VerifyRestaurantUserDetails = {
+  communication: CommunicationPreferenceInput;
+  email: Scalars['String']['input'];
+  emailOtp: Scalars['String']['input'];
+  emailOtpVerifyKey: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  numberOtp: Scalars['String']['input'];
+  numberOtpVerifyKey: Scalars['String']['input'];
+  phone: Scalars['String']['input'];
+};
+
+/** Menu visibility enum. */
+export enum Visibility {
+  Delivery = 'Delivery',
+  Online = 'Online',
+  Pos = 'POS'
 }
 
 export type WaitListUser = {
@@ -444,20 +562,22 @@ export type AdminLoginQueryVariables = Exact<{
 
 export type AdminLoginQuery = { __typename?: 'Query', adminLogin: string };
 
+export type GetAllRestaurantUsersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestaurantUsers: Array<{ __typename?: 'RestaurantUser', _id: string, name: string, email: string, createdAt: any, updatedAt: any }> };
+
+export type GetAllRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string }> };
+
 export type DeleteAdminMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
 
 
 export type DeleteAdminMutation = { __typename?: 'Mutation', deleteAdmin: boolean };
-
-export type ResetPasswordAdminQueryVariables = Exact<{
-  id: Scalars['String']['input'];
-  password: Scalars['String']['input'];
-}>;
-
-
-export type ResetPasswordAdminQuery = { __typename?: 'Query', resetPasswordAdmin: boolean };
 
 export type ChangeRoleMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -466,6 +586,14 @@ export type ChangeRoleMutationVariables = Exact<{
 
 
 export type ChangeRoleMutation = { __typename?: 'Mutation', changeRole: boolean };
+
+export type BlockAdminMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+  updateStatus: PlantFormStatus;
+}>;
+
+
+export type BlockAdminMutation = { __typename?: 'Mutation', blockAdmin: boolean };
 
 export type AdminLogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -505,19 +633,37 @@ export const AdminLoginDocument = gql`
   adminLogin(email: $email, password: $password)
 }
     `;
+export const GetAllRestaurantUsersDocument = gql`
+    query GetAllRestaurantUsers {
+  getAllRestaurantUsers {
+    _id
+    name
+    email
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const GetAllRestaurantsDocument = gql`
+    query GetAllRestaurants {
+  getAllRestaurants {
+    _id
+  }
+}
+    `;
 export const DeleteAdminDocument = gql`
     mutation DeleteAdmin($id: String!) {
   deleteAdmin(id: $id)
 }
     `;
-export const ResetPasswordAdminDocument = gql`
-    query ResetPasswordAdmin($id: String!, $password: String!) {
-  resetPasswordAdmin(id: $id, password: $password)
-}
-    `;
 export const ChangeRoleDocument = gql`
     mutation ChangeRole($id: String!, $role: AdminRole!) {
   changeRole(id: $id, role: $role)
+}
+    `;
+export const BlockAdminDocument = gql`
+    mutation BlockAdmin($id: String!, $updateStatus: PlantFormStatus!) {
+  blockAdmin(id: $id, updateStatus: $updateStatus)
 }
     `;
 export const AdminLogoutDocument = gql`
@@ -553,14 +699,20 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     AdminLogin(variables: AdminLoginQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AdminLoginQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AdminLoginQuery>(AdminLoginDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AdminLogin', 'query', variables);
     },
+    GetAllRestaurantUsers(variables?: GetAllRestaurantUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllRestaurantUsersQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllRestaurantUsersQuery>(GetAllRestaurantUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllRestaurantUsers', 'query', variables);
+    },
+    GetAllRestaurants(variables?: GetAllRestaurantsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllRestaurantsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllRestaurantsQuery>(GetAllRestaurantsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllRestaurants', 'query', variables);
+    },
     DeleteAdmin(variables: DeleteAdminMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteAdminMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteAdminMutation>(DeleteAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteAdmin', 'mutation', variables);
     },
-    ResetPasswordAdmin(variables: ResetPasswordAdminQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ResetPasswordAdminQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<ResetPasswordAdminQuery>(ResetPasswordAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ResetPasswordAdmin', 'query', variables);
-    },
     ChangeRole(variables: ChangeRoleMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ChangeRoleMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ChangeRoleMutation>(ChangeRoleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ChangeRole', 'mutation', variables);
+    },
+    BlockAdmin(variables: BlockAdminMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<BlockAdminMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<BlockAdminMutation>(BlockAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'BlockAdmin', 'mutation', variables);
     },
     AdminLogout(variables?: AdminLogoutQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AdminLogoutQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AdminLogoutQuery>(AdminLogoutDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AdminLogout', 'query', variables);

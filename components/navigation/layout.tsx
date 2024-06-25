@@ -39,7 +39,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 bg-black ">
         <Heading title={selectedModule} />

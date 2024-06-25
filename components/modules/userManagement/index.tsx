@@ -1,51 +1,49 @@
-import React from "react";
-import RoopTable from "@/components/common/customTableR/table";
-import Heading from "@/components/common/heading/Heading";
+import React, { useEffect, useState } from "react";
+import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
+import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
 
-const data = [
-  {
-    id: 1,
-    name: "John Doe EAHFJKBAEKFB AEGFYAE IUFHUIAEFAEY FAEF FGAEUIF GUIAEGFIUAEG FIEAEGIUF GAEUIF IUAFUIE FIEAUGF IAEUVHD VAVIU AEIV AIV IUV AEIwrui giura iu fiufe eafu ruifiu",
-    status: "active",
-  },
-  { id: 2, name: "Jane Smith", status: "inactive" },
-];
+const Reports: React.FC = () => {
+  const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const headings = [
-  { title: "ID", dataKey: "id" },
-  { title: "Name", dataKey: "name" },
-  { title: "Name", dataKey: "name" },
-  { title: "Name", dataKey: "name" },
-  { title: "Name", dataKey: "name" },
-  {
-    title: "Status",
-    dataKey: "status",
-    render: (status: string) => (
-      <button
-        onClick={() => alert(`Status: ${status}`)}
-        className={`p-2 rounded ${
-          status === "active" ? "bg-green-500" : "bg-red-500"
-        }`}
-      >
-        {status}
-      </button>
-    ),
-  },
-];
+  useEffect(() => {
+    fetchRestaurantUsers();
+  }, []);
 
-const App = () => {
+  const fetchRestaurantUsers = async () => {
+    setLoading(true);
+    try {
+      const response = await sdk.GetAllRestaurantUsers();
+      if (response && response.getAllRestaurantUsers) {
+        setRestaurantUsers(response.getAllRestaurantUsers);
+      }
+    } catch (error) {
+      console.error("Failed to fetch restaurant users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const headings = [
+    { title: "Name", dataKey: "name" },
+    { title: "Email", dataKey: "email" },
+    { title: "Created At", dataKey: "createdAt" },
+    { title: "Updated At", dataKey: "updatedAt" },
+    { title: "Status", dataKey: "status" },
+  ];
+
   return (
     <div className="container mx-auto px-2">
       <RoopTable
-        data={data}
+        data={restaurantUsers}
         itemsPerPage={5}
         headings={headings}
-        actions={[{ label: "Edit", onClick: (id) => alert(`Edit ${id}`) }]}
-        mainActions={[{ label: "Add New", onClick: () => alert("Add New") }]}
-        filterable={true}
+        hovered
+        csvExport
+        filterable
       />
     </div>
   );
 };
 
-export default App;
+export default Reports;
