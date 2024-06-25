@@ -191,7 +191,6 @@ const RoopTable: React.FC<TableProps> = ({
                         setFilterColumn(selectedOption?.value || "")
                       }
                     />
-                    {/* Operator dropdown */}
                     <Select
                       classNames={{
                         placeholder: (state) => "!text-gray-400",

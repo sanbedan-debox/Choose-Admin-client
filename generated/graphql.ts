@@ -22,7 +22,7 @@ export type AddAdminInput = {
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
   password: Scalars['String']['input'];
-  type: AdminRole;
+  role: AdminRole;
 };
 
 export type AddEmailCampaignInput = {
@@ -44,19 +44,20 @@ export type AddEmailTemplateInput = {
 };
 
 export type AddRestaurantInput = {
-  address: Scalars['String']['input'];
+  address?: InputMaybe<Scalars['String']['input']>;
   availability?: InputMaybe<Array<AvailabilityDateInput>>;
-  city: Scalars['String']['input'];
-  name: Scalars['String']['input'];
-  state: Scalars['String']['input'];
-  tax_rate: Scalars['Float']['input'];
-  zip_code: Scalars['Float']['input'];
+  city?: InputMaybe<Scalars['String']['input']>;
+  name?: InputMaybe<Scalars['String']['input']>;
+  state?: InputMaybe<Scalars['String']['input']>;
+  tax_rate?: InputMaybe<Scalars['Float']['input']>;
+  zip_code?: InputMaybe<Scalars['Float']['input']>;
 };
 
 export type AddRestaurantUserInput = {
-  communication: Array<CommunicationPreference>;
+  communication: Array<CommunicationPreferenceInput>;
   email: Scalars['String']['input'];
   name: Scalars['String']['input'];
+  password: Scalars['String']['input'];
   phone: Scalars['String']['input'];
 };
 
@@ -79,7 +80,7 @@ export type Admin = {
   lastLoggedOut?: Maybe<Scalars['DateTimeISO']['output']>;
   name: Scalars['String']['output'];
   numberOfResetPassword: Scalars['Float']['output'];
-  type: AdminRole;
+  role: AdminRole;
   updatedAt: Scalars['DateTimeISO']['output'];
   updatedBy: Admin;
 };
@@ -98,6 +99,12 @@ export type AvailabilityDateInput = {
 };
 
 export type CommunicationPreference = {
+  __typename?: 'CommunicationPreference';
+  resp: Scalars['Boolean']['output'];
+  type: CommunicationType;
+};
+
+export type CommunicationPreferenceInput = {
   resp: Scalars['Boolean']['input'];
   type: CommunicationType;
 };
@@ -121,10 +128,10 @@ export enum Day {
 
 export type Device = {
   __typename?: 'Device';
-  _id?: Maybe<Scalars['ID']['output']>;
+  _id: Scalars['ID']['output'];
   createdAt: Scalars['DateTimeISO']['output'];
-  isPasswordChange: Scalars['Boolean']['output'];
-  updatedAt: Scalars['DateTimeISO']['output'];
+  lastLoggedIn: Scalars['DateTimeISO']['output'];
+  lastLoggedOut: Scalars['DateTimeISO']['output'];
   userAgent: Scalars['String']['output'];
 };
 
@@ -209,14 +216,14 @@ export type EmailTemplatesObject = {
 export type Mutation = {
   __typename?: 'Mutation';
   addAdmin: ResultUnion;
+  addRestaurant: Scalars['Boolean']['output'];
   addWaitListUser: Scalars['Boolean']['output'];
   changeRole: Scalars['Boolean']['output'];
   createEmailCampaign: Scalars['Boolean']['output'];
   createEmailTemplate: Scalars['Boolean']['output'];
-  createRestaurant: Scalars['Boolean']['output'];
-  createRestaurantUser: Scalars['Boolean']['output'];
   deleteAdmin: Scalars['Boolean']['output'];
   deleteEmailTemplate: Scalars['Boolean']['output'];
+  registerUser: Scalars['Boolean']['output'];
   removeRestaurant: Scalars['Boolean']['output'];
   sendTestEmails: Scalars['Boolean']['output'];
   updateRestaurantUserProfile: Scalars['Boolean']['output'];
@@ -225,6 +232,11 @@ export type Mutation = {
 
 export type MutationAddAdminArgs = {
   input: AddAdminInput;
+};
+
+
+export type MutationAddRestaurantArgs = {
+  input: AddRestaurantInput;
 };
 
 
@@ -249,16 +261,6 @@ export type MutationCreateEmailTemplateArgs = {
 };
 
 
-export type MutationCreateRestaurantArgs = {
-  input: AddRestaurantInput;
-};
-
-
-export type MutationCreateRestaurantUserArgs = {
-  input: AddRestaurantUserInput;
-};
-
-
 export type MutationDeleteAdminArgs = {
   id: Scalars['String']['input'];
 };
@@ -266,6 +268,11 @@ export type MutationDeleteAdminArgs = {
 
 export type MutationDeleteEmailTemplateArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type MutationRegisterUserArgs = {
+  input: AddRestaurantUserInput;
 };
 
 
@@ -287,13 +294,18 @@ export type Query = {
   __typename?: 'Query';
   adminLogin: Scalars['String']['output'];
   adminLogout: Scalars['Boolean']['output'];
+  emailOtpVerification: Scalars['Boolean']['output'];
+  generateOtpForEmailVerification: Scalars['String']['output'];
+  generateOtpForNumberVerification: Scalars['String']['output'];
   getAdmins: Array<Admin>;
   getAllEmailCampaigns: Array<EmailCampaignsObject>;
   getAllEmailTemplates: Array<EmailTemplatesObject>;
+  getAllRestaurantUsers: Array<RestaurantUser>;
   getWaitListUsers: Array<WaitListUser>;
   login: Scalars['String']['output'];
   logout: Scalars['Boolean']['output'];
   me: Admin;
+  mobileNumberOtpVerification: Scalars['Boolean']['output'];
   resetPasswordAdmin: Scalars['Boolean']['output'];
 };
 
@@ -304,9 +316,33 @@ export type QueryAdminLoginArgs = {
 };
 
 
+export type QueryEmailOtpVerificationArgs = {
+  email: Scalars['String']['input'];
+  key: Scalars['String']['input'];
+  otp: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateOtpForEmailVerificationArgs = {
+  email: Scalars['String']['input'];
+};
+
+
+export type QueryGenerateOtpForNumberVerificationArgs = {
+  number: Scalars['String']['input'];
+};
+
+
 export type QueryLoginArgs = {
   email: Scalars['String']['input'];
   password: Scalars['String']['input'];
+};
+
+
+export type QueryMobileNumberOtpVerificationArgs = {
+  key: Scalars['String']['input'];
+  number: Scalars['String']['input'];
+  otp: Scalars['String']['input'];
 };
 
 
@@ -314,6 +350,34 @@ export type QueryResetPasswordAdminArgs = {
   id: Scalars['String']['input'];
   password: Scalars['String']['input'];
 };
+
+export type RestaurantInfo = {
+  __typename?: 'RestaurantInfo';
+  _id: Scalars['ID']['output'];
+  restaurantId: Scalars['ID']['output'];
+};
+
+export type RestaurantUser = {
+  __typename?: 'RestaurantUser';
+  _id: Scalars['ID']['output'];
+  communicationPreference?: Maybe<Array<CommunicationPreference>>;
+  createdAt: Scalars['DateTimeISO']['output'];
+  deviceDetails: Array<Device>;
+  email: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  phone: Scalars['Float']['output'];
+  profileStatus: UserOnboardingStatus;
+  restaurants: Array<RestaurantInfo>;
+  status: RestaurantUserStatus;
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+/** Restaurant user status */
+export enum RestaurantUserStatus {
+  Active = 'active',
+  Blocked = 'blocked',
+  Deactive = 'deactive'
+}
 
 export type Result = {
   __typename?: 'Result';
@@ -338,10 +402,17 @@ export type TestEmailInput = {
 };
 
 export type UpdateUserProfileInput = {
-  communication?: InputMaybe<Array<CommunicationPreference>>;
+  communication?: InputMaybe<Array<CommunicationPreferenceInput>>;
   name?: InputMaybe<Scalars['String']['input']>;
   restaurantIds?: InputMaybe<Array<Scalars['String']['input']>>;
 };
+
+/** User onboarding status */
+export enum UserOnboardingStatus {
+  Completed = 'completed',
+  EmailPending = 'emailPending',
+  PhonePending = 'phonePending'
+}
 
 export type WaitListUser = {
   __typename?: 'WaitListUser';
@@ -358,12 +429,12 @@ export type WaitListUser = {
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Admin', _id: string, name: string, type: AdminRole } };
+export type MeQuery = { __typename?: 'Query', me: { __typename?: 'Admin', _id: string, name: string, role: AdminRole } };
 
 export type GetAdminsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAdminsQuery = { __typename?: 'Query', getAdmins: Array<{ __typename?: 'Admin', _id: string, name: string, email: string, type: AdminRole, numberOfResetPassword: number, createdAt: any, updatedAt: any }> };
+export type GetAdminsQuery = { __typename?: 'Query', getAdmins: Array<{ __typename?: 'Admin', _id: string, name: string, email: string, role: AdminRole, numberOfResetPassword: number, createdAt: any, updatedAt: any }> };
 
 export type AdminLoginQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -412,7 +483,7 @@ export const MeDocument = gql`
   me {
     _id
     name
-    type
+    role
   }
 }
     `;
@@ -422,7 +493,7 @@ export const GetAdminsDocument = gql`
     _id
     name
     email
-    type
+    role
     numberOfResetPassword
     createdAt
     updatedAt

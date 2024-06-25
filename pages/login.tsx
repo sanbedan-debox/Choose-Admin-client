@@ -7,6 +7,8 @@ import useGlobalStore from "@/store/global";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { GetServerSideProps } from "next";
+import { parseCookies } from "nookies";
 
 interface IFormInput {
   email: string;
@@ -29,8 +31,8 @@ export default function Login() {
 
     try {
       const response = await sdk.AdminLogin({
-        email: email,
-        password: password,
+        email,
+        password,
       });
 
       if (response) {
@@ -122,3 +124,41 @@ export default function Login() {
     </section>
   );
 }
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  const cookies = parseCookies(context);
+  const token = cookies.accessToken;
+
+  if (!token) {
+    return {
+      props: {},
+    };
+  }
+
+  try {
+    const response = await sdk.Me(
+      {},
+      {
+        cookie: context.req.headers.cookie?.toString() ?? "",
+      }
+    );
+
+    if (response && response.me) {
+      return {
+        redirect: {
+          destination: "/",
+          permanent: false,
+        },
+      };
+    } else {
+      return {
+        props: {},
+      };
+    }
+  } catch (error) {
+    console.error("Failed to fetch user details:", error);
+    return {
+      props: {},
+    };
+  }
+};

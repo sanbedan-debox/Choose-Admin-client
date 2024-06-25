@@ -15,13 +15,16 @@ import useGlobalStore from "@/store/global";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { FaTrash, FaEdit, FaShieldAlt } from "react-icons/fa";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
-  const [selectedAdminId, setSelectedAdminId] = useState<string | null>(null);
+  const [selectedAdminId, setSelectedAdminId] = useState<
+    string | number | null
+  >(null);
   const [randomPassword, setRandomPassword] = useState(
     generateRandomPassword()
   );
@@ -136,7 +139,7 @@ const Admin: React.FC = () => {
     if (!adminToDelete) return;
 
     try {
-      const response = await sdk.DeleteAdmin({ id: adminToDelete._id });
+      const response = await sdk.DeleteAdmin({ id: adminToDelete });
       console.log("Admin deleted successfully:", response);
       setIsDeleteModalOpen(false);
       setAdminToDelete(null);
@@ -148,8 +151,8 @@ const Admin: React.FC = () => {
     }
   };
 
-  const openDeleteModal = (admin: AdminInterface) => {
-    setAdminToDelete(admin);
+  const openDeleteModal = (id) => {
+    setAdminToDelete(id);
     setIsDeleteModalOpen(true);
   };
 
@@ -159,6 +162,27 @@ const Admin: React.FC = () => {
     setValuePass("newPassword", randomPassword);
     setIsChangePassModalOpen(true);
   };
+  const renderActions = (_id) => (
+    <div className="flex space-x-2">
+      <FaTrash
+        className="text-red-500 cursor-pointer"
+        onClick={() => openDeleteModal(_id)}
+      />
+      <FaEdit
+        className="text-blue-500 cursor-pointer"
+        // onClick={() => openChangeRoleModal(rowData._id)}
+        onClick={() => {
+          setSelectedAdminId(_id);
+          console.log(selectedAdminId);
+          setIsChangeRoleModalOpen(true);
+        }}
+      />
+      <FaShieldAlt
+        className="text-green-500 cursor-pointer"
+        onClick={() => openChangePassModal(_id)}
+      />
+    </div>
+  );
 
   const mainActions = [
     {
@@ -167,30 +191,13 @@ const Admin: React.FC = () => {
     },
   ];
 
-  const Actions = [
-    {
-      label: "Delete",
-      onClick: (data: AdminInterface) => openDeleteModal(data),
-    },
-    {
-      label: "Change Password",
-      onClick: (data: AdminInterface) => openChangePassModal(data._id),
-    },
-    {
-      label: "Change Role",
-      onClick: (data: AdminInterface) => {
-        setSelectedAdminId(data._id);
-        setIsChangeRoleModalOpen(true);
-      },
-    },
-  ];
-
   const headings = [
     { title: "Name", dataKey: "name" },
     { title: "Email", dataKey: "email" },
-    { title: "Role", dataKey: "type" },
+    { title: "Role", dataKey: "role" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
+    { title: "Actions", dataKey: "_id", render: renderActions },
   ];
 
   return (
@@ -201,7 +208,6 @@ const Admin: React.FC = () => {
         <RoopTable
           data={members}
           itemsPerPage={5}
-          actions={Actions}
           csvExport
           fullCsv
           csvFileName="admins_data.csv"

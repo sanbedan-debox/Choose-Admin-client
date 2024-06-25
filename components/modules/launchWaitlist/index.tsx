@@ -40,7 +40,7 @@ const Admin: React.FC = () => {
       ) : (
         <RoopTable
           data={waitListUsers}
-          itemsPerPage={5}
+          itemsPerPage={10}
           csvExport
           fullCsv
           csvFileName="admins_data.csv"

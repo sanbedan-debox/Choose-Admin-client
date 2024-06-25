@@ -1,41 +1,97 @@
+# # Queries
+
+# # Query to log in a restaurant user
+# query Login($email: String!, $password: String!) {
+#   login(email: $email, password: $password)
+# }
+
+# # Query to log out the currently logged-in user
+# query Logout {
+#   logout
+# }
+
+# # Mutations
+
+# # # Mutation to create a new restaurant user
+# # mutation CreateRestaurantUser($input: AddRestaurantUserInput!) {
+# #   createRestaurantUser(input: $input)
+# # }
+
+# # Mutation to update the restaurant user's profile
+# mutation UpdateRestaurantUserProfile($input: UpdateUserProfileInput!) {
+#   updateRestaurantUserProfile(input: $input)
+# }
+
+# # Inputs
+
+# # Input for adding a new restaurant user
+# input AddRestaurantUserInput {
+#   name: String!
+#   email: String!
+#   password: String!
+#   restaurantId: String!
+#   # Add other fields as necessary
+# }
+
+# # Input for updating user profile
+# input UpdateUserProfileInput {
+#   name: String
+#   email: String
+#   # Add other fields as necessary
+# }
+
 # Queries
 
-# Query to log in a restaurant user
-query Login($email: String!, $password: String!) {
-  login(email: $email, password: $password)
+# Query to get the currently logged-in admin's details//
+query Me {
+  me {
+    _id
+    name
+    role
+  }
 }
 
-# Query to log out the currently logged-in user
-query Logout {
-  logout
+# Query to get a list of all admins//
+query GetAdmins {
+  getAdmins {
+    _id
+    name
+    email
+    role
+    numberOfResetPassword
+    createdAt
+    updatedAt
+  }
+}
+
+# Query to log in an admin//
+query AdminLogin($email: String!, $password: String!) {
+  adminLogin(email: $email, password: $password)
 }
 
 # Mutations
 
-# Mutation to create a new restaurant user
-mutation CreateRestaurantUser($input: AddRestaurantUserInput!) {
-  createRestaurantUser(input: $input)
+# # Mutation to add a new admin//
+# mutation AddAdmin($input: AddAdminInput!) {
+#   addAdmin(input: $input)
+# }
+
+# Mutation to delete an admin by ID//
+mutation DeleteAdmin($id: String!) {
+  deleteAdmin(id: $id)
 }
 
-# Mutation to update the restaurant user's profile
-mutation UpdateRestaurantUserProfile($input: UpdateUserProfileInput!) {
-  updateRestaurantUserProfile(input: $input)
+# Mutation to reset an admin's password//
+query ResetPasswordAdmin($id: String!, $password: String!) {
+  resetPasswordAdmin(id: $id, password: $password)
 }
 
-# Inputs
-
-# Input for adding a new restaurant user
-input AddRestaurantUserInput {
-  name: String!
-  email: String!
-  password: String!
-  restaurantId: String!
-  # Add other fields as necessary
+# Mutation to change an admin's role
+mutation ChangeRole($id: String!, $role: AdminRole!) {
+  changeRole(id: $id, role: $role)
 }
 
-# Input for updating user profile
-input UpdateUserProfileInput {
-  name: String
-  email: String
-  # Add other fields as necessary
-}
+# Mutation to log out the admin//
+query AdminLogout {
+  adminLogout
+} # Queries

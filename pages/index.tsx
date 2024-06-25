@@ -10,7 +10,7 @@ import { parseCookies } from "nookies";
 type HomePageProps = {
   repo: {
     name: string;
-    type: string;
+    role: string;
   };
 };
 
@@ -22,7 +22,7 @@ const HomePage: React.FC<HomePageProps> = ({
 
   useEffect(() => {
     setUserName(repo.name);
-    setUserRole(repo.type);
+    setUserRole(repo.role);
   }, [repo, setUserName, setUserRole]);
 
   return <div>{EmailBuilderOpen ? <UnlayerEditor /> : <Layout />}</div>;
@@ -54,12 +54,12 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
       }
     );
     if (response && response.me) {
-      const { name, type } = response.me;
+      const { name, role } = response.me;
       return {
         props: {
           repo: {
             name,
-            type,
+            role,
           },
         },
       };
