@@ -14,9 +14,9 @@ const buttonStyles = {
   [ButtonType.Icon]:
     "flex items-center justify-center h-10 px-3 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary  md:w-auto w-10",
   [ButtonType.Outlined]:
-    "flex items-center justify-center h-10 px-4 py-2 m-1 text-white text-sm border border-primary rounded-full transition-colors duration-300 transform hover:bg-primary hover:text-white  md:w-auto w-32",
+    "flex items-center justify-center h-10 px-4 py-2 m-1 text-black text-sm border border-primary rounded-full transition-colors duration-300 transform hover:bg-primary hover:text-white  md:w-auto w-32",
   [ButtonType.Primary]:
-    "flex items-center justify-center h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary  md:w-auto w-32",
+    "flex items-center justify-center h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-primary hover:bg-opacity-70 hover:text-white  md:w-auto w-32",
   [ButtonType.Text]:
     "text-primary text-sm transition-colors duration-300 transform hover:text-blue-600 focus:outline-none",
   [ButtonType.Warning]:

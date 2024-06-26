@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
 import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);

@@ -10,7 +10,7 @@ export function Message() {
       title: "Campaign",
       value: "campaign",
       content: (
-        <div className="bg-black">
+        <div className="bg-white rounded-md">
           <MssgCampaign />
         </div>
       ),
@@ -19,7 +19,7 @@ export function Message() {
       title: "Message Template",
       value: "messageTemplate",
       content: (
-        <div className="bg-black max-w-7xl">
+        <div className="bg-white max-w-7xl rounded-md">
           <MssgTemplate />
         </div>
       ),

@@ -3,14 +3,25 @@ import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
 
 import { WaitlistInterface } from "./interface";
+import useGlobalStore from "@/store/global";
+import useCampaignStore from "@/store/campaign";
 
 const Admin: React.FC = () => {
   const [waitListUsers, setWaitListUsers] = useState<WaitlistInterface[]>([]);
   const [loading, setLoading] = useState(true);
+  const { selectedModule, setSelectedModule } = useGlobalStore();
+  const { setCreateEmailCampaignModalOpen, setselectedTargetValue } =
+    useCampaignStore();
 
   useEffect(() => {
     fetchWaitListUsers();
   }, []);
+
+  const handleCreateCampaign = () => {
+    setSelectedModule("Emails");
+    setCreateEmailCampaignModalOpen(true);
+    setselectedTargetValue("waitlistUsers");
+  };
 
   const fetchWaitListUsers = async () => {
     setLoading(true);
@@ -25,7 +36,12 @@ const Admin: React.FC = () => {
       setLoading(false);
     }
   };
-
+  const mainActions = [
+    {
+      label: "Create",
+      onClick: handleCreateCampaign,
+    },
+  ];
   const headings = [
     { title: "Name", dataKey: "name" },
     { title: "Email", dataKey: "email" },
@@ -46,6 +62,7 @@ const Admin: React.FC = () => {
           csvFileName="admins_data.csv"
           headings={headings}
           hovered
+          mainActions={mainActions}
         />
       )}
     </div>

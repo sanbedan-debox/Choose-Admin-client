@@ -31,7 +31,6 @@ query AdminLogin($email: String!, $password: String!) {
 query GetAllRestaurantUsers {
   getAllRestaurantUsers {
     _id
-    name
     email
     createdAt
     updatedAt

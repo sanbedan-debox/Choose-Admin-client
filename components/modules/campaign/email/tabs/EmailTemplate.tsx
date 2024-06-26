@@ -1,21 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import RoopTable from "@/components/common/customTableR/table";
-import UnlayerEditor from "../unlayer/editor";
 import useGlobalStore from "@/store/global";
+import { sdk } from "@/util/graphqlClient";
 
 const EmailTemplate: React.FC = () => {
   const { setEmailBuilderOpen } = useGlobalStore();
+  const [emailTemplates, setEmailTemplates] = useState<any[]>([]); // Adjust type as per your GraphQL schema
 
-  const members = [
-    {
-      id: 1,
-      title: "John Doe",
-      content: "johndoe@example.com",
-      createdBy: "superAdmin",
-      createdAt: "2021-10-18",
-      UpdatedAt: "2021-10-18",
-    },
-  ];
+  useEffect(() => {
+    const fetchEmailTemplates = async () => {
+      try {
+        const { getAllEmailTemplates } = await sdk.getAllEmailTemplates();
+        setEmailTemplates(getAllEmailTemplates);
+      } catch (error) {
+        console.error("Error fetching email templates:", error);
+        // Handle error fetching data (e.g., show error message)
+      }
+    };
+
+    fetchEmailTemplates();
+  }, []);
 
   const mainActions = [
     {
@@ -28,13 +32,13 @@ const EmailTemplate: React.FC = () => {
     {
       label: "Delete",
       onClick: (id: number) => {
-        alert(`Delete member with ID: ${id}`);
+        alert(`Delete template with ID: ${id}`);
       },
     },
     {
       label: "Preview",
       onClick: (id: number) => {
-        alert(`Preview for member ID: ${id}`);
+        alert(`Preview for template ID: ${id}`);
       },
     },
   ];
@@ -42,20 +46,20 @@ const EmailTemplate: React.FC = () => {
   const headings = [
     { title: "Title", dataKey: "title" },
     { title: "Content", dataKey: "content" },
-    { title: "Created By", dataKey: "createdBy" },
     { title: "Created At", dataKey: "createdAt" },
-    { title: "Updated At", dataKey: "UpdatedAt" },
+    { title: "Updated At", dataKey: "updatedAt" },
+    // Add more headings as needed
   ];
 
   return (
     <div className="">
       <RoopTable
-        data={members}
+        data={emailTemplates}
         itemsPerPage={5}
         actions={actions}
         csvExport
         fullCsv
-        csvFileName="admins_data.csv"
+        csvFileName="email_templates_data.csv"
         headings={headings}
         mainActions={mainActions}
         // striped

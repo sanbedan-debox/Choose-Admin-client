@@ -1,0 +1,21 @@
+query getAllEmailTemplates {
+  getAllEmailTemplates {
+    title
+    content
+
+    createdAt
+    updatedAt
+    designJson
+  }
+}
+
+query getAllEmailCampaigns {
+  getAllEmailCampaigns {
+    campaignName
+    emailSubject
+    status
+    target
+    scheduleType
+    usersCount
+  }
+}

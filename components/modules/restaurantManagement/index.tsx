@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
 import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
+import Switch from "react-switch";
 
 const Reports: React.FC = () => {
   const [restaurants, setRestaurants] = useState<any[]>([]);
@@ -24,23 +25,31 @@ const Reports: React.FC = () => {
     }
   };
 
+  const toggleStatus = (id: string) => {
+    console.log(`Toggling status for ID: ${id}`);
+  };
+
+  const renderActions = (_id: string) => (
+    <Switch
+      onChange={() => toggleStatus(_id)}
+      checked={true} // Replace with actual status from your data
+      onColor="#86d3ff"
+      onHandleColor="#2693e6"
+      handleDiameter={20}
+      uncheckedIcon={false}
+      checkedIcon={false}
+      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+      height={12}
+      width={30}
+      className="react-switch"
+      id="material-switch"
+    />
+  );
+
   const headings = [
+    { title: "Toggle Status", dataKey: "_id", render: renderActions },
     { title: "id", dataKey: "_id" },
-    // { title: "Address", dataKey: "address.value" },
-    // { title: "Status", dataKey: "status" },
-    // { title: "State", dataKey: "state.value" },
-    // { title: "City", dataKey: "city.value" },
-    // {
-    //   title: "Restaurant User",
-    //   dataKey: "restaurantUser",
-    //   render: (restaurantUser: any) => (
-    //     <div>
-    //       <div>{restaurantUser.name}</div>
-    //       <div>{restaurantUser.email}</div>
-    //       <div>{restaurantUser.phone}</div>
-    //     </div>
-    //   ),
-    // },
   ];
 
   return (

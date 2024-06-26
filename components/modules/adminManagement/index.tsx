@@ -16,6 +16,7 @@ import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { FaTrash, FaEdit, FaShieldAlt } from "react-icons/fa";
+import Switch from "react-switch"; // Import react-switch component
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -180,6 +181,21 @@ const Admin: React.FC = () => {
       <FaShieldAlt
         className="text-green-500 cursor-pointer"
         onClick={() => openChangePassModal(_id)}
+      />
+      <Switch
+        // onChange={() => toggleAdminStatus(admin._id)}
+        checked={true} // Replace with actual status from your data
+        onColor="#86d3ff"
+        onHandleColor="#2693e6"
+        handleDiameter={20}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+        height={12}
+        width={30}
+        className="react-switch"
+        // id={`status-switch-${admin._id}`}
       />
     </div>
   );

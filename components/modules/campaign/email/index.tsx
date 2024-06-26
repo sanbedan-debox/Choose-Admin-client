@@ -10,7 +10,7 @@ export function Emails() {
       title: "Campaign",
       value: "campaign",
       content: (
-        <div className="bg-black">
+        <div className="bg-white rounded-md">
           <EmailCampaign />
         </div>
       ),
@@ -19,7 +19,7 @@ export function Emails() {
       title: "Email Template",
       value: "emailTemplate",
       content: (
-        <div className="bg-black ">
+        <div className="bg-white rounded-md">
           <EmailTemplate />
         </div>
       ),

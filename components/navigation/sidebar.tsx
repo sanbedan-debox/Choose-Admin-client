@@ -25,12 +25,12 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      style={{
-        background: "rgb(4,7,29)",
-        backgroundColor:
-          "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
-      }}
-      className={`max-h-none flex flex-col text-white transition-all duration-300 ${
+      // style={{
+      //   background: "rgb(4,7,29)",
+      //   backgroundColor:
+      //     "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
+      // }}
+      className={`max-h-none flex flex-col bg-white text-white transition-all duration-300 ${
         isSidebarExpanded ? "w-64" : "w-20"
       }`}
     >
@@ -39,21 +39,21 @@ const Sidebar: React.FC = () => {
         <div
           className={`flex items-center ${
             isSidebarExpanded ? "justify-between  py-4" : "justify-center py-6"
-          }  w-full px-4 bg-gray-800`}
+          }  w-full px-4 bg-primary bg-opacity-50`}
         >
           {isSidebarExpanded && (
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-gray-500 rounded-full flex items-center justify-center text-lg font-semibold text-white">
+              <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-lg font-semibold text-white">
                 {userName.charAt(0).toUpperCase()}
               </div>
-              <span className="ml-2">{userName}</span>
+              <span className="ml-2 text-black">{userName}</span>
             </div>
           )}
           <button
             type="button"
             title={isSidebarExpanded ? "Collapse Sidebar" : "Expand Sidebar"}
             onClick={toggleSidebar}
-            className="text-gray-400 hover:text-white flex items-center justify-center"
+            className="text-black hover:text-gray-500 flex items-center justify-center"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -91,12 +91,12 @@ const Sidebar: React.FC = () => {
                   {module.subModules ? (
                     <li className="cursor-pointer mb-1">
                       <div
-                        className="flex justify-between items-center hover:bg-gray-700 rounded-lg"
+                        className="flex justify-between items-center hover:bg-primary hover:bg-opacity-80 rounded-lg"
                         onClick={() => toggleDropdown(module.name)}
                       >
-                        <div className="flex items-center p-2 text-white group">
+                        <div className="flex items-center p-2 text-black hover:text-white group">
                           <svg
-                            className="w-5 h-5 transition duration-75 text-gray-400 group-hover:text-white"
+                            className="w-5 h-5 transition duration-75 text-gray-700 hover:text-white group-hover:text-white"
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor"
@@ -144,10 +144,10 @@ const Sidebar: React.FC = () => {
                                   onClick={() =>
                                     setSelectedModule(subModule.name)
                                   }
-                                  className="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group"
+                                  className="flex items-center p-2 rounded-lg text-black hover:bg-primary hover:bg-opacity-80  hover:text-white group"
                                 >
                                   <svg
-                                    className="w-5 h-5 transition duration-75 text-gray-400 group-hover:text-white"
+                                    className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white"
                                     aria-hidden="true"
                                     xmlns="http://www.w3.org/2000/svg"
                                     fill="currentColor"
@@ -171,10 +171,10 @@ const Sidebar: React.FC = () => {
                     <li className="cursor-pointer mb-1" key={module.name}>
                       <a
                         onClick={() => setSelectedModule(module.name)}
-                        className="flex items-center p-2 rounded-lg text-white hover:bg-gray-700 group"
+                        className="flex items-center p-2 rounded-lg  text-black hover:text-white hover:bg-primary hover:bg-opacity-80 group"
                       >
                         <svg
-                          className="w-5 h-5 transition duration-75 text-gray-400 group-hover:text-white"
+                          className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white"
                           aria-hidden="true"
                           xmlns="http://www.w3.org/2000/svg"
                           fill="currentColor"
