@@ -51,11 +51,11 @@ const ReusableModal: React.FC<ModalProps> = ({
         <div className=" py-5 px-6">
           <div className="flex items-start justify-between py-2 mb-4 rounded-t dark:border-gray-600">
             <div className="flex items-center space-x-4">
-              <h2 className="text-2xl font-bold text-white">{title}</h2>
+              <h2 className="text-2xl font-bold text-black">{title}</h2>
             </div>
             <button
               type="button"
-              className="text-black bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white"
+              className="text-black bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 inline-flex justify-center items-center dark:hover:bg-primary dark:hover:text-white"
               onClick={onClose}
             >
               <svg

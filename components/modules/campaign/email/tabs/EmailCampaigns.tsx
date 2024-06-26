@@ -5,6 +5,8 @@ import Select from "react-select";
 import ReusableModal from "@/components/common/modal/modal";
 import useCampaignStore from "@/store/campaign";
 import { sdk } from "@/util/graphqlClient";
+import { ButtonType } from "@/components/common/button/interface";
+import CButton from "@/components/common/button/button";
 
 const templateOptions = [
   { value: "template1", label: "Template 1" },
@@ -121,7 +123,7 @@ const EmailCampaign: React.FC = () => {
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
-            <label className="block text-white">Name</label>
+            <label className="block text-black">Name</label>
             <Controller
               name="name"
               control={control}
@@ -140,7 +142,7 @@ const EmailCampaign: React.FC = () => {
             </p>
           </div>
           <div>
-            <label className="block text-white">Email Subject</label>
+            <label className="block text-black">Email Subject</label>
             <Controller
               name="subject"
               control={control}
@@ -159,7 +161,7 @@ const EmailCampaign: React.FC = () => {
             </p>
           </div>
           <div>
-            <label className="block text-white">Email Template</label>
+            <label className="block text-black">Email Template</label>
             <Controller
               name="template"
               control={control}
@@ -174,7 +176,7 @@ const EmailCampaign: React.FC = () => {
                     control: () =>
                       "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
                     menu: () => "z-[100] !bg-[#142D5F]",
-                    singleValue: () => "!text-white",
+                    singleValue: () => "!text-black",
                     option: (state) =>
                       `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
                         state.isFocused || state.isSelected
@@ -189,7 +191,7 @@ const EmailCampaign: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block text-white">Target</label>
+            <label className="block text-black">Target</label>
             <Controller
               name="target"
               control={control}
@@ -204,7 +206,7 @@ const EmailCampaign: React.FC = () => {
                     control: () =>
                       "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
                     menu: () => "z-[100] !bg-[#142D5F]",
-                    singleValue: () => "!text-white",
+                    singleValue: () => "!text-black",
                     option: (state) =>
                       `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
                         state.isFocused || state.isSelected
@@ -219,7 +221,7 @@ const EmailCampaign: React.FC = () => {
             />
           </div>
           <div>
-            <label className="block text-white">Schedule Type</label>
+            <label className="block text-black">Schedule Type</label>
             <Controller
               name="scheduleType"
               control={control}
@@ -234,19 +236,13 @@ const EmailCampaign: React.FC = () => {
             />
           </div>
           <div className="flex justify-end space-x-2">
-            <button
-              type="button"
-              className="bg-gray-600 text-white px-4 py-2 rounded"
+            <CButton
+              type={ButtonType.Warning}
               onClick={() => setCreateEmailCampaignModalOpen(false)}
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="bg-blue-600 text-white px-4 py-2 rounded"
-            >
-              Send
-            </button>
+            </CButton>
+            <CButton type={ButtonType.Confirm}>Send</CButton>
           </div>
         </form>
       </ReusableModal>

@@ -239,19 +239,19 @@ const Admin: React.FC = () => {
       >
         <form onSubmit={handleSubmit(handleAddAdmin)}>
           <div className="mb-4">
-            <label className="block text-white">Name</label>
+            <label className="block text-black">Name</label>
             <input
               type="text"
               placeholder="Enter Name..."
               {...register("name", { required: "Name is required" })}
-              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
             />
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name.message}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-white">Email</label>
+            <label className="block text-black">Email</label>
             <input
               placeholder="Enter Email..."
               {...register("email", {
@@ -261,14 +261,14 @@ const Admin: React.FC = () => {
                   message: "Invalid email address",
                 },
               })}
-              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-white">Password</label>
+            <label className="block text-black">Password</label>
             <input
               type="password"
               placeholder="Enter Password..."
@@ -279,14 +279,14 @@ const Admin: React.FC = () => {
                   message: "Password must be at least 6 characters long",
                 },
               })}
-              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-white">Role</label>
+            <label className="block text-black">Role</label>
             <Controller
               name="role"
               control={control}
@@ -300,7 +300,7 @@ const Admin: React.FC = () => {
                     control: () =>
                       "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
                     menu: () => "z-[100] !bg-[#142D5F]",
-                    singleValue: () => "!text-white",
+                    singleValue: () => "!text-black",
                     option: (state) =>
                       `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
                         state.isFocused || state.isSelected
@@ -337,7 +337,7 @@ const Admin: React.FC = () => {
       >
         <form onSubmit={handleSubmitPass(handleChangePassword)}>
           <div className="mb-4">
-            <h3 className="font-bold mb-2 text-white">
+            <h3 className="font-bold mb-2 text-black">
               Generate or Enter New Password
             </h3>
             <Controller
@@ -348,7 +348,7 @@ const Admin: React.FC = () => {
                   {...field}
                   placeholder="Enter Password..."
                   type="text"
-                  className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                  className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
                 />
               )}
             />
@@ -371,7 +371,7 @@ const Admin: React.FC = () => {
               Generate Password
             </CButton>
             <CButton
-              type={ButtonType.Outlined}
+              type={ButtonType.Warning}
               onClick={() => setIsChangePassModalOpen(false)}
             >
               Cancel
@@ -394,7 +394,7 @@ const Admin: React.FC = () => {
       >
         <form onSubmit={handleSubmitRole(handleChangeRole)}>
           <div className="mb-4">
-            <label className="block text-white">Select Role</label>
+            <label className="block text-black">Select Role</label>
             <Controller
               name="role"
               control={controlRole}
@@ -408,7 +408,7 @@ const Admin: React.FC = () => {
                     control: () =>
                       "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
                     menu: () => "z-[100] !bg-[#142D5F]",
-                    singleValue: () => "!text-white",
+                    singleValue: () => "!text-black",
                     option: (state) =>
                       `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
                         state.isFocused || state.isSelected
@@ -427,12 +427,12 @@ const Admin: React.FC = () => {
           </div>
           <div className="flex justify-end mt-4">
             <CButton
-              type={ButtonType.Primary}
+              type={ButtonType.Warning}
               onClick={() => setIsChangeRoleModalOpen(false)}
             >
               Cancel
             </CButton>
-            <CButton type={ButtonType.Primary}>Change Role</CButton>
+            <CButton type={ButtonType.Confirm}>Change Role</CButton>
           </div>
         </form>
       </ReusableModal>
@@ -443,7 +443,7 @@ const Admin: React.FC = () => {
         onClose={() => setIsDeleteModalOpen(false)}
         width="md"
       >
-        <p className="text-white mb-4">
+        <p className="text-black mb-4">
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
