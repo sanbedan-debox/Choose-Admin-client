@@ -163,6 +163,27 @@ const Admin: React.FC = () => {
     setValuePass("newPassword", randomPassword);
     setIsChangePassModalOpen(true);
   };
+
+  const renderSwitch = (_id) => (
+    <div className="">
+      <Switch
+        onChange={() => console.log(_id)}
+        checked={true} // Replace with actual status from your data
+        onColor="#86d3ff"
+        onHandleColor="#2693e6"
+        handleDiameter={20}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+        height={12}
+        width={30}
+        className="react-switch"
+        // id={`status-switch-${admin._id}`}
+      />
+    </div>
+  );
+
   const renderActions = (_id) => (
     <div className="flex space-x-2">
       <FaTrash
@@ -182,21 +203,6 @@ const Admin: React.FC = () => {
         className="text-green-500 cursor-pointer"
         onClick={() => openChangePassModal(_id)}
       />
-      <Switch
-        // onChange={() => toggleAdminStatus(admin._id)}
-        checked={true} // Replace with actual status from your data
-        onColor="#86d3ff"
-        onHandleColor="#2693e6"
-        handleDiameter={20}
-        uncheckedIcon={false}
-        checkedIcon={false}
-        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-        height={12}
-        width={30}
-        className="react-switch"
-        // id={`status-switch-${admin._id}`}
-      />
     </div>
   );
 
@@ -208,6 +214,7 @@ const Admin: React.FC = () => {
   // ];
 
   const headings = [
+    { title: "Toggle Status", dataKey: "_id", render: renderSwitch },
     { title: "Name", dataKey: "name" },
     { title: "Email", dataKey: "email" },
     { title: "Role", dataKey: "role" },
@@ -348,7 +355,7 @@ const Admin: React.FC = () => {
                   {...field}
                   placeholder="Enter Password..."
                   type="text"
-                  className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
+                  className="mt-1  bg-[#EFEFEF] text-sm rounded-lg w-full focus:outline-none block p-2.5  placeholder-gray-400 text-black "
                 />
               )}
             />
@@ -406,13 +413,13 @@ const Admin: React.FC = () => {
                   classNames={{
                     placeholder: () => "!text-gray-400",
                     control: () =>
-                      "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-[#142D5F]",
+                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
+                    menu: () => "z-[100] !bg-white text-black",
                     singleValue: () => "!text-black",
                     option: (state) =>
-                      `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
+                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
                         state.isFocused || state.isSelected
-                          ? "!bg-transparent"
+                          ? "!bg-transparent !text-black"
                           : ""
                       }`,
                   }}

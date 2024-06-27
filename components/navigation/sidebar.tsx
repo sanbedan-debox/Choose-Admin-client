@@ -25,11 +25,6 @@ const Sidebar: React.FC = () => {
 
   return (
     <div
-      // style={{
-      //   background: "rgb(4,7,29)",
-      //   backgroundColor:
-      //     "linear-gradient(90deg, rgba(4,7,29,1) 0%, rgba(12,14,35,1) 100%)",
-      // }}
       className={`max-h-none flex flex-col bg-white text-white transition-all duration-300 ${
         isSidebarExpanded ? "w-64" : "w-20"
       }`}
@@ -39,7 +34,7 @@ const Sidebar: React.FC = () => {
         <div
           className={`flex items-center ${
             isSidebarExpanded ? "justify-between  py-4" : "justify-center py-6"
-          }  w-full px-4 bg-primary bg-opacity-50`}
+          }  w-full px-4`}
         >
           {isSidebarExpanded && (
             <div className="flex items-center">

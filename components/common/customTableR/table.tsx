@@ -201,7 +201,7 @@ const RoopTable: React.FC<TableProps> = ({
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-secondary bg-opacity-30 text-sm rounded-lg block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent w-96"
+            className="bg-input text-sm rounded-lg block p-2.5  placeholder-gray-400 text-white w-96"
           />
 
           {filterable && (
@@ -245,7 +245,7 @@ const RoopTable: React.FC<TableProps> = ({
       <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
         <div className="overflow-x-auto">
           <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
-            <thead className="bg-primary bg-opacity-80 text-white">
+            <thead className="bg-white text-black">
               <tr>
                 {headings.map((heading, index) => (
                   <th

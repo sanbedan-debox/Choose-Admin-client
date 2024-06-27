@@ -133,7 +133,7 @@ const EmailCampaign: React.FC = () => {
                   placeholder="Enter name"
                   type="text"
                   maxLength={60}
-                  className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
                 />
               )}
             />
@@ -152,7 +152,7 @@ const EmailCampaign: React.FC = () => {
                   placeholder="Enter subject"
                   type="text"
                   maxLength={60}
-                  className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
                 />
               )}
             />
@@ -174,13 +174,13 @@ const EmailCampaign: React.FC = () => {
                   classNames={{
                     placeholder: () => "!text-gray-400",
                     control: () =>
-                      "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-[#142D5F]",
+                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
+                    menu: () => "z-[100] !bg-white text-black",
                     singleValue: () => "!text-black",
                     option: (state) =>
-                      `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
+                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
                         state.isFocused || state.isSelected
-                          ? "!bg-transparent"
+                          ? "!bg-transparent !text-black"
                           : ""
                       }`,
                   }}
@@ -204,13 +204,13 @@ const EmailCampaign: React.FC = () => {
                   classNames={{
                     placeholder: () => "!text-gray-400",
                     control: () =>
-                      "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-[#142D5F]",
+                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
+                    menu: () => "z-[100] !bg-white text-black",
                     singleValue: () => "!text-black",
                     option: (state) =>
-                      `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
+                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
                         state.isFocused || state.isSelected
-                          ? "!bg-transparent"
+                          ? "!bg-transparent !text-black"
                           : ""
                       }`,
                   }}
@@ -230,7 +230,7 @@ const EmailCampaign: React.FC = () => {
                   {...field}
                   placeholder="Enter schedule type"
                   type="text"
-                  className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
                 />
               )}
             />

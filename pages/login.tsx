@@ -79,7 +79,7 @@ export default function Login() {
                     },
                   })}
                   id="email"
-                  className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-500 text-black "
+                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
                   placeholder="Enter your Email Address"
                 />
                 {errors.email && (
@@ -99,7 +99,7 @@ export default function Login() {
                     required: "Password is required",
                   })}
                   id="password"
-                  className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:ring-primary-600 focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-500 text-black focus:ring-primary-500 focus:border-transparent"
+                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
                   placeholder="Enter your Password"
                 />
                 {errors.password && (
