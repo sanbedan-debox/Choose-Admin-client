@@ -355,7 +355,7 @@ const Admin: React.FC = () => {
                   {...field}
                   placeholder="Enter Password..."
                   type="text"
-                  className="mt-1  bg-[#EFEFEF] text-sm rounded-lg w-full focus:outline-none block p-2.5  placeholder-gray-400 text-black "
+                  className="mt-1  bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
                 />
               )}
             />
