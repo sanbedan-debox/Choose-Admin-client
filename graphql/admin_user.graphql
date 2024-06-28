@@ -19,6 +19,7 @@ query GetAdmins {
     numberOfResetPassword
     createdAt
     updatedAt
+    status
   }
 }
 
@@ -41,6 +42,7 @@ query GetAllRestaurantUsers {
 query GetAllRestaurants {
   getAllRestaurants {
     _id
+    status
   }
 }
 
@@ -62,9 +64,9 @@ mutation ChangeRole($id: String!, $role: AdminRole!) {
 }
 
 # Mutation to block/unblock an admin
-mutation BlockAdmin($id: String!, $updateStatus: PlantFormStatus!) {
-  blockAdmin(id: $id, updateStatus: $updateStatus)
-}
+# mutation BlockAdmin($id: String!, $updateStatus: PlantFormStatus!) {
+#   blockAdmin(id: $id, updateStatus: $updateStatus)
+# }
 
 # Mutation to log out the admin
 query AdminLogout {

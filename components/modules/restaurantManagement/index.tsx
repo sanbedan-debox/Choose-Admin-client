@@ -25,14 +25,14 @@ const Reports: React.FC = () => {
     }
   };
 
-  const toggleStatus = (id: string) => {
-    console.log(`Toggling status for ID: ${id}`);
+  const toggleStatus = (status: string) => {
+    console.log(`Toggling status for ID: ${status}`);
   };
 
-  const renderActions = (_id: string) => (
+  const renderActions = (status: string) => (
     <Switch
-      onChange={() => toggleStatus(_id)}
-      checked={true} // Replace with actual status from your data
+      onChange={() => toggleStatus(status)}
+      checked={status === "blocked" ? false : true}
       onColor="#86d3ff"
       onHandleColor="#2693e6"
       handleDiameter={20}
@@ -48,8 +48,9 @@ const Reports: React.FC = () => {
   );
 
   const headings = [
-    { title: "Toggle Status", dataKey: "_id", render: renderActions },
+    { title: "Toggle Status", dataKey: "status", render: renderActions },
     { title: "id", dataKey: "_id" },
+    { title: "status", dataKey: "status" },
   ];
 
   return (

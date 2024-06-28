@@ -86,12 +86,12 @@ const Sidebar: React.FC = () => {
                   {module.subModules ? (
                     <li className="cursor-pointer mb-1">
                       <div
-                        className="flex justify-between items-center hover:bg-primary hover:bg-opacity-80 rounded-lg"
+                        className="flex justify-between items-center hover:bg-primary hover:bg-opacity-80 group rounded-lg"
                         onClick={() => toggleDropdown(module.name)}
                       >
-                        <div className="flex items-center p-2 text-black hover:text-white group">
+                        <div className="flex items-center p-2 text-black group-hover:text-white">
                           <svg
-                            className="w-5 h-5 transition duration-75 text-gray-700 hover:text-white group-hover:text-white"
+                            className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white "
                             aria-hidden="true"
                             xmlns="http://www.w3.org/2000/svg"
                             fill="currentColor"
@@ -106,7 +106,7 @@ const Sidebar: React.FC = () => {
                         </div>
                         {isSidebarExpanded && (
                           <svg
-                            className={`w-5 h-5 transition-transform duration-200 mr-2 ${
+                            className={`w-5 h-5 text-black group-hover:text-white transition-transform duration-200 mr-2 ${
                               openDropdown === module.name ? "rotate-180" : ""
                             }`}
                             xmlns="http://www.w3.org/2000/svg"

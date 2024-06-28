@@ -164,11 +164,11 @@ const Admin: React.FC = () => {
     setIsChangePassModalOpen(true);
   };
 
-  const renderSwitch = (_id) => (
+  const renderSwitch = (status: string) => (
     <div className="">
       <Switch
-        onChange={() => console.log(_id)}
-        checked={true} // Replace with actual status from your data
+        onChange={() => console.log(status)}
+        checked={status === "blocked" ? false : true} // Replace with actual status from your data
         onColor="#86d3ff"
         onHandleColor="#2693e6"
         handleDiameter={20}
@@ -214,12 +214,13 @@ const Admin: React.FC = () => {
   // ];
 
   const headings = [
-    { title: "Toggle Status", dataKey: "_id", render: renderSwitch },
+    { title: "Toggle Status", dataKey: "status", render: renderSwitch },
     { title: "Name", dataKey: "name" },
     { title: "Email", dataKey: "email" },
     { title: "Role", dataKey: "role" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
+    { title: "status", dataKey: "status" },
     { title: "Actions", dataKey: "_id", render: renderActions },
   ];
 
