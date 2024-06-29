@@ -19,3 +19,25 @@ query getAllEmailCampaigns {
     usersCount
   }
 }
+
+# Mutations
+
+# Mutation to create an email template
+mutation CreateEmailTemplate($input: AddEmailTemplateInput!) {
+  createEmailTemplate(input: $input)
+}
+
+# Mutation to delete an email template by ID
+mutation DeleteEmailTemplate($id: String!) {
+  deleteEmailTemplate(id: $id)
+}
+
+# Mutation to create an email campaign
+mutation CreateEmailCampaign($input: AddEmailCampaignInput!) {
+  createEmailCampaign(input: $input)
+}
+
+# Mutation to send test emails
+mutation SendTestEmails($input: TestEmailInput!) {
+  sendTestEmails(input: $input)
+}

@@ -24,7 +24,7 @@ interface TableProps {
   headings: {
     title: string;
     dataKey: string;
-    render?: (value: any) => React.ReactNode;
+    render?: (rowData: any) => React.ReactNode;
   }[];
   striped?: boolean;
   bordered?: boolean;
@@ -180,14 +180,6 @@ const RoopTable: React.FC<TableProps> = ({
     }
   };
 
-  if (data.length === 0) {
-    return (
-      <div className="flex items-center justify-center h-64 text-black text-2xl">
-        No data to display.
-      </div>
-    );
-  }
-
   return (
     <div
       className={`container mx-auto rounded-lg p-4 bg-white text-black ${
@@ -207,7 +199,7 @@ const RoopTable: React.FC<TableProps> = ({
           {filterable && (
             <div className="flex items-center ml-4">
               <HiFilter
-                className="text-white cursor-pointer hover:text-primary transition-colors duration-300"
+                className="text-primary cursor-pointer hover:text-primary hover:text-opacity-60 transition-colors duration-300"
                 onClick={() => setShowFilterModal(true)}
                 style={{ height: "2rem", width: "2rem" }}
               />
@@ -217,19 +209,19 @@ const RoopTable: React.FC<TableProps> = ({
 
         <div className="flex">
           {mainActions.map((action, index) => (
-            <CButton
+            <button
               key={index}
-              type={ButtonType.Outlined}
+              className="btn btn-primary mr-2"
               onClick={action.onClick}
             >
               {action.label}
-            </CButton>
+            </button>
           ))}
           {csvExport && (
             <div className="flex space-x-2">
-              <CButton type={ButtonType.Primary} onClick={handleExportClick}>
+              <button className="btn btn-primary" onClick={handleExportClick}>
                 Export to CSV
-              </CButton>
+              </button>
               {/* Hidden CSVLink for full data export */}
               <CSVLink
                 id="csvLink"
@@ -242,6 +234,8 @@ const RoopTable: React.FC<TableProps> = ({
           )}
         </div>
       </div>
+
+      {/* Table content */}
       <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
         <div className="overflow-x-auto">
           <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
@@ -263,148 +257,163 @@ const RoopTable: React.FC<TableProps> = ({
               </tr>
             </thead>
             <tbody>
-              {displayedData.map((rowData, index) => (
-                <tr
-                  key={index}
-                  className={`text-center ${rowClasses(
-                    index
-                  )} border-b border-red text-black`}
-                >
-                  {headings.map((heading, colIndex) => (
-                    <td
-                      key={colIndex}
-                      className="py-4 px-4 first:rounded-bl-lg last:rounded-br-lg"
-                    >
-                      {heading.render
-                        ? heading.render(
-                            getNestedValue(rowData, heading.dataKey)
-                          )
-                        : truncateString(
-                            getNestedValue(rowData, heading.dataKey),
-                            65
-                          )}
-                    </td>
-                  ))}
-                  {actions.length > 0 && (
-                    <td className="py-4 px-4">
-                      <Menu as="div" className="inline-block text-left">
-                        <Menu.Button className="inline-flex justify-center w-full rounded-md bg-black bg-opacity-20 px-2 py-1 text-sm font-medium text-white hover:bg-opacity-30 focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75">
-                          <HiDotsVertical
-                            className="w-5 h-5"
-                            aria-hidden="true"
-                          />
-                        </Menu.Button>
-                        <Menu.Items className="absolute right-0 mt-2 w-48 origin-top-right bg-white divide-y divide-gray-100 rounded-md shadow-lg ring-1 ring-black ring-opacity-5 z-10">
-                          {actions.map((action, menuIndex) => (
-                            <div key={menuIndex} className="px-1 py-1">
-                              <Menu.Item>
+              {data.length === 0 ? (
+                <tr>
+                  <td
+                    colSpan={headings.length + (actions.length > 0 ? 1 : 0)}
+                    className="text-center text-xl font-bold"
+                  >
+                    No data to display.
+                  </td>
+                </tr>
+              ) : (
+                displayedData.map((row, rowIndex) => (
+                  <tr key={rowIndex} className={rowClasses(rowIndex)}>
+                    {headings.map((heading, colIndex) => (
+                      <td
+                        key={colIndex}
+                        className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg"
+                      >
+                        {heading.render
+                          ? heading.render(row)
+                          : truncateString(
+                              getNestedValue(row, heading.dataKey),
+                              30
+                            )}
+                      </td>
+                    ))}
+                    {actions.length > 0 && (
+                      <td className="py-2 px-4">
+                        <Menu as="div" className="relative inline-block">
+                          <Menu.Button className="flex items-center space-x-2">
+                            <HiDotsVertical className="h-5 w-5 text-black" />
+                          </Menu.Button>
+                          <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                            {actions.map((action, actionIndex) => (
+                              <Menu.Item key={actionIndex}>
                                 {({ active }) => (
                                   <button
-                                    onClick={() => action.onClick(rowData)}
+                                    onClick={() => action.onClick(row)}
                                     className={`${
                                       active
                                         ? "bg-primary text-white"
-                                        : "text-gray-900"
-                                    } group flex rounded-md items-center w-full px-2 py-2 text-sm ${
-                                      action.style
-                                    }`}
+                                        : "text-black"
+                                    } flex w-full items-center px-4 py-2 text-sm`}
                                   >
                                     {action.label}
                                   </button>
                                 )}
                               </Menu.Item>
-                            </div>
-                          ))}
-                        </Menu.Items>
-                      </Menu>
-                    </td>
-                  )}
-                </tr>
-              ))}
+                            ))}
+                          </Menu.Items>
+                        </Menu>
+                      </td>
+                    )}
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
       </div>
+
+      {/* Pagination */}
+      <div className="flex justify-between items-center mt-4">
+        <button
+          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+          disabled={currentPage === 1}
+          className="flex items-center space-x-2 text-sm"
+        >
+          <HiChevronLeft />
+          <span>Previous</span>
+        </button>
+        <span className="text-sm">
+          Page {currentPage} of {totalPages}
+        </span>
+        <button
+          onClick={() =>
+            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+          }
+          disabled={currentPage === totalPages}
+          className="flex items-center space-x-2 text-sm"
+        >
+          <span>Next</span>
+          <HiChevronRight />
+        </button>
+      </div>
+
+      {/* Filter Modal */}
       <ReusableModal
         isOpen={showFilterModal}
         onClose={() => setShowFilterModal(false)}
-        title="Filter Data"
-        width="md"
+        title="Filter"
       >
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col space-y-4">
           <Select
             options={options}
-            value={options.find((opt) => opt.value === filterColumn)}
-            onChange={(selected) => setFilterColumn(selected?.value || "")}
+            className="text-black"
+            placeholder="Select Column"
+            value={options.find((option) => option.value === filterColumn)}
+            onChange={(selectedOption) =>
+              setFilterColumn(selectedOption?.value || "")
+            }
           />
           <Select
             options={operatorOptions}
-            value={operatorOptions.find((opt) => opt.value === operator)}
-            onChange={(selected) => setOperator(selected?.value || "")}
+            className="text-black"
+            placeholder="Select Operator"
+            value={operatorOptions.find((option) => option.value === operator)}
+            onChange={(selectedOption) =>
+              setOperator(selectedOption?.value || "contains")
+            }
           />
           <input
             type="text"
-            placeholder="Filter Value"
+            placeholder="Enter Value"
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
-            className="bg-secondary bg-opacity-30 text-sm rounded-lg p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
+            className="bg-input text-sm rounded-lg block p-2.5  placeholder-gray-400 text-white w-96"
           />
-          <CButton type={ButtonType.Warning} onClick={clearFilter}>
-            Clear
-          </CButton>
-        </div>
-        <div className="flex justify-end mt-4">
-          <CButton type={ButtonType.Primary} onClick={applyFilter}>
-            Apply Filter
-          </CButton>
+          <div className="flex justify-end space-x-2">
+            <button
+              className="btn btn-secondary"
+              onClick={() => setShowFilterModal(false)}
+            >
+              Cancel
+            </button>
+            <button className="btn btn-primary" onClick={applyFilter}>
+              Apply
+            </button>
+          </div>
         </div>
       </ReusableModal>
+
+      {/* Export Modal */}
       <ReusableModal
         isOpen={showExportModal}
         onClose={() => setShowExportModal(false)}
         title="Export Data"
-        width="md"
       >
         <div className="flex flex-col space-y-4">
-          <CSVLink
-            data={csvData}
-            headers={csvHeaders}
-            filename={csvFileName}
-            className="flex items-center justify-center h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary md:w-auto w-32"
+          <button
+            className="btn btn-primary"
+            onClick={() => {
+              setShowExportModal(false);
+              document.getElementById("csvLink")?.click();
+            }}
           >
-            Export Full Table
-          </CSVLink>
+            Download Full Table Data
+          </button>
           <CSVLink
-            data={displayedData}
+            data={filteredMembers}
             headers={csvHeaders}
-            filename={`filtered_${csvFileName}`}
-            className="h-10 px-4 py-2 m-1 text-white text-sm transition-colors duration-300 transform bg-primary rounded-full hover:bg-white hover:text-primary"
+            filename={csvFileName.replace(".csv", "-filtered.csv")}
+            className="btn btn-primary text-center"
           >
-            Export Filtered Table
+            Download Filtered Table Data
           </CSVLink>
         </div>
       </ReusableModal>
-      <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
-        <div className="flex justify-between items-center mt-4">
-          {currentPage !== 1 && (
-            <HiChevronLeft
-              className="cursor-pointer text-white text-2xl"
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-            />
-          )}
-          <span className="flex-1 text-center">
-            Page {currentPage} of {totalPages}
-          </span>
-          {currentPage !== totalPages && (
-            <HiChevronRight
-              className="cursor-pointer text-white text-2xl"
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-            />
-          )}
-        </div>
-      </div>
     </div>
   );
 };

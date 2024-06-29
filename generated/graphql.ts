@@ -774,7 +774,7 @@ export type AdminLoginQuery = { __typename?: 'Query', adminLogin: string };
 export type GetAllRestaurantUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestaurantUsers: Array<{ __typename?: 'User', _id: string, email: string, createdAt: any, updatedAt: any }> };
+export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestaurantUsers: Array<{ __typename?: 'User', _id: string, email: string, createdAt: any, updatedAt: any, status: PlatformStatus, firstName: string }> };
 
 export type GetAllRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -796,6 +796,20 @@ export type ChangeRoleMutationVariables = Exact<{
 
 export type ChangeRoleMutation = { __typename?: 'Mutation', changeRole: boolean };
 
+export type ChangeUserStatusMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type ChangeUserStatusMutation = { __typename?: 'Mutation', changeUserStatus: boolean };
+
+export type BlockAdminMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type BlockAdminMutation = { __typename?: 'Mutation', blockAdmin: boolean };
+
 export type AdminLogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -810,6 +824,34 @@ export type GetAllEmailCampaignsQueryVariables = Exact<{ [key: string]: never; }
 
 
 export type GetAllEmailCampaignsQuery = { __typename?: 'Query', getAllEmailCampaigns: Array<{ __typename?: 'EmailCampaignsObject', campaignName: string, emailSubject: string, status: EmailCampaignStatusEnum, target: EmailCampaignTargetTypes, scheduleType: EmailCampaignScheduleTypes, usersCount: number }> };
+
+export type CreateEmailTemplateMutationVariables = Exact<{
+  input: AddEmailTemplateInput;
+}>;
+
+
+export type CreateEmailTemplateMutation = { __typename?: 'Mutation', createEmailTemplate: boolean };
+
+export type DeleteEmailTemplateMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type DeleteEmailTemplateMutation = { __typename?: 'Mutation', deleteEmailTemplate: boolean };
+
+export type CreateEmailCampaignMutationVariables = Exact<{
+  input: AddEmailCampaignInput;
+}>;
+
+
+export type CreateEmailCampaignMutation = { __typename?: 'Mutation', createEmailCampaign: boolean };
+
+export type SendTestEmailsMutationVariables = Exact<{
+  input: TestEmailInput;
+}>;
+
+
+export type SendTestEmailsMutation = { __typename?: 'Mutation', sendTestEmails: boolean };
 
 export type GetWaitListUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -852,6 +894,8 @@ export const GetAllRestaurantUsersDocument = gql`
     email
     createdAt
     updatedAt
+    status
+    firstName
   }
 }
     `;
@@ -871,6 +915,16 @@ export const DeleteAdminDocument = gql`
 export const ChangeRoleDocument = gql`
     mutation ChangeRole($id: String!, $role: AdminRole!) {
   changeRole(id: $id, role: $role)
+}
+    `;
+export const ChangeUserStatusDocument = gql`
+    mutation changeUserStatus($id: String!) {
+  changeUserStatus(id: $id)
+}
+    `;
+export const BlockAdminDocument = gql`
+    mutation blockAdmin($id: String!) {
+  blockAdmin(id: $id, updateStatus: active)
 }
     `;
 export const AdminLogoutDocument = gql`
@@ -899,6 +953,26 @@ export const GetAllEmailCampaignsDocument = gql`
     scheduleType
     usersCount
   }
+}
+    `;
+export const CreateEmailTemplateDocument = gql`
+    mutation CreateEmailTemplate($input: AddEmailTemplateInput!) {
+  createEmailTemplate(input: $input)
+}
+    `;
+export const DeleteEmailTemplateDocument = gql`
+    mutation DeleteEmailTemplate($id: String!) {
+  deleteEmailTemplate(id: $id)
+}
+    `;
+export const CreateEmailCampaignDocument = gql`
+    mutation CreateEmailCampaign($input: AddEmailCampaignInput!) {
+  createEmailCampaign(input: $input)
+}
+    `;
+export const SendTestEmailsDocument = gql`
+    mutation SendTestEmails($input: TestEmailInput!) {
+  sendTestEmails(input: $input)
 }
     `;
 export const GetWaitListUsersDocument = gql`
@@ -941,6 +1015,12 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     ChangeRole(variables: ChangeRoleMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ChangeRoleMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ChangeRoleMutation>(ChangeRoleDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'ChangeRole', 'mutation', variables);
     },
+    changeUserStatus(variables: ChangeUserStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ChangeUserStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ChangeUserStatusMutation>(ChangeUserStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'changeUserStatus', 'mutation', variables);
+    },
+    blockAdmin(variables: BlockAdminMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<BlockAdminMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<BlockAdminMutation>(BlockAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'blockAdmin', 'mutation', variables);
+    },
     AdminLogout(variables?: AdminLogoutQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AdminLogoutQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AdminLogoutQuery>(AdminLogoutDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AdminLogout', 'query', variables);
     },
@@ -949,6 +1029,18 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     getAllEmailCampaigns(variables?: GetAllEmailCampaignsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllEmailCampaignsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAllEmailCampaignsQuery>(GetAllEmailCampaignsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllEmailCampaigns', 'query', variables);
+    },
+    CreateEmailTemplate(variables: CreateEmailTemplateMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateEmailTemplateMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateEmailTemplateMutation>(CreateEmailTemplateDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateEmailTemplate', 'mutation', variables);
+    },
+    DeleteEmailTemplate(variables: DeleteEmailTemplateMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteEmailTemplateMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<DeleteEmailTemplateMutation>(DeleteEmailTemplateDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteEmailTemplate', 'mutation', variables);
+    },
+    CreateEmailCampaign(variables: CreateEmailCampaignMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateEmailCampaignMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<CreateEmailCampaignMutation>(CreateEmailCampaignDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateEmailCampaign', 'mutation', variables);
+    },
+    SendTestEmails(variables: SendTestEmailsMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<SendTestEmailsMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<SendTestEmailsMutation>(SendTestEmailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendTestEmails', 'mutation', variables);
     },
     GetWaitListUsers(variables?: GetWaitListUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetWaitListUsersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetWaitListUsersQuery>(GetWaitListUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetWaitListUsers', 'query', variables);

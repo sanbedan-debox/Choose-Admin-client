@@ -164,11 +164,30 @@ const Admin: React.FC = () => {
     setIsChangePassModalOpen(true);
   };
 
-  const renderSwitch = (status: string) => (
+  const handleStatusChange = async (id: string, currentStatus: string) => {
+    try {
+      const newStatus = currentStatus === "blocked" ? "active" : "blocked";
+      const response = await sdk.blockAdmin({
+        id,
+        updateStatus: newStatus,
+      });
+      console.log("Status changed successfully:", response);
+      fetchAdmins();
+      setToastData({
+        message: `Admin status changed to ${newStatus}`,
+        type: "success",
+      });
+    } catch (error) {
+      console.error("Failed to change status:", error);
+      setToastData({ message: "Failed to change status", type: "error" });
+    }
+  };
+
+  const renderSwitch = (rowData: { status: string; _id: string }) => (
     <div className="">
       <Switch
-        onChange={() => console.log(status)}
-        checked={status === "blocked" ? false : true} // Replace with actual status from your data
+        onChange={() => handleStatusChange(rowData._id, rowData.status)}
+        checked={rowData.status === "blocked" ? false : true}
         onColor="#86d3ff"
         onHandleColor="#2693e6"
         handleDiameter={20}
@@ -179,7 +198,6 @@ const Admin: React.FC = () => {
         height={12}
         width={30}
         className="react-switch"
-        // id={`status-switch-${admin._id}`}
       />
     </div>
   );
@@ -237,6 +255,7 @@ const Admin: React.FC = () => {
           csvFileName="admins_data.csv"
           headings={headings}
           hovered
+          filterable
         />
       )}
       {/* <ReusableModal
@@ -367,8 +386,8 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4">
-            <CButton
-              type={ButtonType.Outlined}
+            <button
+              className="btn btn-outlined"
               onClick={(e) => {
                 e.preventDefault();
                 const newPassword = generateRandomPassword();
@@ -377,19 +396,19 @@ const Admin: React.FC = () => {
               }}
             >
               Generate Password
-            </CButton>
-            <CButton
-              type={ButtonType.Warning}
+            </button>
+            <button
+              className="btn btn-warning"
               onClick={() => setIsChangePassModalOpen(false)}
             >
               Cancel
-            </CButton>
-            <CButton
-              type={ButtonType.Confirm}
+            </button>
+            <button
+              className="btn btn-confirmation"
               onClick={handleSubmitPass(handleChangePassword)}
             >
               Change Password
-            </CButton>
+            </button>
           </div>
         </form>
       </ReusableModal>
@@ -434,13 +453,13 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4">
-            <CButton
-              type={ButtonType.Warning}
+            <button
+              className="btn btn-warning"
               onClick={() => setIsChangeRoleModalOpen(false)}
             >
               Cancel
-            </CButton>
-            <CButton type={ButtonType.Confirm}>Change Role</CButton>
+            </button>
+            <button className="btn btn-confirmation">Change Role</button>
           </div>
         </form>
       </ReusableModal>
@@ -455,15 +474,15 @@ const Admin: React.FC = () => {
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
-          <CButton
-            type={ButtonType.Outlined}
+          <button
+            className="btn btn-warning"
             onClick={() => setIsDeleteModalOpen(false)}
           >
             No
-          </CButton>
-          <CButton type={ButtonType.Warning} onClick={handleDeleteAdmin}>
+          </button>
+          <button className="btn btn-confirmation" onClick={handleDeleteAdmin}>
             Yes
-          </CButton>
+          </button>
         </div>
       </ReusableModal>
     </div>

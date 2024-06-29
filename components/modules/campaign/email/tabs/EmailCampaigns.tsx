@@ -236,13 +236,13 @@ const EmailCampaign: React.FC = () => {
             />
           </div>
           <div className="flex justify-end space-x-2">
-            <CButton
-              type={ButtonType.Warning}
+            <button
+              className="btn btn-warning"
               onClick={() => setCreateEmailCampaignModalOpen(false)}
             >
               Cancel
-            </CButton>
-            <CButton type={ButtonType.Confirm}>Send</CButton>
+            </button>
+            <button className="btn btn-primary">Send</button>
           </div>
         </form>
       </ReusableModal>

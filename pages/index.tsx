@@ -25,7 +25,11 @@ const HomePage: React.FC<HomePageProps> = ({
     setUserRole(repo.role);
   }, [repo, setUserName, setUserRole]);
 
-  return <div>{EmailBuilderOpen ? <UnlayerEditor /> : <Layout />}</div>;
+  return (
+    <div className="bg-white">
+      {EmailBuilderOpen ? <UnlayerEditor /> : <Layout />}
+    </div>
+  );
 };
 
 export default HomePage;

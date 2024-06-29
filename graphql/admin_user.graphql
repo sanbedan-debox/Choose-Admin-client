@@ -35,6 +35,8 @@ query GetAllRestaurantUsers {
     email
     createdAt
     updatedAt
+    status
+    firstName
   }
 }
 
@@ -61,6 +63,14 @@ mutation DeleteAdmin($id: String!) {
 # Mutation to change an admin's role
 mutation ChangeRole($id: String!, $role: AdminRole!) {
   changeRole(id: $id, role: $role)
+}
+
+mutation changeUserStatus($id: String!) {
+  changeUserStatus(id: $id)
+}
+
+mutation blockAdmin($id: String!) {
+  blockAdmin(id: $id, updateStatus: active)
 }
 
 # Mutation to block/unblock an admin

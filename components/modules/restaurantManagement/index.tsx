@@ -25,14 +25,14 @@ const Reports: React.FC = () => {
     }
   };
 
-  const toggleStatus = (status: string) => {
-    console.log(`Toggling status for ID: ${status}`);
+  const toggleStatus = (rowData: { status: string; _id: string }) => {
+    console.log(`Toggling status for ID: ${rowData.status} ${rowData._id}`);
   };
 
-  const renderActions = (status: string) => (
+  const renderActions = (rowData: { status: string; _id: string }) => (
     <Switch
-      onChange={() => toggleStatus(status)}
-      checked={status === "blocked" ? false : true}
+      onChange={() => toggleStatus(rowData)}
+      checked={rowData.status !== "blocked"}
       onColor="#86d3ff"
       onHandleColor="#2693e6"
       handleDiameter={20}
@@ -48,7 +48,7 @@ const Reports: React.FC = () => {
   );
 
   const headings = [
-    { title: "Toggle Status", dataKey: "status", render: renderActions },
+    { title: "Toggle Status", dataKey: "rowData", render: renderActions },
     { title: "id", dataKey: "_id" },
     { title: "status", dataKey: "status" },
   ];
@@ -61,6 +61,7 @@ const Reports: React.FC = () => {
         headings={headings}
         hovered
         csvExport
+        filterable
       />
     </div>
   );

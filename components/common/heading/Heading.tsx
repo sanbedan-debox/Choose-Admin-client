@@ -33,9 +33,9 @@ const Heading: React.FC<HeadingProps> = ({ title }) => {
       <h1 className="text-xl md:text-xl sm:text-xl lg:text-2xl text-black  font-semibold">
         {title && <>{title} </>}
       </h1>
-      <CButton type={ButtonType.Primary} onClick={handleLogout}>
+      <button className="btn btn-primary" onClick={handleLogout}>
         Log Out
-      </CButton>
+      </button>
     </div>
   );
 };

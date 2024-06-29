@@ -81,28 +81,24 @@ const UnlayerEditor = () => {
   };
 
   return (
-    <div className="p-6 bg-black rounded-lg shadow-lg max-h-screen">
+    <div className="p-6 bg-white rounded-lg shadow-lg min-h-screen">
       <div className="flex mb-6 space-x-4">
-        <div className="flex-1">
-          <label className="block text-white-700 mb-2">Title:</label>
-          <input
-            type="text"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
-            placeholder="Enter title"
-          />
-        </div>
-        <div className="flex-1">
-          <label className="block text-white-700 mb-2">Emails:</label>
-          <input
-            type="text"
-            value={emails}
-            onChange={(e) => setEmails(e.target.value)}
-            className="bg-secondary bg-opacity-30 text-sm rounded-lg focus:outline-none block w-full p-2.5 border-gray-500 placeholder-gray-400 text-white focus:ring-primary-500 focus:border-transparent"
-            placeholder="Enter emails"
-          />
-        </div>
+        <label className="block text-black mb-2">Title:</label>
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          className="input input-primary"
+          placeholder="Enter title"
+        />
+        <label className="block text-black mb-2">Emails:</label>
+        <input
+          type="text"
+          value={emails}
+          onChange={(e) => setEmails(e.target.value)}
+          className="input input-primary"
+          placeholder="Enter emails"
+        />{" "}
       </div>
       <div className="rounded-lg shadow-md p-4 mb-6">
         <EmailEditor
@@ -136,16 +132,16 @@ const UnlayerEditor = () => {
           onReady={onReady}
         />
       </div>
-      <div className=" text-center flex float-end">
-        <CButton type={ButtonType.Outlined} onClick={handleCloseClick}>
+      <div className=" text-center flex float-end space-x-4">
+        <button className="btn btn-warning" onClick={handleCloseClick}>
           Close
-        </CButton>
-        <CButton type={ButtonType.Outlined} onClick={handleTestEmailClick}>
+        </button>
+        <button className="btn btn-warning" onClick={handleTestEmailClick}>
           Test Email
-        </CButton>
-        <CButton type={ButtonType.Confirm} onClick={handleSaveClick}>
+        </button>
+        <button className="btn btn-primary" onClick={handleSaveClick}>
           Save
-        </CButton>
+        </button>
       </div>
     </div>
   );

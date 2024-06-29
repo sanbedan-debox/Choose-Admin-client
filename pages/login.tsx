@@ -109,7 +109,7 @@ export default function Login() {
                 )}
               </div>
               <div className="flex justify-end">
-                <CButton type={ButtonType.Primary}>Sign In</CButton>
+                <button className="btn btn-primary">Sign In</button>
               </div>
             </form>
           </div>
