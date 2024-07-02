@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
-import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
+import RoopTable from "@/components/common/customTableR/table";
+import { sdk } from "@/util/graphqlClient";
 import Switch from "react-switch";
 
 const Reports: React.FC = () => {
@@ -16,7 +16,12 @@ const Reports: React.FC = () => {
     try {
       const response = await sdk.GetAllRestaurantUsers();
       if (response && response.getAllRestaurantUsers) {
-        setRestaurantUsers(response.getAllRestaurantUsers);
+        const formattedUsers = response.getAllRestaurantUsers.map((user) => ({
+          ...user,
+          createdAt: formatDate(user.createdAt),
+          updatedAt: formatDate(user.updatedAt),
+        }));
+        setRestaurantUsers(formattedUsers);
       }
     } catch (error) {
       console.error("Failed to fetch restaurant users:", error);
@@ -36,7 +41,6 @@ const Reports: React.FC = () => {
     }
   };
 
-  // Function to render switch for status column
   const renderSwitch = (rowData: { status: string; _id: string }) => (
     <Switch
       onChange={() => handleStatusChange(rowData._id)}
@@ -55,8 +59,22 @@ const Reports: React.FC = () => {
     />
   );
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const formattedDate = `${padTwoDigits(date.getMonth() + 1)}/${padTwoDigits(
+      date.getDate()
+    )}/${date.getFullYear()} ${padTwoDigits(date.getHours())}:${padTwoDigits(
+      date.getMinutes()
+    )}`;
+    return formattedDate;
+  };
+
+  const padTwoDigits = (num: number) => {
+    return num.toString().padStart(2, "0");
+  };
+
   const headings = [
-    { title: "Toggle Status", dataKey: "status", render: renderSwitch }, // Render switch for status
+    { title: "Toggle Status", dataKey: "status", render: renderSwitch },
     { title: "First Name", dataKey: "firstName" },
     { title: "Email", dataKey: "email" },
     { title: "Created At", dataKey: "createdAt" },

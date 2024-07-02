@@ -70,6 +70,12 @@ const Admin: React.FC = () => {
     try {
       const response = await sdk.GetAdmins();
       if (response && response.getAdmins) {
+        const formattedUsers = response.getAdmins.map((user) => ({
+          ...user,
+          createdAt: formatDate(user.createdAt),
+          updatedAt: formatDate(user.updatedAt),
+        }));
+
         setMembers(response.getAdmins);
       }
     } catch (error) {
@@ -79,24 +85,38 @@ const Admin: React.FC = () => {
     }
   };
 
-  // const handleAddAdmin: SubmitHandler<AddAdminFormInputs> = async (data) => {
-  //   try {
-  //     const input = {
-  //       name: data.name,
-  //       email: data.email,
-  //       password: data.password,
-  //       type: data.role?.value || "",
-  //     };
-  //     const response = await sdk.AddAdmin({ input });
-  //     console.log("Admin added successfully:", response);
-  //     setIsAddModalOpen(false);
-  //     fetchAdmins();
-  //     setToastData({ message: "Admin added successfully", type: "success" });
-  //   } catch (error) {
-  //     console.error("Failed to add admin:", error);
-  //     setToastData({ message: "Failed to add admin", type: "error" });
-  //   }
-  // };
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const formattedDate = `${padTwoDigits(date.getMonth() + 1)}/${padTwoDigits(
+      date.getDate()
+    )}/${date.getFullYear()} ${padTwoDigits(date.getHours())}:${padTwoDigits(
+      date.getMinutes()
+    )}`;
+    return formattedDate;
+  };
+
+  const padTwoDigits = (num: number) => {
+    return num.toString().padStart(2, "0");
+  };
+
+  const handleAddAdmin: SubmitHandler<AddAdminFormInputs> = async (data) => {
+    try {
+      const input: AddAdminFormInputs = {
+        name: data.name,
+        email: data.email,
+        password: data.password,
+        role: data.role?.value || "",
+      };
+      const response = await sdk.addAdmin({ input });
+      console.log("Admin added successfully:", response);
+      setIsAddModalOpen(false);
+      fetchAdmins();
+      setToastData({ message: "Admin added successfully", type: "success" });
+    } catch (error) {
+      console.error("Failed to add admin:", error);
+      setToastData({ message: "Failed to add admin", type: "error" });
+    }
+  };
 
   const handleChangePassword: SubmitHandler<ChangePasswordInputs> = async (
     data
@@ -231,12 +251,12 @@ const Admin: React.FC = () => {
     </div>
   );
 
-  // const mainActions = [
-  //   {
-  //     label: "Add Admin",
-  //     onClick: () => setIsAddModalOpen(true),
-  //   },
-  // ];
+  const mainActions = [
+    {
+      label: "Add Admin",
+      onClick: () => setIsAddModalOpen(true),
+    },
+  ];
 
   const headings = [
     { title: "Toggle Status", dataKey: "status", render: renderSwitch },
@@ -263,9 +283,10 @@ const Admin: React.FC = () => {
           headings={headings}
           hovered
           filterable
+          mainActions={mainActions}
         />
       )}
-      {/* <ReusableModal
+      <ReusableModal
         title="Add New Admin"
         isOpen={isAddModalOpen}
         onClose={() => setIsAddModalOpen(false)}
@@ -278,7 +299,7 @@ const Admin: React.FC = () => {
               type="text"
               placeholder="Enter Name..."
               {...register("name", { required: "Name is required" })}
-              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
+              className="mt-1 border bg-input bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
             />
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name.message}</p>
@@ -295,7 +316,7 @@ const Admin: React.FC = () => {
                   message: "Invalid email address",
                 },
               })}
-              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
+              className="mt-1 border bg-input bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -313,7 +334,7 @@ const Admin: React.FC = () => {
                   message: "Password must be at least 6 characters long",
                 },
               })}
-              className="mt-1 border bg-secondary bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
+              className="mt-1 border bg-input bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -332,13 +353,13 @@ const Admin: React.FC = () => {
                   classNames={{
                     placeholder: () => "!text-gray-400",
                     control: () =>
-                      "!bg-secondary !bg-opacity-30 !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-[#142D5F]",
+                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
+                    menu: () => "z-[100] !bg-white text-black",
                     singleValue: () => "!text-black",
                     option: (state) =>
-                      `!text-sm hover:!bg-white hover:!text-black focus:!bg-transparent ${
+                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
                         state.isFocused || state.isSelected
-                          ? "!bg-transparent"
+                          ? "!bg-transparent !text-black"
                           : ""
                       }`,
                   }}
@@ -361,7 +382,7 @@ const Admin: React.FC = () => {
             <CButton type={ButtonType.Confirm}>Add Admin</CButton>
           </div>
         </form>
-      </ReusableModal> */}
+      </ReusableModal>
 
       <ReusableModal
         title="Change Password"

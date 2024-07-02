@@ -9,6 +9,10 @@ query Me {
   }
 }
 
+mutation addAdmin($input: AddAdminInput!) {
+  addAdmin(input: $input)
+}
+
 # Query to get a list of all admins
 query GetAdmins {
   getAdmins {
