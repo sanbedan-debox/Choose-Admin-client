@@ -222,7 +222,6 @@ const RoopTable: React.FC<TableProps> = ({
               <button className="btn btn-primary" onClick={handleExportClick}>
                 Export to CSV
               </button>
-              {/* Hidden CSVLink for full data export */}
               <CSVLink
                 id="csvLink"
                 data={data}
@@ -235,89 +234,85 @@ const RoopTable: React.FC<TableProps> = ({
         </div>
       </div>
 
-      {/* Table content */}
-      <div className="bg-dot-white/[0.12] md:bg-dot-white/[0.10]">
-        <div className="overflow-x-auto">
-          <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
-            <thead className="bg-white text-black">
-              <tr>
-                {headings.map((heading, index) => (
-                  <th
-                    key={index}
-                    className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg"
-                  >
-                    {heading.title}
-                  </th>
-                ))}
-                {actions.length > 0 && (
-                  <th className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg">
-                    Actions
-                  </th>
-                )}
-              </tr>
-            </thead>
-            <tbody>
-              {data.length === 0 ? (
-                <tr>
-                  <td
-                    colSpan={headings.length + (actions.length > 0 ? 1 : 0)}
-                    className="text-center text-xl font-bold"
-                  >
-                    No data to display.
-                  </td>
-                </tr>
-              ) : (
-                displayedData.map((row, rowIndex) => (
-                  <tr key={rowIndex} className={rowClasses(rowIndex)}>
-                    {headings.map((heading, colIndex) => (
-                      <td
-                        key={colIndex}
-                        className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg"
-                      >
-                        {heading.render
-                          ? heading.render(row)
-                          : truncateString(
-                              getNestedValue(row, heading.dataKey),
-                              30
-                            )}
-                      </td>
-                    ))}
-                    {actions.length > 0 && (
-                      <td className="py-2 px-4">
-                        <Menu as="div" className="relative inline-block">
-                          <Menu.Button className="flex items-center space-x-2">
-                            <HiDotsVertical className="h-5 w-5 text-black" />
-                          </Menu.Button>
-                          <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
-                            {actions.map((action, actionIndex) => (
-                              <Menu.Item key={actionIndex}>
-                                {({ active }) => (
-                                  <button
-                                    onClick={() => action.onClick(row)}
-                                    className={`${
-                                      active
-                                        ? "bg-primary text-white"
-                                        : "text-black"
-                                    } flex w-full items-center px-4 py-2 text-sm`}
-                                  >
-                                    {action.label}
-                                  </button>
-                                )}
-                              </Menu.Item>
-                            ))}
-                          </Menu.Items>
-                        </Menu>
-                      </td>
-                    )}
-                  </tr>
-                ))
+      <div className="overflow-x-auto">
+        <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
+          <thead className="bg-white text-black ">
+            <tr>
+              {headings.map((heading, index) => (
+                <th
+                  key={index}
+                  className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg"
+                >
+                  {heading.title}
+                </th>
+              ))}
+              {actions.length > 0 && (
+                <th className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg">
+                  Actions
+                </th>
               )}
-            </tbody>
-          </table>
-        </div>
+            </tr>
+          </thead>
+          <tbody>
+            {data.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={headings.length + (actions.length > 0 ? 1 : 0)}
+                  className="text-center text-xl font-bold"
+                >
+                  No data to display.
+                </td>
+              </tr>
+            ) : (
+              displayedData.map((row, rowIndex) => (
+                <tr key={rowIndex} className={rowClasses(rowIndex)}>
+                  {headings.map((heading, colIndex) => (
+                    <td
+                      key={colIndex}
+                      className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg text-center"
+                    >
+                      {heading.render
+                        ? heading.render(row)
+                        : truncateString(
+                            getNestedValue(row, heading.dataKey),
+                            30
+                          )}
+                    </td>
+                  ))}
+                  {actions.length > 0 && (
+                    <td className="py-2 px-4 text-center">
+                      <Menu as="div" className="relative inline-block">
+                        <Menu.Button className="flex items-center space-x-2">
+                          <HiDotsVertical className="h-5 w-5 text-black" />
+                        </Menu.Button>
+                        <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                          {actions.map((action, actionIndex) => (
+                            <Menu.Item key={actionIndex}>
+                              {({ active }) => (
+                                <button
+                                  onClick={() => action.onClick(row)}
+                                  className={`${
+                                    active
+                                      ? "bg-primary text-white"
+                                      : "text-black"
+                                  } flex w-full items-center px-4 py-2 text-sm`}
+                                >
+                                  {action.label}
+                                </button>
+                              )}
+                            </Menu.Item>
+                          ))}
+                        </Menu.Items>
+                      </Menu>
+                    </td>
+                  )}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
       </div>
 
-      {/* Pagination */}
       <div className="flex justify-between items-center mt-4">
         <button
           onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
@@ -372,14 +367,18 @@ const RoopTable: React.FC<TableProps> = ({
             placeholder="Enter Value"
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
-            className="bg-input text-sm rounded-lg block p-2.5  placeholder-gray-400 text-white w-96"
+            className="bg-input text-sm rounded-lg block p-2.5 text-black  placeholder-gray-400  "
           />
           <div className="flex justify-end space-x-2">
             <button
               className="btn btn-secondary"
-              onClick={() => setShowFilterModal(false)}
+              onClick={() => {
+                setFilterColumn("");
+                setOperator("contains");
+                setFilterValue("");
+              }}
             >
-              Cancel
+              Clear
             </button>
             <button className="btn btn-primary" onClick={applyFilter}>
               Apply

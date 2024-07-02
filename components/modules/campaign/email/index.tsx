@@ -29,7 +29,11 @@ export function Emails() {
   return (
     <div className="container mx-auto ">
       <div className="h-[20rem] md:h-[35rem] [perspective:1000px] relative b flex flex-col max-w-7xl mx-auto w-full  items-start justify-start  ">
-        <Tabs tabs={tabs} />
+        <Tabs
+          activeTabClassName="text-white"
+          tabClassName="text-black"
+          tabs={tabs}
+        />
       </div>
     </div>
   );

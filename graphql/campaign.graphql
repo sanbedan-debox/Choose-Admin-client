@@ -1,43 +1,80 @@
-query getAllEmailTemplates {
-  getAllEmailTemplates {
-    title
-    content
-
-    createdAt
-    updatedAt
-    designJson
-  }
-}
-
-query getAllEmailCampaigns {
-  getAllEmailCampaigns {
-    campaignName
-    emailSubject
-    status
-    target
-    scheduleType
-    usersCount
-  }
-}
-
-# Mutations
-
-# Mutation to create an email template
 mutation CreateEmailTemplate($input: AddEmailTemplateInput!) {
   createEmailTemplate(input: $input)
 }
 
-# Mutation to delete an email template by ID
 mutation DeleteEmailTemplate($id: String!) {
   deleteEmailTemplate(id: $id)
 }
 
-# Mutation to create an email campaign
 mutation CreateEmailCampaign($input: AddEmailCampaignInput!) {
   createEmailCampaign(input: $input)
 }
 
-# Mutation to send test emails
 mutation SendTestEmails($input: TestEmailInput!) {
   sendTestEmails(input: $input)
+}
+
+query GetAllEmailTemplates {
+  getAllEmailTemplates {
+    _id
+    content
+    designJson
+    title
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query GetAllEmailTemplatesTitleAndId {
+  getAllEmailTemplates {
+    _id
+    designJson
+    title
+    content
+  }
+}
+
+query GetAllEmailCampaigns {
+  getAllEmailCampaigns {
+    _id
+    campaignName
+    emailSubject
+    emailTemplate {
+      _id
+      title
+    }
+    status
+    target
+    usersCount
+    scheduleType
+    scheduleTime
+    csvDataUrl
+    logUrl
+    stats {
+      mailsSent
+      mailsDelivered
+      mailsOpened {
+        email
+        date
+      }
+      mailsClicked {
+        email
+        date
+      }
+    }
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
 }

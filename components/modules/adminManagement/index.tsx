@@ -17,6 +17,7 @@ import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { FaTrash, FaEdit, FaShieldAlt } from "react-icons/fa";
 import Switch from "react-switch"; // Import react-switch component
+import { PlatformStatus } from "@/generated/graphql";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -164,9 +165,34 @@ const Admin: React.FC = () => {
     setIsChangePassModalOpen(true);
   };
 
-  const handleStatusChange = async (id: string, currentStatus: string) => {
+  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+    <div>
+      <Switch
+        onChange={() => handleStatusChange(rowData._id, rowData.status)}
+        checked={rowData.status !== PlatformStatus.Blocked}
+        onColor="#86d3ff"
+        onHandleColor="#2693e6"
+        handleDiameter={20}
+        uncheckedIcon={false}
+        checkedIcon={false}
+        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+        height={12}
+        width={30}
+        className="react-switch"
+      />
+    </div>
+  );
+
+  const handleStatusChange = async (
+    id: string,
+    currentStatus: PlatformStatus
+  ) => {
     try {
-      const newStatus = currentStatus === "blocked" ? "active" : "blocked";
+      const newStatus =
+        currentStatus === PlatformStatus.Blocked
+          ? PlatformStatus.Active
+          : PlatformStatus.Blocked;
       const response = await sdk.blockAdmin({
         id,
         updateStatus: newStatus,
@@ -183,27 +209,8 @@ const Admin: React.FC = () => {
     }
   };
 
-  const renderSwitch = (rowData: { status: string; _id: string }) => (
-    <div className="">
-      <Switch
-        onChange={() => handleStatusChange(rowData._id, rowData.status)}
-        checked={rowData.status === "blocked" ? false : true}
-        onColor="#86d3ff"
-        onHandleColor="#2693e6"
-        handleDiameter={20}
-        uncheckedIcon={false}
-        checkedIcon={false}
-        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-        height={12}
-        width={30}
-        className="react-switch"
-      />
-    </div>
-  );
-
-  const renderActions = (_id) => (
-    <div className="flex space-x-2">
+  const renderActions = (_id: any) => (
+    <div className="flex space-x-3">
       <FaTrash
         className="text-red-500 cursor-pointer"
         onClick={() => openDeleteModal(_id)}
@@ -385,7 +392,7 @@ const Admin: React.FC = () => {
               </p>
             )}
           </div>
-          <div className="flex justify-end mt-4">
+          <div className="flex justify-end mt-4 space-x-2">
             <button
               className="btn btn-outlined"
               onClick={(e) => {
@@ -397,12 +404,7 @@ const Admin: React.FC = () => {
             >
               Generate Password
             </button>
-            <button
-              className="btn btn-warning"
-              onClick={() => setIsChangePassModalOpen(false)}
-            >
-              Cancel
-            </button>
+
             <button
               className="btn btn-confirmation"
               onClick={handleSubmitPass(handleChangePassword)}
@@ -452,13 +454,7 @@ const Admin: React.FC = () => {
               <p className="text-red-500 text-sm">{errorsRole.role.message}</p>
             )}
           </div>
-          <div className="flex justify-end mt-4">
-            <button
-              className="btn btn-warning"
-              onClick={() => setIsChangeRoleModalOpen(false)}
-            >
-              Cancel
-            </button>
+          <div className="flex justify-end mt-4 space-x-2">
             <button className="btn btn-confirmation">Change Role</button>
           </div>
         </form>
@@ -474,12 +470,6 @@ const Admin: React.FC = () => {
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
-          <button
-            className="btn btn-warning"
-            onClick={() => setIsDeleteModalOpen(false)}
-          >
-            No
-          </button>
           <button className="btn btn-confirmation" onClick={handleDeleteAdmin}>
             Yes
           </button>

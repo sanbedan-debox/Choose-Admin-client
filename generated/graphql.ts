@@ -815,16 +815,6 @@ export type AdminLogoutQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type AdminLogoutQuery = { __typename?: 'Query', adminLogout: boolean };
 
-export type GetAllEmailTemplatesQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllEmailTemplatesQuery = { __typename?: 'Query', getAllEmailTemplates: Array<{ __typename?: 'EmailTemplatesObject', title: string, content: string, createdAt: any, updatedAt: any, designJson: string }> };
-
-export type GetAllEmailCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetAllEmailCampaignsQuery = { __typename?: 'Query', getAllEmailCampaigns: Array<{ __typename?: 'EmailCampaignsObject', campaignName: string, emailSubject: string, status: EmailCampaignStatusEnum, target: EmailCampaignTargetTypes, scheduleType: EmailCampaignScheduleTypes, usersCount: number }> };
-
 export type CreateEmailTemplateMutationVariables = Exact<{
   input: AddEmailTemplateInput;
 }>;
@@ -852,6 +842,21 @@ export type SendTestEmailsMutationVariables = Exact<{
 
 
 export type SendTestEmailsMutation = { __typename?: 'Mutation', sendTestEmails: boolean };
+
+export type GetAllEmailTemplatesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllEmailTemplatesQuery = { __typename?: 'Query', getAllEmailTemplates: Array<{ __typename?: 'EmailTemplatesObject', _id: string, content: string, designJson: string, title: string, createdAt: any, updatedAt: any, createdBy: { __typename?: 'Admin', name: string }, updatedBy: { __typename?: 'Admin', name: string } }> };
+
+export type GetAllEmailTemplatesTitleAndIdQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllEmailTemplatesTitleAndIdQuery = { __typename?: 'Query', getAllEmailTemplates: Array<{ __typename?: 'EmailTemplatesObject', _id: string, designJson: string, title: string, content: string }> };
+
+export type GetAllEmailCampaignsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllEmailCampaignsQuery = { __typename?: 'Query', getAllEmailCampaigns: Array<{ __typename?: 'EmailCampaignsObject', _id: string, campaignName: string, emailSubject: string, status: EmailCampaignStatusEnum, target: EmailCampaignTargetTypes, usersCount: number, scheduleType: EmailCampaignScheduleTypes, scheduleTime?: any | null, csvDataUrl?: string | null, logUrl?: string | null, createdAt: any, updatedAt: any, emailTemplate: { __typename?: 'EmailBuilderTemplate', _id: string, title: string }, stats: { __typename?: 'EmailCampaignStats', mailsSent: number, mailsDelivered: number, mailsOpened: Array<{ __typename?: 'EmailCampaignEventHistory', email: string, date: any }>, mailsClicked: Array<{ __typename?: 'EmailCampaignEventHistory', email: string, date: any }> }, createdBy: { __typename?: 'Admin', name: string }, updatedBy: { __typename?: 'Admin', name: string } }> };
 
 export type GetWaitListUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -932,29 +937,6 @@ export const AdminLogoutDocument = gql`
   adminLogout
 }
     `;
-export const GetAllEmailTemplatesDocument = gql`
-    query getAllEmailTemplates {
-  getAllEmailTemplates {
-    title
-    content
-    createdAt
-    updatedAt
-    designJson
-  }
-}
-    `;
-export const GetAllEmailCampaignsDocument = gql`
-    query getAllEmailCampaigns {
-  getAllEmailCampaigns {
-    campaignName
-    emailSubject
-    status
-    target
-    scheduleType
-    usersCount
-  }
-}
-    `;
 export const CreateEmailTemplateDocument = gql`
     mutation CreateEmailTemplate($input: AddEmailTemplateInput!) {
   createEmailTemplate(input: $input)
@@ -973,6 +955,74 @@ export const CreateEmailCampaignDocument = gql`
 export const SendTestEmailsDocument = gql`
     mutation SendTestEmails($input: TestEmailInput!) {
   sendTestEmails(input: $input)
+}
+    `;
+export const GetAllEmailTemplatesDocument = gql`
+    query GetAllEmailTemplates {
+  getAllEmailTemplates {
+    _id
+    content
+    designJson
+    title
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}
+    `;
+export const GetAllEmailTemplatesTitleAndIdDocument = gql`
+    query GetAllEmailTemplatesTitleAndId {
+  getAllEmailTemplates {
+    _id
+    designJson
+    title
+    content
+  }
+}
+    `;
+export const GetAllEmailCampaignsDocument = gql`
+    query GetAllEmailCampaigns {
+  getAllEmailCampaigns {
+    _id
+    campaignName
+    emailSubject
+    emailTemplate {
+      _id
+      title
+    }
+    status
+    target
+    usersCount
+    scheduleType
+    scheduleTime
+    csvDataUrl
+    logUrl
+    stats {
+      mailsSent
+      mailsDelivered
+      mailsOpened {
+        email
+        date
+      }
+      mailsClicked {
+        email
+        date
+      }
+    }
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
 }
     `;
 export const GetWaitListUsersDocument = gql`
@@ -1024,12 +1074,6 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     AdminLogout(variables?: AdminLogoutQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AdminLogoutQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<AdminLogoutQuery>(AdminLogoutDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AdminLogout', 'query', variables);
     },
-    getAllEmailTemplates(variables?: GetAllEmailTemplatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllEmailTemplatesQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAllEmailTemplatesQuery>(GetAllEmailTemplatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllEmailTemplates', 'query', variables);
-    },
-    getAllEmailCampaigns(variables?: GetAllEmailCampaignsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllEmailCampaignsQuery> {
-      return withWrapper((wrappedRequestHeaders) => client.request<GetAllEmailCampaignsQuery>(GetAllEmailCampaignsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllEmailCampaigns', 'query', variables);
-    },
     CreateEmailTemplate(variables: CreateEmailTemplateMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<CreateEmailTemplateMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<CreateEmailTemplateMutation>(CreateEmailTemplateDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'CreateEmailTemplate', 'mutation', variables);
     },
@@ -1041,6 +1085,15 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     SendTestEmails(variables: SendTestEmailsMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<SendTestEmailsMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<SendTestEmailsMutation>(SendTestEmailsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'SendTestEmails', 'mutation', variables);
+    },
+    GetAllEmailTemplates(variables?: GetAllEmailTemplatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllEmailTemplatesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllEmailTemplatesQuery>(GetAllEmailTemplatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllEmailTemplates', 'query', variables);
+    },
+    GetAllEmailTemplatesTitleAndId(variables?: GetAllEmailTemplatesTitleAndIdQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllEmailTemplatesTitleAndIdQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllEmailTemplatesTitleAndIdQuery>(GetAllEmailTemplatesTitleAndIdDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllEmailTemplatesTitleAndId', 'query', variables);
+    },
+    GetAllEmailCampaigns(variables?: GetAllEmailCampaignsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllEmailCampaignsQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllEmailCampaignsQuery>(GetAllEmailCampaignsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllEmailCampaigns', 'query', variables);
     },
     GetWaitListUsers(variables?: GetWaitListUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetWaitListUsersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetWaitListUsersQuery>(GetWaitListUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetWaitListUsers', 'query', variables);

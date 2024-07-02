@@ -1,35 +1,29 @@
-import React, { Dispatch, SetStateAction, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { EditorRef, EmailEditorProps } from "react-email-editor";
 import default_template from "./defaultTemplate.json";
 import useGlobalStore from "@/store/global";
-import CButton from "@/components/common/button/button";
-import { ButtonType } from "@/components/common/button/interface";
+import { AddEmailTemplateInput } from "@/generated/graphql";
+import { sdk } from "@/util/graphqlClient";
+import ReusableModal from "@/components/common/modal/modal";
 
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
 });
 
-interface IUnlayerEditorProps {
-  closeHandler: () => void;
-  setCounter: Dispatch<SetStateAction<number>>;
-}
-
 const UnlayerEditor = () => {
   const { setEmailBuilderOpen } = useGlobalStore();
 
-  // Loading & Error Handling
   const [loading, setLoading] = useState<boolean>(false);
+  const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);
+  const [showTestEmailDialog, setShowTestEmailDialog] =
+    useState<boolean>(false);
+  const [title, setTitle] = useState<string>("");
+  const [testTitle, setTestTitle] = useState<string>("");
+  const [testEmail, setTestEmail] = useState<string>("");
 
-  // Data Handling
   const emailEditorRef = useRef<EditorRef | null>(null);
 
-  const [showTestMailDialog, setShowTestMailDialog] = useState<boolean>(false);
-  const [showSaveDialog, setShowSaveDialog] = useState<boolean>(false);
-  const [title, setTitle] = useState<string>("");
-  const [emails, setEmails] = useState<string>("");
-
-  // Unlayer Email Editor
   const onLoad: EmailEditorProps["onLoad"] = (unlayer) => {
     emailEditorRef.current = { editor: unlayer };
     unlayer.loadDesign(default_template.body);
@@ -42,64 +36,68 @@ const UnlayerEditor = () => {
   // Handlers
   const handleCloseClick = () => {
     setShowSaveDialog(false);
-    setShowTestMailDialog(false);
+    setShowTestEmailDialog(false);
     setTitle("");
     setEmailBuilderOpen(false);
   };
 
-  const handleTestMailDialogClose = () => {
-    setShowTestMailDialog(false);
-    setTitle("");
-    setEmails("");
-  };
-
-  const handleSaveDialogClose = () => {
-    setShowSaveDialog(false);
-    setTitle("");
-  };
-
   const handleSaveClick = () => {
-    setLoading(false);
+    setLoading(true);
     setTitle("");
     setShowSaveDialog(true);
   };
 
   const handleTestEmailClick = () => {
-    setLoading(false);
-    setTitle("");
-    setEmails("");
-    setShowTestMailDialog(true);
+    setShowTestEmailDialog(true);
   };
 
-  const saveTemplate = () => {};
+  const saveTemplate = async () => {
+    if (emailEditorRef.current && emailEditorRef.current.editor) {
+      setLoading(true);
+      emailEditorRef.current.editor.exportHtml(async (data: any) => {
+        try {
+          let plainText = "";
 
-  const sendTestMail = () => {};
+          unlayer?.exportPlainText(async (data) => {
+            const { text } = data;
+            plainText = text;
+          });
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
+          const { design, html } = data;
+          const input: AddEmailTemplateInput = {
+            title,
+            designJson: JSON.stringify(design),
+            html,
+            content: plainText,
+          };
+
+          const response = await sdk.CreateEmailTemplate({ input });
+          if (response.createEmailTemplate) {
+            alert("Email template saved successfully");
+          } else {
+            alert("Failed to save email template");
+          }
+        } catch (error) {
+          console.error("Error saving email template:", error);
+          alert("Error saving email template");
+        } finally {
+          setLoading(false);
+          setShowSaveDialog(false);
+        }
+      });
+    }
+  };
+
+  const saveTestEmail = () => {
+    console.log("Test Title:", testTitle);
+    console.log("Test Email:", testEmail);
+    setShowTestEmailDialog(false);
+    setTestTitle("");
+    setTestEmail("");
   };
 
   return (
     <div className="p-6 bg-white rounded-lg shadow-lg min-h-screen">
-      <div className="flex mb-6 space-x-4">
-        <label className="block text-black mb-2">Title:</label>
-        <input
-          type="text"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="input input-primary"
-          placeholder="Enter title"
-        />
-        <label className="block text-black mb-2">Emails:</label>
-        <input
-          type="text"
-          value={emails}
-          onChange={(e) => setEmails(e.target.value)}
-          className="input input-primary"
-          placeholder="Enter emails"
-        />{" "}
-      </div>
       <div className="rounded-lg shadow-md p-4 mb-6">
         <EmailEditor
           ref={emailEditorRef}
@@ -132,17 +130,67 @@ const UnlayerEditor = () => {
           onReady={onReady}
         />
       </div>
-      <div className=" text-center flex float-end space-x-4">
+      <div className="text-center flex float-end space-x-4">
         <button className="btn btn-warning" onClick={handleCloseClick}>
           Close
-        </button>
-        <button className="btn btn-warning" onClick={handleTestEmailClick}>
-          Test Email
         </button>
         <button className="btn btn-primary" onClick={handleSaveClick}>
           Save
         </button>
+        <button className="btn btn-primary" onClick={handleTestEmailClick}>
+          Test Email
+        </button>
       </div>
+      {showSaveDialog && (
+        <ReusableModal
+          title="Save Template"
+          isOpen={showSaveDialog}
+          onClose={handleCloseClick}
+        >
+          <label className="block text-black mb-2">Title:</label>
+          <input
+            type="text"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            className="input input-primary"
+            placeholder="Enter title"
+          />
+          <div className="text-center mt-4">
+            <button className="btn btn-primary" onClick={saveTemplate}>
+              Save
+            </button>
+          </div>
+        </ReusableModal>
+      )}
+      {showTestEmailDialog && (
+        <ReusableModal
+          title="Test Email"
+          isOpen={showTestEmailDialog}
+          onClose={handleCloseClick}
+        >
+          <label className="block text-black mb-2">Title:</label>
+          <input
+            type="text"
+            value={testTitle}
+            onChange={(e) => setTestTitle(e.target.value)}
+            className="input input-primary"
+            placeholder="Enter title"
+          />
+          <label className="block text-black mb-2 mt-4">Test Email:</label>
+          <input
+            type="text"
+            value={testEmail}
+            onChange={(e) => setTestEmail(e.target.value)}
+            className="input input-primary"
+            placeholder="Enter test email"
+          />
+          <div className="text-center mt-4">
+            <button className="btn btn-primary" onClick={saveTestEmail}>
+              Save
+            </button>
+          </div>
+        </ReusableModal>
+      )}
     </div>
   );
 };
