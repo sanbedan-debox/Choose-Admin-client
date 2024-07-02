@@ -25,9 +25,7 @@ const Admin: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
-  const [selectedAdminId, setSelectedAdminId] = useState<
-    string | number | null
-  >(null);
+  const [selectedAdminId, setSelectedAdminId] = useState<any>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
 
   const [randomPassword, setRandomPassword] = useState(
@@ -188,30 +186,36 @@ const Admin: React.FC = () => {
     setIsChangePassModalOpen(true);
   };
 
-  const handleToggleSwitch = (rowData: { status: PlatformStatus; _id: string }) => {
+  const handleToggleSwitch = (rowData: {
+    status: PlatformStatus;
+    _id: string;
+  }) => {
     setSelectedAdminId(rowData._id);
     setShowConfirmationModal(true);
   };
-  
+
   const handleConfirmation = async () => {
     setShowConfirmationModal(false);
     try {
       const response = await sdk.blockAdmin({ id: selectedAdminId });
       if (response) {
         fetchAdmins(); // Refresh admin list on successful toggle
-        setToastData({ message: "Admin status updated successfully", type: "success" });
+        setToastData({
+          message: "Admin status updated successfully",
+          type: "success",
+        });
       }
     } catch (error) {
       console.error("Failed to update admin status:", error);
       setToastData({ message: "Failed to update admin status", type: "error" });
     }
   };
-  
+
   const handleCloseConfirmationModal = () => {
     setShowConfirmationModal(false);
     setSelectedAdminId(null);
   };
-  
+
   const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
     <div>
       <Switch
@@ -230,7 +234,7 @@ const Admin: React.FC = () => {
       />
     </div>
   );
-  
+
   const handleStatusChange = async (
     id: string,
     currentStatus: PlatformStatus
@@ -297,20 +301,20 @@ const Admin: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      {loading && <Loading />} 
+      {loading && <Loading />}
       : (
-        <RoopTable
-          data={members}
-          itemsPerPage={5}
-          csvExport
-          fullCsv
-          csvFileName="admins_data.csv"
-          headings={headings}
-          hovered
-          filterable
-          mainActions={mainActions}
-        />
-      )}
+      <RoopTable
+        data={members}
+        itemsPerPage={5}
+        csvExport
+        fullCsv
+        csvFileName="admins_data.csv"
+        headings={headings}
+        hovered
+        filterable
+        mainActions={mainActions}
+      />
+      )
       <ReusableModal
         title="Add New Admin"
         isOpen={isAddModalOpen}
@@ -402,7 +406,6 @@ const Admin: React.FC = () => {
           </div>
         </form>
       </ReusableModal>
-
       <ReusableModal
         title="Change Password"
         isOpen={isChangePassModalOpen}
@@ -454,7 +457,6 @@ const Admin: React.FC = () => {
           </div>
         </form>
       </ReusableModal>
-
       <ReusableModal
         title="Change Admin Role"
         isOpen={isChangeRoleModalOpen}
@@ -495,27 +497,30 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4 space-x-2">
-            <button className="btn btn-outlined-confirmation">Change Role</button>
+            <button className="btn btn-outlined-confirmation">
+              Change Role
+            </button>
           </div>
         </form>
       </ReusableModal>
       <ReusableModal
-  title="Confirm Status Change"
-  isOpen={showConfirmationModal}
-  onClose={handleCloseConfirmationModal}
-  width="sm"
->
-  <p className="text-black mb-4">
-    Are you sure you want to change the admin's status?
-  </p>
-  <div className="flex justify-end mt-4">
-    <button className="btn btn-outlined-confirmation" onClick={handleConfirmation}>
-      Yes
-    </button>
-  </div>
-</ReusableModal>
-
-
+        title="Confirm Status Change"
+        isOpen={showConfirmationModal}
+        onClose={handleCloseConfirmationModal}
+        width="sm"
+      >
+        <p className="text-black mb-4">
+          Are you sure you want to change the admin's status?
+        </p>
+        <div className="flex justify-end mt-4">
+          <button
+            className="btn btn-outlined-confirmation"
+            onClick={handleConfirmation}
+          >
+            Yes
+          </button>
+        </div>
+      </ReusableModal>
       <ReusableModal
         title="Confirm Deletion"
         isOpen={isDeleteModalOpen}
@@ -526,7 +531,10 @@ const Admin: React.FC = () => {
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
-          <button className="btn btn-outlined-confirmation" onClick={handleDeleteAdmin}>
+          <button
+            className="btn btn-outlined-confirmation"
+            onClick={handleDeleteAdmin}
+          >
             Yes
           </button>
         </div>
