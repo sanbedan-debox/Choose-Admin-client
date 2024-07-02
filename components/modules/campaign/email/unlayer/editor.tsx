@@ -173,7 +173,7 @@ const UnlayerEditor = () => {
             type="text"
             value={testTitle}
             onChange={(e) => setTestTitle(e.target.value)}
-            className="input input-primary"
+            className="input input-primary w-full"
             placeholder="Enter title"
           />
           <label className="block text-black mb-2 mt-4">Test Email:</label>
@@ -181,10 +181,10 @@ const UnlayerEditor = () => {
             type="text"
             value={testEmail}
             onChange={(e) => setTestEmail(e.target.value)}
-            className="input input-primary"
+            className="input input-primary w-full"
             placeholder="Enter test email"
           />
-          <div className="text-center mt-4">
+          <div className="text-center mt-4 w-full flex justify-end ">
             <button className="btn btn-primary" onClick={saveTestEmail}>
               Save
             </button>

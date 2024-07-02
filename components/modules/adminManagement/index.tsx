@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Select, { SingleValue } from "react-select";
+import Select from "react-select";
 import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
 import ReusableModal from "@/components/common/modal/modal";
@@ -16,8 +16,9 @@ import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { FaTrash, FaEdit, FaShieldAlt } from "react-icons/fa";
-import Switch from "react-switch"; // Import react-switch component
+import Switch from "react-switch";
 import { PlatformStatus } from "@/generated/graphql";
+import Loading from "@/components/common/Loader/Loader";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -27,6 +28,8 @@ const Admin: React.FC = () => {
   const [selectedAdminId, setSelectedAdminId] = useState<
     string | number | null
   >(null);
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+
   const [randomPassword, setRandomPassword] = useState(
     generateRandomPassword()
   );
@@ -76,7 +79,7 @@ const Admin: React.FC = () => {
           updatedAt: formatDate(user.updatedAt),
         }));
 
-        setMembers(response.getAdmins);
+        setMembers(formattedUsers);
       }
     } catch (error) {
       console.error("Failed to fetch admin details:", error);
@@ -185,13 +188,37 @@ const Admin: React.FC = () => {
     setIsChangePassModalOpen(true);
   };
 
+  const handleToggleSwitch = (rowData: { status: PlatformStatus; _id: string }) => {
+    setSelectedAdminId(rowData._id);
+    setShowConfirmationModal(true);
+  };
+  
+  const handleConfirmation = async () => {
+    setShowConfirmationModal(false);
+    try {
+      const response = await sdk.blockAdmin({ id: selectedAdminId });
+      if (response) {
+        fetchAdmins(); // Refresh admin list on successful toggle
+        setToastData({ message: "Admin status updated successfully", type: "success" });
+      }
+    } catch (error) {
+      console.error("Failed to update admin status:", error);
+      setToastData({ message: "Failed to update admin status", type: "error" });
+    }
+  };
+  
+  const handleCloseConfirmationModal = () => {
+    setShowConfirmationModal(false);
+    setSelectedAdminId(null);
+  };
+  
   const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
     <div>
       <Switch
-        onChange={() => handleStatusChange(rowData._id, rowData.status)}
+        onChange={() => handleToggleSwitch(rowData)}
         checked={rowData.status !== PlatformStatus.Blocked}
-        onColor="#86d3ff"
-        onHandleColor="#2693e6"
+        onColor="#162CF1"
+        onHandleColor="#162CF1"
         handleDiameter={20}
         uncheckedIcon={false}
         checkedIcon={false}
@@ -203,7 +230,7 @@ const Admin: React.FC = () => {
       />
     </div>
   );
-
+  
   const handleStatusChange = async (
     id: string,
     currentStatus: PlatformStatus
@@ -271,9 +298,8 @@ const Admin: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      {loading ? (
-        <div className="loader">Loading...</div>
-      ) : (
+      {loading && <Loading />} 
+      : (
         <RoopTable
           data={members}
           itemsPerPage={5}
@@ -373,13 +399,8 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4">
-            <CButton
-              type={ButtonType.Outlined}
-              onClick={() => setIsAddModalOpen(false)}
-            >
-              Cancel
-            </CButton>
-            <CButton type={ButtonType.Confirm}>Add Admin</CButton>
+            {/* <CButton type={ButtonType.Confirm}>Add Admin</CButton> */}
+            <button className="btn btn-outlined-confirmation">Add Admin</button>
           </div>
         </form>
       </ReusableModal>
@@ -427,7 +448,7 @@ const Admin: React.FC = () => {
             </button>
 
             <button
-              className="btn btn-confirmation"
+              className="btn btn-outlined-confirmation"
               onClick={handleSubmitPass(handleChangePassword)}
             >
               Change Password
@@ -476,10 +497,26 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4 space-x-2">
-            <button className="btn btn-confirmation">Change Role</button>
+            <button className="btn btn-outlined-confirmation">Change Role</button>
           </div>
         </form>
       </ReusableModal>
+      <ReusableModal
+  title="Confirm Status Change"
+  isOpen={showConfirmationModal}
+  onClose={handleCloseConfirmationModal}
+  width="sm"
+>
+  <p className="text-black mb-4">
+    Are you sure you want to change the admin's status?
+  </p>
+  <div className="flex justify-end mt-4">
+    <button className="btn btn-outlined-confirmation" onClick={handleConfirmation}>
+      Yes
+    </button>
+  </div>
+</ReusableModal>
+
 
       <ReusableModal
         title="Confirm Deletion"
@@ -491,7 +528,7 @@ const Admin: React.FC = () => {
           Are you sure you want to delete this admin?
         </p>
         <div className="flex justify-end mt-4">
-          <button className="btn btn-confirmation" onClick={handleDeleteAdmin}>
+          <button className="btn btn-outlined-confirmation" onClick={handleDeleteAdmin}>
             Yes
           </button>
         </div>

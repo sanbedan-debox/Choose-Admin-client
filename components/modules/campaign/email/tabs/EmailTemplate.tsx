@@ -2,24 +2,30 @@ import React, { useState, useEffect } from "react";
 import RoopTable from "@/components/common/customTableR/table";
 import useGlobalStore from "@/store/global";
 import { sdk } from "@/util/graphqlClient";
+import Loading from "@/components/common/Loader/Loader"; // Import your loading component
+import useGlobalLoaderStore from "@/store/loader";
 
 const EmailTemplate: React.FC = () => {
   const { setEmailBuilderOpen } = useGlobalStore();
+  const { isLoading, setLoading } = useGlobalLoaderStore(); // Use global loader store
   const [emailTemplates, setEmailTemplates] = useState<any[]>([]); // Adjust type as per your GraphQL schema
 
   useEffect(() => {
-    const fetchEmailTemplates = async () => {
-      try {
-        const { getAllEmailTemplates } = await sdk.getAllEmailTemplates();
-        setEmailTemplates(getAllEmailTemplates);
-      } catch (error) {
-        console.error("Error fetching email templates:", error);
-        // Handle error fetching data (e.g., show error message)
-      }
-    };
-
     fetchEmailTemplates();
   }, []);
+
+  const fetchEmailTemplates = async () => {
+    setLoading(true);
+    try {
+      const { getAllEmailTemplates } = await sdk.GetAllEmailTemplates();
+      setEmailTemplates(getAllEmailTemplates);
+    } catch (error) {
+      console.error("Error fetching email templates:", error);
+      // Handle error fetching data (e.g., show error message)
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const mainActions = [
     {
@@ -53,6 +59,7 @@ const EmailTemplate: React.FC = () => {
 
   return (
     <div className="">
+      {isLoading && <Loading />}
       <RoopTable
         data={emailTemplates}
         itemsPerPage={5}

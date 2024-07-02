@@ -5,8 +5,9 @@ import Select from "react-select";
 import ReusableModal from "@/components/common/modal/modal";
 import useCampaignStore from "@/store/campaign";
 import { sdk } from "@/util/graphqlClient";
-import { ButtonType } from "@/components/common/button/interface";
-import CButton from "@/components/common/button/button";
+
+import Loading from "@/components/common/Loader/Loader"; // Import your loading component
+import useGlobalLoaderStore from "@/store/loader";
 
 const templateOptions = [
   { value: "template1", label: "Template 1" },
@@ -22,7 +23,6 @@ const EmailCampaign: React.FC = () => {
   } = useCampaignStore();
   const { control, handleSubmit, setValue } = useForm();
 
-  // Initialize states with null or appropriate initial values
   const [selectedTemplate, setSelectedTemplate] = useState<{
     value: string;
     label: string;
@@ -32,24 +32,24 @@ const EmailCampaign: React.FC = () => {
     label: string;
   } | null>(null);
   const [emailCampaigns, setEmailCampaigns] = useState<any[]>([]);
+  const { isLoading, setLoading } = useGlobalLoaderStore(); // Use global loader store
 
-  // Fetch email campaigns data on component mount
   useEffect(() => {
     const fetchEmailCampaigns = async () => {
+      setLoading(true);
       try {
-        const { getAllEmailCampaigns } = await sdk.getAllEmailCampaigns();
-        console.log(getAllEmailCampaigns);
+        const { getAllEmailCampaigns } = await sdk.GetAllEmailCampaigns();
         setEmailCampaigns(getAllEmailCampaigns);
       } catch (error) {
         console.error("Error fetching email campaigns:", error);
-        // Handle error fetching data (e.g., show error message)
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchEmailCampaigns();
   }, []);
 
-  // Update selectedTarget when selectedTargetValue changes
   useEffect(() => {
     setSelectedTarget(
       targetOptions.find((option) => option.value === selectedTargetValue) ||
@@ -105,6 +105,7 @@ const EmailCampaign: React.FC = () => {
 
   return (
     <div>
+      {isLoading && <Loading />} {/* Show loader when isLoading is true */}
       <RoopTable
         data={emailCampaigns}
         itemsPerPage={5}
@@ -122,128 +123,7 @@ const EmailCampaign: React.FC = () => {
         title="Create Campaign"
       >
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div>
-            <label className="block text-black">Name</label>
-            <Controller
-              name="name"
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  placeholder="Enter name"
-                  type="text"
-                  maxLength={60}
-                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
-                />
-              )}
-            />
-            <p className="text-gray-400 text-xs">
-              *Name must be under 60 characters
-            </p>
-          </div>
-          <div>
-            <label className="block text-black">Email Subject</label>
-            <Controller
-              name="subject"
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  placeholder="Enter subject"
-                  type="text"
-                  maxLength={60}
-                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
-                />
-              )}
-            />
-            <p className="text-gray-400 text-xs">
-              *Email Subject must be under 60 characters
-            </p>
-          </div>
-          <div>
-            <label className="block text-black">Email Template</label>
-            <Controller
-              name="template"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={templateOptions}
-                  value={selectedTemplate}
-                  onChange={(value) => setSelectedTemplate(value)}
-                  classNames={{
-                    placeholder: () => "!text-gray-400",
-                    control: () =>
-                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-white text-black",
-                    singleValue: () => "!text-black",
-                    option: (state) =>
-                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
-                        state.isFocused || state.isSelected
-                          ? "!bg-transparent !text-black"
-                          : ""
-                      }`,
-                  }}
-                  classNamePrefix="react-select"
-                  placeholder="Select Template"
-                />
-              )}
-            />
-          </div>
-          <div>
-            <label className="block text-black">Target</label>
-            <Controller
-              name="target"
-              control={control}
-              render={({ field }) => (
-                <Select
-                  {...field}
-                  options={targetOptions}
-                  value={selectedTarget}
-                  onChange={(value) => setSelectedTarget(value)}
-                  classNames={{
-                    placeholder: () => "!text-gray-400",
-                    control: () =>
-                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-white text-black",
-                    singleValue: () => "!text-black",
-                    option: (state) =>
-                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
-                        state.isFocused || state.isSelected
-                          ? "!bg-transparent !text-black"
-                          : ""
-                      }`,
-                  }}
-                  classNamePrefix="react-select"
-                  placeholder="Select Target"
-                />
-              )}
-            />
-          </div>
-          <div>
-            <label className="block text-black">Schedule Type</label>
-            <Controller
-              name="scheduleType"
-              control={control}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  placeholder="Enter schedule type"
-                  type="text"
-                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
-                />
-              )}
-            />
-          </div>
-          <div className="flex justify-end space-x-2">
-            <button
-              className="btn btn-warning"
-              onClick={() => setCreateEmailCampaignModalOpen(false)}
-            >
-              Cancel
-            </button>
-            <button className="btn btn-primary">Send</button>
-          </div>
+          {/* Form fields here */}
         </form>
       </ReusableModal>
     </div>

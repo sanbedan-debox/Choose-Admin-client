@@ -1,13 +1,17 @@
-import React, { useEffect, useState } from "react";
+// src/pages/Reports.tsx
+import React, { useEffect } from "react";
 import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
 import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
 import Switch from "react-switch";
+import useGlobalStore from "@/store/global"; // Adjust path as per your project structure
+import useGlobalLoaderStore from "@/store/loader";
+import Loading from "@/components/common/Loader/Loader";
 
 const Reports: React.FC = () => {
-  const [restaurants, setRestaurants] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { isLoading, setLoading } = useGlobalLoaderStore();
+  const [restaurants, setRestaurants] = React.useState<any[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     fetchRestaurants();
   }, []);
 
@@ -33,8 +37,8 @@ const Reports: React.FC = () => {
     <Switch
       onChange={() => toggleStatus(rowData)}
       checked={rowData.status !== "blocked"}
-      onColor="#86d3ff"
-      onHandleColor="#2693e6"
+      onColor="#162CF1"
+      onHandleColor="#162CF1"
       handleDiameter={20}
       uncheckedIcon={false}
       checkedIcon={false}
@@ -55,6 +59,8 @@ const Reports: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
+      {isLoading && <Loading />}
+
       <RoopTable
         data={restaurants}
         itemsPerPage={10}

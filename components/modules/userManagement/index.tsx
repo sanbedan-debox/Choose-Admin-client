@@ -2,10 +2,15 @@ import React, { useEffect, useState } from "react";
 import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
 import Switch from "react-switch";
+import useGlobalLoaderStore from "@/store/loader";
+import Loading from "@/components/common/Loader/Loader";
+import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { isLoading, setLoading } = useGlobalLoaderStore();
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [userIdToBlock, setUserIdToBlock] = useState<string>("");
 
   useEffect(() => {
     fetchRestaurantUsers();
@@ -30,9 +35,15 @@ const Reports: React.FC = () => {
     }
   };
 
-  const handleStatusChange = async (id: string) => {
+  const handleToggleSwitch = (rowData: { status: string; _id: string }) => {
+    setShowConfirmationModal(true);
+    setUserIdToBlock(rowData._id);
+  };
+
+  const handleConfirmation = async () => {
+    setShowConfirmationModal(false);
     try {
-      const response = await sdk.changeUserStatus({ id });
+      const response = await sdk.changeUserStatus({ id: userIdToBlock });
       if (response && response.changeUserStatus) {
         fetchRestaurantUsers();
       }
@@ -41,12 +52,17 @@ const Reports: React.FC = () => {
     }
   };
 
+  const handleCloseConfirmationModal = () => {
+    setShowConfirmationModal(false);
+    setUserIdToBlock("");
+  };
+
   const renderSwitch = (rowData: { status: string; _id: string }) => (
     <Switch
-      onChange={() => handleStatusChange(rowData._id)}
+      onChange={() => handleToggleSwitch(rowData)}
       checked={rowData.status !== "blocked"}
-      onColor="#86d3ff"
-      onHandleColor="#2693e6"
+      onColor="#162CF1"
+      onHandleColor="#162CF1"
       handleDiameter={20}
       uncheckedIcon={false}
       checkedIcon={false}
@@ -84,20 +100,31 @@ const Reports: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      {loading ? (
-        <div className="flex items-center justify-center h-64 text-black text-2xl">
-          Loading...
+      {isLoading && <Loading />}
+      <RoopTable
+        data={restaurantUsers}
+        itemsPerPage={10}
+        headings={headings}
+        hovered
+        csvExport
+        filterable
+      />
+
+      {/* Confirmation Modal */}
+      <ReusableModal
+        isOpen={showConfirmationModal}
+        onClose={handleCloseConfirmationModal}
+        title="Are you sure you want to block the user?"
+      >
+        <div className="flex justify-end space-x-4">
+          <button
+            className="btn btn-outlined-confirmation"
+            onClick={handleConfirmation}
+          >
+            Yes
+          </button>
         </div>
-      ) : (
-        <RoopTable
-          data={restaurantUsers}
-          itemsPerPage={10}
-          headings={headings}
-          hovered
-          csvExport
-          filterable
-        />
-      )}
+      </ReusableModal>
     </div>
   );
 };
