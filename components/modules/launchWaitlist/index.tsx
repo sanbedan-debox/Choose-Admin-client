@@ -2,17 +2,17 @@ import React, { useEffect, useState } from "react";
 import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
 import { WaitlistInterface } from "./interface";
-import useGlobalLoaderStore from "@/store/loader"; // Adjust path as per your project structure
-import useCampaignStore from "@/store/campaign"; // Adjust path as per your project structure
-import Loading from "@/components/common/Loader/Loader"; // Adjust path as per your project structure
+import useGlobalLoaderStore from "@/store/loader";
+import useCampaignStore from "@/store/campaign";
+import Loading from "@/components/common/Loader/Loader";
 import useGlobalStore from "@/store/global";
 
 const Admin: React.FC = () => {
-  const [waitListUsers, setWaitListUsers] = useState<WaitlistInterface[]>([]);
-  const { isLoading, setLoading } = useGlobalLoaderStore(); // Zustand hook for loading state
-  const { setSelectedModule } = useGlobalStore(); // Adjust according to your global store usage
+  const [waitListUsers, setWaitListUsers] = useState<any>([]);
+  const { isLoading, setLoading } = useGlobalLoaderStore();
+  const { setSelectedModule } = useGlobalStore();
   const { setCreateEmailCampaignModalOpen, setselectedTargetValue } =
-    useCampaignStore(); // Adjust according to your campaign store usage
+    useCampaignStore();
 
   useEffect(() => {
     fetchWaitListUsers();
@@ -40,7 +40,7 @@ const Admin: React.FC = () => {
 
   const mainActions = [
     {
-      label: "Create",
+      label: "Create Email Campaign",
       onClick: handleCreateCampaign,
     },
   ];

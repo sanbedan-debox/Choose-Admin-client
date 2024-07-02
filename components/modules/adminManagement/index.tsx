@@ -264,7 +264,6 @@ const Admin: React.FC = () => {
       />
       <FaEdit
         className="text-blue-500 cursor-pointer"
-        // onClick={() => openChangeRoleModal(rowData._id)}
         onClick={() => {
           setSelectedAdminId(_id);
           console.log(selectedAdminId);
@@ -399,7 +398,6 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4">
-            {/* <CButton type={ButtonType.Confirm}>Add Admin</CButton> */}
             <button className="btn btn-outlined-confirmation">Add Admin</button>
           </div>
         </form>
