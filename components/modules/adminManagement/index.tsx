@@ -174,7 +174,7 @@ const Admin: React.FC = () => {
     }
   };
 
-  const openDeleteModal = (id) => {
+  const openDeleteModal = (id: any) => {
     setAdminToDelete(id);
     setIsDeleteModalOpen(true);
   };
