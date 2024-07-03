@@ -4,10 +4,10 @@ import { Controller, useForm } from "react-hook-form";
 import Select from "react-select";
 import ReusableModal from "@/components/common/modal/modal";
 import { sdk } from "@/util/graphqlClient";
-import Loading from "@/components/common/Loader/Loader"; // Import your loading component
 import useGlobalLoaderStore from "@/store/loader";
-import DatePicker from "react-datepicker"; // Import date picker component
-import "react-datepicker/dist/react-datepicker.css"; // Date picker styles
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import axios from "axios";
 
 const templateOptions = [
   { value: "template1", label: "Template 1" },
@@ -15,9 +15,16 @@ const templateOptions = [
   { value: "template3", label: "Template 3" },
 ];
 
+const targetOptions = [
+  { value: "both", label: "Both" },
+  { value: "csv", label: "CSV" },
+  { value: "employee", label: "Employee" },
+  { value: "employer", label: "Employer" },
+];
+
 const EmailCampaign: React.FC = () => {
-  const { control, handleSubmit, setValue } = useForm();
-  const { isLoading, setLoading } = useGlobalLoaderStore(); // Use global loader store
+  const { control, handleSubmit } = useForm();
+  const { isLoading, setLoading } = useGlobalLoaderStore();
   const [emailCampaigns, setEmailCampaigns] = useState<any[]>([]);
   const [isCreateEmailCampaignModalOpen, setCreateEmailCampaignModalOpen] =
     useState(false);
@@ -32,15 +39,8 @@ const EmailCampaign: React.FC = () => {
   const [selectedScheduleType, setSelectedScheduleType] = useState<
     string | null
   >(null);
-  const [scheduleTime, setScheduleTime] = useState<Date | null>(null); // Updated state to store date/time
-  const [csvFile, setCsvFile] = useState<File | null>(null); // State to store uploaded CSV file
-
-  const targetOptions = [
-    { value: "both", label: "Both" },
-    { value: "csv", label: "CSV" },
-    { value: "employee", label: "Employee" },
-    { value: "employer", label: "Employer" },
-  ];
+  const [scheduleTime, setScheduleTime] = useState<Date | null>(null);
+  const [csvFile, setCsvFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchEmailCampaigns = async () => {
@@ -69,16 +69,6 @@ const EmailCampaign: React.FC = () => {
     },
   ];
 
-  const actions = [
-    {
-      label: "Delete",
-      onClick: (id: number) => {
-        handleDeleteCampaign(id); // Implement this function
-      },
-    },
-    // Add more actions as needed
-  ];
-
   const headings = [
     { title: "Campaign Name", dataKey: "campaignName" },
     { title: "Email Subject", dataKey: "emailSubject" },
@@ -90,11 +80,25 @@ const EmailCampaign: React.FC = () => {
     try {
       setLoading(true);
 
-      // Ensure data.template and data.target are not undefined/null before accessing their values
-      const templateValue = data.template ? data.template.value : null;
-      const targetValue = data.target ? data.target.value : null;
+      // Step 1: Upload CSV file to Cloudinary
+      let csvDataUrl = null;
+      if (selectedTarget?.value === "csv" && csvFile) {
+        const formData = new FormData();
+        formData.append("file", csvFile);
+        formData.append("upload_preset", "email-csv-data");
+        formData.append("public_id", `csv_user_data_${Date.now()}`);
 
-      // Example: Call to create email campaign using sdk
+        const response = await axios.post(
+          "https://api.cloudinary.com/v1_1/inradiuscloud/raw/upload",
+          formData
+        );
+
+        csvDataUrl = response.data.secure_url;
+      }
+
+      const templateValue = selectedTemplate ? selectedTemplate.value : null;
+      const targetValue = selectedTarget ? selectedTarget.value : null;
+
       await sdk.CreateEmailCampaign({
         campaignName: data.name,
         emailSubject: data.subject,
@@ -102,42 +106,30 @@ const EmailCampaign: React.FC = () => {
         target: targetValue,
         scheduleType: selectedScheduleType,
         scheduleTime,
-        csvDataUrl: data.csvDataUrl || null,
+        csvDataUrl,
         customLink: data.customLink || null,
-        csvFile, // Pass the uploaded CSV file to the SDK function
+        filters: {
+          location: data.location || null,
+          industry: data.industry || null,
+          minPay: data.minPay || null,
+          maxPay: data.maxPay || null,
+          employerEmailPending: data.employerEmailPending || null,
+          // Add more filters as needed
+        },
       });
-      // Assuming successful creation, update state or refetch data
+
       const { getAllEmailCampaigns } = await sdk.GetAllEmailCampaigns();
       setEmailCampaigns(getAllEmailCampaigns);
-      setCreateEmailCampaignModalOpen(false);
+      setCreateEmailCampaignModalOpen(false); // Close modal after successful creation
     } catch (error) {
       console.error("Error creating email campaign:", error);
     } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleDeleteCampaign = async (id: number) => {
-    // Implement delete campaign logic using sdk or similar
-    try {
-      setLoading(true);
-      // Example delete operation
-      await sdk.DeleteEmailCampaign(id);
-      // Assuming successful deletion, update state or refetch data
-      const updatedCampaigns = emailCampaigns.filter(
-        (campaign) => campaign.id !== id
-      );
-      setEmailCampaigns(updatedCampaigns);
-    } catch (error) {
-      console.error("Error deleting email campaign:", error);
-    } finally {
-      setLoading(false);
+      setLoading(false); // Ensure loading state is reset
     }
   };
 
   const handleTargetChange = (value: any) => {
     setSelectedTarget(value);
-    // Reset schedule type and schedule time if target is CSV
     if (value.value === "csv") {
       setSelectedScheduleType(null);
       setScheduleTime(null);
@@ -146,7 +138,6 @@ const EmailCampaign: React.FC = () => {
 
   const handleScheduleTypeChange = (value: string) => {
     setSelectedScheduleType(value);
-    // Reset schedule time if switching from later to now
     if (value === "now") {
       setScheduleTime(null);
     }
@@ -164,10 +155,6 @@ const EmailCampaign: React.FC = () => {
       <RoopTable
         data={emailCampaigns}
         itemsPerPage={5}
-        actions={actions}
-        csvExport
-        fullCsv
-        csvFileName="email_campaigns_data.csv"
         headings={headings}
         mainActions={mainActions}
         hovered
@@ -275,7 +262,15 @@ const EmailCampaign: React.FC = () => {
                     { value: "now", label: "Now" },
                     { value: "later", label: "Later" },
                   ]}
-                  value={selectedScheduleType}
+                  value={
+                    selectedScheduleType
+                      ? {
+                          value: selectedScheduleType,
+                          label:
+                            selectedScheduleType === "now" ? "Now" : "Later",
+                        }
+                      : null
+                  }
                   onChange={(value) => handleScheduleTypeChange(value.value)}
                   className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
                   classNamePrefix="react-select"
