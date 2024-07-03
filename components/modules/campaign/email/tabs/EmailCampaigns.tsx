@@ -161,7 +161,6 @@ const EmailCampaign: React.FC = () => {
 
   return (
     <div>
-      {isLoading && <Loading />}
       <RoopTable
         data={emailCampaigns}
         itemsPerPage={5}

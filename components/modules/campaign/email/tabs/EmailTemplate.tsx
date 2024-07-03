@@ -59,7 +59,6 @@ const EmailTemplate: React.FC = () => {
 
   return (
     <div className="">
-      {isLoading && <Loading />}
       <RoopTable
         data={emailTemplates}
         itemsPerPage={5}
