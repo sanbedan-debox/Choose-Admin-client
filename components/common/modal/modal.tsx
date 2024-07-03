@@ -81,7 +81,7 @@ const ReusableModal: React.FC<ModalProps> = ({
           </div>
           {comments && (
             <p
-              className="text-gray-700
+              className="text-gray-500
            mb-4"
             >
               {comments}

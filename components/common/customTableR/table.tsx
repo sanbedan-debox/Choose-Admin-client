@@ -370,7 +370,7 @@ const RoopTable: React.FC<TableProps> = ({
           />
           <div className="flex justify-end space-x-2">
             <button
-              className="btn btn-outlined-warning"
+              className="btn btn-outlined"
               onClick={() => {
                 setFilterColumn("");
                 setOperator("contains");
@@ -379,10 +379,7 @@ const RoopTable: React.FC<TableProps> = ({
             >
               Clear
             </button>
-            <button
-              className="btn btn-outlined-confirmation"
-              onClick={applyFilter}
-            >
+            <button className="btn btn-primary" onClick={applyFilter}>
               Apply
             </button>
           </div>

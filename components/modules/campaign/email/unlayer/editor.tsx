@@ -129,7 +129,7 @@ const UnlayerEditor = () => {
         />
       </div>
       <div className="text-center flex float-end space-x-4">
-        <button className="btn btn-warning" onClick={handleCloseClick}>
+        <button className="btn btn-outlined" onClick={handleCloseClick}>
           Close
         </button>
         <button className="btn btn-primary" onClick={handleSaveClick}>

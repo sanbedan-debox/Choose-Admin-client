@@ -236,7 +236,7 @@ const EmailCampaign: React.FC = () => {
             />
           </div>
           <div className="flex justify-end space-x-2">
-            <button className="btn btn-outlined-confirmation">Send</button>
+            <button className="btn btn-primary">Send</button>
           </div>
         </form>
       </ReusableModal>

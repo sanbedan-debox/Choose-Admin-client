@@ -388,7 +388,7 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4">
-            <button className="btn btn-outlined-confirmation">Add Admin</button>
+            <button className="btn btn-primary">Add Admin</button>
           </div>
         </form>
       </ReusableModal>
@@ -433,7 +433,7 @@ const Admin: React.FC = () => {
             </button>
 
             <button
-              className="btn btn-outlined-confirmation"
+              className="btn btn-primary"
               onClick={handleSubmitPass(handleChangePassword)}
             >
               Change Password
@@ -481,9 +481,7 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4 space-x-2">
-            <button className="btn btn-outlined-confirmation">
-              Change Role
-            </button>
+            <button className="btn btn-primary">Change Role</button>
           </div>
         </form>
       </ReusableModal>
@@ -495,10 +493,7 @@ const Admin: React.FC = () => {
         width="sm"
       >
         <div className="flex justify-end mt-4">
-          <button
-            className="btn btn-outlined-confirmation"
-            onClick={handleConfirmation}
-          >
+          <button className="btn btn-primary" onClick={handleConfirmation}>
             Yes
           </button>
         </div>
@@ -511,10 +506,7 @@ const Admin: React.FC = () => {
         width="md"
       >
         <div className="flex justify-end mt-4">
-          <button
-            className="btn btn-outlined-confirmation"
-            onClick={handleDeleteAdmin}
-          >
+          <button className="btn btn-primary" onClick={handleDeleteAdmin}>
             Yes
           </button>
         </div>
