@@ -36,7 +36,6 @@ export default function Login() {
       });
 
       if (response) {
-        console.log("Login successful:", response);
         setToastData({ message: "Login Successful", type: "success" });
 
         router.replace("/");

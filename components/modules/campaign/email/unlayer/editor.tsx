@@ -89,8 +89,6 @@ const UnlayerEditor = () => {
   };
 
   const saveTestEmail = () => {
-    console.log("Test Title:", testTitle);
-    console.log("Test Email:", testEmail);
     setShowTestEmailDialog(false);
     setTestTitle("");
     setTestEmail("");

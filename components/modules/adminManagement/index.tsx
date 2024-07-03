@@ -109,7 +109,6 @@ const Admin: React.FC = () => {
         role: data.role?.value || "",
       };
       const response = await sdk.addAdmin({ input });
-      console.log("Admin added successfully:", response);
       setIsAddModalOpen(false);
       fetchAdmins();
       setToastData({ message: "Admin added successfully", type: "success" });
@@ -130,7 +129,6 @@ const Admin: React.FC = () => {
         id: selectedAdminId,
         password: newPassword,
       });
-      console.log("Password reset successfully:", response);
       setIsChangePassModalOpen(false);
       fetchAdmins();
       setToastData({ message: "Password reset successfully", type: "success" });
@@ -148,7 +146,6 @@ const Admin: React.FC = () => {
         id: selectedAdminId,
         role: data.role.value,
       });
-      console.log("Role changed successfully:", response);
       setIsChangeRoleModalOpen(false);
       fetchAdmins();
       setToastData({ message: "Role changed successfully", type: "success" });
@@ -248,7 +245,6 @@ const Admin: React.FC = () => {
         id,
         updateStatus: newStatus,
       });
-      console.log("Status changed successfully:", response);
       fetchAdmins();
       setToastData({
         message: `Admin status changed to ${newStatus}`,
@@ -260,23 +256,23 @@ const Admin: React.FC = () => {
     }
   };
 
-  const renderActions = (_id: any) => (
+  const renderActions = (rowData: { _id: string }) => (
     <div className="flex space-x-3">
       <FaTrash
         className="text-red-500 cursor-pointer"
-        onClick={() => openDeleteModal(_id)}
+        onClick={() => openDeleteModal(rowData._id)}
       />
       <FaEdit
         className="text-blue-500 cursor-pointer"
         onClick={() => {
-          setSelectedAdminId(_id);
+          setSelectedAdminId(rowData._id);
           console.log(selectedAdminId);
           setIsChangeRoleModalOpen(true);
         }}
       />
       <FaShieldAlt
         className="text-green-500 cursor-pointer"
-        onClick={() => openChangePassModal(_id)}
+        onClick={() => openChangePassModal(rowData._id)}
       />
     </div>
   );

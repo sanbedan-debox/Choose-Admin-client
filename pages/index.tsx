@@ -39,7 +39,6 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
 ) => {
   const cookies = parseCookies(context);
   const token = cookies.accessToken;
-  console.log("roop37", token);
   if (!token) {
     console.error("No authentication token found");
     return {
