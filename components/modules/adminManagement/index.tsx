@@ -20,6 +20,7 @@ import Switch from "react-switch";
 import { PlatformStatus } from "@/generated/graphql";
 import Loading from "@/components/common/Loader/Loader";
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
+import useAuthStore from "@/store/auth";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -32,6 +33,7 @@ const Admin: React.FC = () => {
   const [randomPassword, setRandomPassword] = useState(
     generateRandomPassword()
   );
+  const { userId } = useAuthStore();
   const [isChangeRoleModalOpen, setIsChangeRoleModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [adminToDelete, setAdminToDelete] = useState<AdminInterface | null>(
@@ -219,41 +221,28 @@ const Admin: React.FC = () => {
     setSelectedAdminId(null);
   };
 
-  // const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
-  //   <div>
-  //     <Switch
-  //       onChange={() => handleToggleSwitch(rowData)}
-  //       checked={rowData.status !== PlatformStatus.Blocked}
-  //       onColor="#162CF1"
-  //       onHandleColor="#162CF1"
-  //       handleDiameter={20}
-  //       uncheckedIcon={false}
-  //       checkedIcon={false}
-  //       boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-  //       activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-  //       height={12}
-  //       width={30}
-  //       className="react-switch"
-  //     />
-  //   </div>
-  // );
-
   const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
     <div>
-      <CustomSwitch
-        checked={rowData.status !== PlatformStatus.Blocked}
-        onChange={() => handleToggleSwitch(rowData)}
-        label={`Toggle switch for ${rowData._id}`}
-      />
+      {userId !== rowData._id && (
+        <CustomSwitch
+          checked={rowData.status !== PlatformStatus.Blocked}
+          onChange={() => handleToggleSwitch(rowData)}
+          label={`Toggle switch for ${rowData._id}`}
+        />
+      )}
     </div>
   );
 
   const renderActions = (rowData: { _id: string }) => (
     <div className="flex space-x-3">
-      <FaTrash
-        className="text-red-500 cursor-pointer"
-        onClick={() => openDeleteModal(rowData._id)}
-      />
+      {userId !== rowData._id && (
+        <>
+          <FaTrash
+            className="text-red-500 cursor-pointer"
+            onClick={() => openDeleteModal(rowData._id)}
+          />
+        </>
+      )}
       <FaEdit
         className="text-blue-500 cursor-pointer"
         onClick={() => {
@@ -460,19 +449,6 @@ const Admin: React.FC = () => {
                 <Select
                   {...field}
                   options={roleOptions}
-                  // classNames={{
-                  //   placeholder: () => "!text-gray-400",
-                  //   control: () =>
-                  //     "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                  //   menu: () => "z-[100] !bg-white text-black",
-                  //   singleValue: () => "!text-black",
-                  //   option: (state) =>
-                  //     `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
-                  //       state.isFocused || state.isSelected
-                  //         ? "!bg-transparent !text-black"
-                  //         : ""
-                  //     }`,
-                  // }}
                   className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
                   classNamePrefix="react-select"
                   placeholder="Select Role"

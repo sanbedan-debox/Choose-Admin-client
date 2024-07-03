@@ -11,6 +11,7 @@ type HomePageProps = {
   repo: {
     name: string;
     role: string;
+    _id: string;
   };
 };
 
@@ -18,11 +19,12 @@ const HomePage: React.FC<HomePageProps> = ({
   repo,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
   const { EmailBuilderOpen } = useGlobalStore();
-  const { setUserRole, setUserName } = useAuthStore();
+  const { setUserRole, setUserName, setUserId } = useAuthStore();
 
   useEffect(() => {
     setUserName(repo.name);
     setUserRole(repo.role);
+    setUserId(repo._id);
   }, [repo, setUserName, setUserRole]);
 
   return (
@@ -57,12 +59,13 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
       }
     );
     if (response && response.me) {
-      const { name, role } = response.me;
+      const { name, role, _id } = response.me;
       return {
         props: {
           repo: {
             name,
             role,
+            _id,
           },
         },
       };

@@ -5,6 +5,8 @@ type Store = {
   setUserRole: (role: string) => void;
   userName: string;
   setUserName: (name: string) => void;
+  userId: string;
+  setUserId: (id: string) => void;
 };
 
 const useAuthStore = create<Store>((set) => ({
@@ -12,6 +14,8 @@ const useAuthStore = create<Store>((set) => ({
   setUserRole: (role) => set({ userRole: role }),
   userName: "",
   setUserName: (name) => set({ userName: name }),
+  userId: "",
+  setUserId: (id) => set({ userId: id }),
 }));
 
 export default useAuthStore;

@@ -51,6 +51,10 @@ const RoopTable: React.FC<TableProps> = ({
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilterModal, setShowFilterModal] = useState(false);
   const [showExportModal, setShowExportModal] = useState(false);
+  const [currentFilterColumn, setCurrentFilterColumn] = useState<string>("");
+  const [currentOperator, setCurrentOperator] = useState<string>("contains");
+  const [currentFilterValue, setCurrentFilterValue] = useState<string>("");
+
   const [filterColumn, setFilterColumn] = useState<string>("");
   const [operator, setOperator] = useState<string>("contains");
   const [filterValue, setFilterValue] = useState<string>("");
@@ -70,6 +74,12 @@ const RoopTable: React.FC<TableProps> = ({
     setCurrentPage(1);
     setIsFilterApplied(!!filterColumn && !!filterValue);
   }, [filterColumn, filterValue, searchTerm]);
+
+  useEffect(() => {
+    setCurrentFilterColumn(filterColumn);
+    setCurrentOperator(operator);
+    setCurrentFilterValue(filterValue);
+  }, [showFilterModal]);
 
   const operatorOptions = [
     { value: "contains", label: "Contains" },
@@ -168,6 +178,9 @@ const RoopTable: React.FC<TableProps> = ({
   };
 
   const applyFilter = () => {
+    setFilterColumn(currentFilterColumn);
+    setOperator(currentOperator);
+    setFilterValue(currentFilterValue);
     setShowFilterModal(false);
     setCurrentPage(1);
     setIsFilterApplied(true);
@@ -187,26 +200,32 @@ const RoopTable: React.FC<TableProps> = ({
         isSidebarExpanded ? "max-w-[76rem]" : "max-w-[85rem]"
       }`}
     >
-      <div className="flex justify-between items-center mb-4">
-        <div className="flex">
-          <input
-            type="text"
-            placeholder="Search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-input text-sm rounded-lg block p-2.5  placeholder-gray-400 text-black w-96"
-          />
+      <div
+        className={`flex  items-center mb-4 ${
+          data.length < 1 ? "justify-end" : "justify-between"
+        }`}
+      >
+        {data.length > 0 && (
+          <div className="flex">
+            <input
+              type="text"
+              placeholder="Search"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="bg-input text-sm rounded-lg block p-2.5 placeholder-gray-400 text-black w-96"
+            />
 
-          {filterable && (
-            <div className="flex items-center ml-4">
-              <HiFilter
-                className="text-primary cursor-pointer hover:text-primary hover:text-opacity-60 transition-colors duration-300"
-                onClick={() => setShowFilterModal(true)}
-                style={{ height: "2rem", width: "2rem" }}
-              />
-            </div>
-          )}
-        </div>
+            {filterable && (
+              <div className="flex items-center ml-4">
+                <HiFilter
+                  className="text-primary cursor-pointer hover:text-primary hover:text-opacity-60 transition-colors duration-300"
+                  onClick={() => setShowFilterModal(true)}
+                  style={{ height: "2rem", width: "2rem" }}
+                />
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="flex">
           {mainActions.map((action, index) => (
@@ -218,7 +237,7 @@ const RoopTable: React.FC<TableProps> = ({
               {action.label}
             </button>
           ))}
-          {csvExport && (
+          {data.length > 0 && csvExport && (
             <div className="flex space-x-2">
               <button className="btn btn-primary" onClick={handleExportClick}>
                 Export to CSV
@@ -234,7 +253,6 @@ const RoopTable: React.FC<TableProps> = ({
           )}
         </div>
       </div>
-
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64">
           <Image src={noDataImage} alt="No Data Found" className="h-36 mb-4" />
@@ -335,8 +353,6 @@ const RoopTable: React.FC<TableProps> = ({
           </div>
         </>
       )}
-
-      {/* Filter Modal */}
       <ReusableModal
         isOpen={showFilterModal}
         onClose={() => setShowFilterModal(false)}
@@ -347,34 +363,38 @@ const RoopTable: React.FC<TableProps> = ({
             options={options}
             className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
             placeholder="Select Column"
-            value={options.find((option) => option.value === filterColumn)}
+            value={options.find(
+              (option) => option.value === currentFilterColumn
+            )}
             onChange={(selectedOption) =>
-              setFilterColumn(selectedOption?.value || "")
+              setCurrentFilterColumn(selectedOption?.value || "")
             }
           />
           <Select
             options={operatorOptions}
             className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
             placeholder="Select Operator"
-            value={operatorOptions.find((option) => option.value === operator)}
+            value={operatorOptions.find(
+              (option) => option.value === currentOperator
+            )}
             onChange={(selectedOption) =>
-              setOperator(selectedOption?.value || "contains")
+              setCurrentOperator(selectedOption?.value || "contains")
             }
           />
           <input
             type="text"
             placeholder="Enter Value"
-            value={filterValue}
-            onChange={(e) => setFilterValue(e.target.value)}
+            value={currentFilterValue}
+            onChange={(e) => setCurrentFilterValue(e.target.value)}
             className="input input-primary"
           />
           <div className="flex justify-end space-x-2">
             <button
               className="btn btn-outlined"
               onClick={() => {
-                setFilterColumn("");
-                setOperator("contains");
-                setFilterValue("");
+                setCurrentFilterColumn("");
+                setCurrentOperator("contains");
+                setCurrentFilterValue("");
               }}
             >
               Clear
@@ -384,9 +404,7 @@ const RoopTable: React.FC<TableProps> = ({
             </button>
           </div>
         </div>
-      </ReusableModal>
-
-      {/* Export Modal */}
+      </ReusableModal>{" "}
       <ReusableModal
         isOpen={showExportModal}
         onClose={() => setShowExportModal(false)}

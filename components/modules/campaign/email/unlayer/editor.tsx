@@ -38,6 +38,8 @@ const UnlayerEditor = () => {
     setShowSaveDialog(false);
     setShowTestEmailDialog(false);
     setTitle("");
+  };
+  const handleClose = () => {
     setEmailBuilderOpen(false);
   };
 
@@ -99,7 +101,7 @@ const UnlayerEditor = () => {
       <div className="rounded-lg shadow-md p-4 mb-6">
         <EmailEditor
           ref={emailEditorRef}
-          style={{ height: "70vh", width: "100%" }}
+          style={{ height: "80vh", width: "100%" }}
           options={{
             id: "editor-container",
             displayMode: "email",
@@ -129,7 +131,7 @@ const UnlayerEditor = () => {
         />
       </div>
       <div className="text-center flex float-end space-x-4">
-        <button className="btn btn-outlined" onClick={handleCloseClick}>
+        <button className="btn btn-outlined" onClick={handleClose}>
           Close
         </button>
         <button className="btn btn-primary" onClick={handleSaveClick}>
@@ -145,7 +147,7 @@ const UnlayerEditor = () => {
           isOpen={showSaveDialog}
           onClose={handleCloseClick}
         >
-          <label className="block text-black mb-2">Title:</label>
+          <label className="block text-black mb-1">Title:</label>
           <input
             type="text"
             value={title}
@@ -153,7 +155,7 @@ const UnlayerEditor = () => {
             className="input input-primary"
             placeholder="Enter title"
           />
-          <div className="text-center mt-4">
+          <div className="text-end mt-4">
             <button className="btn btn-primary" onClick={saveTemplate}>
               Save
             </button>
@@ -166,7 +168,7 @@ const UnlayerEditor = () => {
           isOpen={showTestEmailDialog}
           onClose={handleCloseClick}
         >
-          <label className="block text-black mb-2">Title:</label>
+          <label className="block text-black mb-1">Title:</label>
           <input
             type="text"
             value={testTitle}
@@ -174,7 +176,7 @@ const UnlayerEditor = () => {
             className="input input-primary w-full"
             placeholder="Enter title"
           />
-          <label className="block text-black mb-2 mt-4">Test Email:</label>
+          <label className="block text-black mb-1 mt-4">Test Email:</label>
           <input
             type="text"
             value={testEmail}

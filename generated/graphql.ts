@@ -589,6 +589,7 @@ export type Query = {
   getAllEmailTemplates: Array<EmailTemplatesObject>;
   getAllRestaurantUsers: Array<User>;
   getAllRestaurants: Array<Restaurant>;
+  getRestaurantDetails: Restaurant;
   getUserOnboardingDetails: User;
   getUserRestaurant: Restaurant;
   getUserRestaurants: Array<Restaurant>;

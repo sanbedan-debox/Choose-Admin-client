@@ -41,7 +41,10 @@ const Sidebar: React.FC = () => {
               <div className="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-lg font-semibold text-white">
                 {userName.charAt(0).toUpperCase()}
               </div>
-              <span className="ml-2 text-black">{userName}</span>
+              <div className="flex flex-col">
+                <span className="ml-2 text-black">{userName}</span>
+                <span className="ml-2 text-black">{userRole}</span>
+              </div>
             </div>
           )}
           <button
@@ -86,7 +89,7 @@ const Sidebar: React.FC = () => {
                   {module.subModules ? (
                     <li className="cursor-pointer mb-1">
                       <div
-                        className="flex justify-between items-center hover:bg-primary hover:bg-opacity-80 group rounded-lg"
+                        className="flex justify-between items-center hover:bg-primary group rounded-lg"
                         onClick={() => toggleDropdown(module.name)}
                       >
                         <div className="flex items-center p-2 text-black group-hover:text-white">
@@ -139,7 +142,7 @@ const Sidebar: React.FC = () => {
                                   onClick={() =>
                                     setSelectedModule(subModule.name)
                                   }
-                                  className="flex items-center p-2 rounded-lg text-black hover:bg-primary hover:bg-opacity-80  hover:text-white group"
+                                  className="flex items-center p-2 rounded-lg text-black hover:bg-primary   hover:text-white group"
                                 >
                                   <svg
                                     className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white"
@@ -166,7 +169,7 @@ const Sidebar: React.FC = () => {
                     <li className="cursor-pointer mb-1" key={module.name}>
                       <a
                         onClick={() => setSelectedModule(module.name)}
-                        className="flex items-center p-2 rounded-lg  text-black hover:text-white hover:bg-primary hover:bg-opacity-80 group"
+                        className="flex items-center p-2 rounded-lg  text-black hover:text-white hover:bg-primary  group"
                       >
                         <svg
                           className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white"
