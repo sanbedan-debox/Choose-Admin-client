@@ -1,11 +1,9 @@
 import * as React from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import logo1 from "../assets/logo/logoWhite.png";
+import logo1 from "../assets/logo/logoDark.png";
 import { sdk } from "@/util/graphqlClient";
 import useGlobalStore from "@/store/global";
-import CButton from "@/components/common/button/button";
-import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
@@ -107,8 +105,8 @@ export default function Login() {
                   </p>
                 )}
               </div>
-              <div className="flex justify-end">
-                <button className="btn btn-primary">Sign In</button>
+              <div className="flex justify-end mt-6">
+                <button className="btn btn-primary w-full">Sign In</button>
               </div>
             </form>
           </div>
