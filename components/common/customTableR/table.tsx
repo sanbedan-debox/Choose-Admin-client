@@ -283,7 +283,7 @@ const RoopTable: React.FC<TableProps> = ({
                           <Menu.Button className="flex items-center space-x-2">
                             <HiDotsVertical className="h-5 w-5 text-black" />
                           </Menu.Button>
-                          <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none">
+                          <Menu.Items className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg focus:outline-none z-20">
                             {actions.map((action, actionIndex) => (
                               <Menu.Item key={actionIndex}>
                                 {({ active }) => (
