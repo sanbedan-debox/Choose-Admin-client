@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 const svgToDataUri = require("mini-svg-data-uri");
@@ -8,8 +7,8 @@ const {
 } = require("tailwindcss/lib/util/flattenColorPalette");
 
 const config: Config = {
-  darkMode: 'class',
-  lightMode: 'class',
+  darkMode: "class",
+  lightMode: "class",
   content: [
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -35,8 +34,6 @@ const config: Config = {
         modal: "#FFFFFF",
 
         ...getCustomColors(),
-
-
       },
     },
   },
@@ -44,75 +41,75 @@ const config: Config = {
     require("tailwindcss-animate"),
     addVariablesForColors,
     function ({ addComponents, theme }: any) {
-      const colors = theme('colors');
+      const colors = theme("colors");
 
       const buttons = {
-        '.btn': {
-          padding: '.5rem 1rem',
-          borderRadius: '.375rem',
-          fontWeight: '600',
-          fontSize: '0.855rem', // reduced text size
-          transition: 'background-color 0.3s ease, opacity 0.3s ease', // added transition
-          '&.btn-primary': {
+        ".btn": {
+          padding: ".5rem 1rem",
+          borderRadius: ".375rem",
+          fontWeight: "600",
+          fontSize: "0.855rem", // reduced text size
+          transition: "background-color 0.3s ease, opacity 0.3s ease", // added transition
+          "&.btn-primary": {
             backgroundColor: colors.primary,
             color: colors.white,
-            '&:hover': {
+            "&:hover": {
               opacity: 0.6, // reduced opacity on hover
             },
           },
-          '&.btn-secondary': {
+          "&.btn-secondary": {
             backgroundColor: colors.secondary,
             color: colors.white,
-            '&:hover': {
+            "&:hover": {
               opacity: 0.8,
             },
           },
-          '&.btn-warning': {
+          "&.btn-warning": {
             backgroundColor: colors.warning,
             color: colors.white,
-            '&:hover': {
+            "&:hover": {
               opacity: 0.8,
             },
           },
-          '&.btn-confirmation': {
+          "&.btn-confirmation": {
             backgroundColor: colors.confirmation,
             color: colors.white,
-            '&:hover': {
+            "&:hover": {
               opacity: 0.8,
             },
           },
-          '&.btn-outlined': {
-            backgroundColor: 'transparent',
+          "&.btn-outlined": {
+            backgroundColor: "transparent",
             border: `1px solid ${colors.primary}`,
             color: colors.primary,
-            '&:hover': {
+            "&:hover": {
               backgroundColor: colors.primary,
               color: colors.white,
             },
           },
-          '&.btn-outlined-warning': {
-            backgroundColor: 'transparent',
+          "&.btn-outlined-warning": {
+            backgroundColor: "transparent",
             border: `1px solid ${colors.warning}`,
             color: colors.warning,
-            '&:hover': {
+            "&:hover": {
               backgroundColor: colors.warning,
               color: colors.white,
             },
           },
-          '&.btn-outlined-secondary': {
-            backgroundColor: 'transparent',
+          "&.btn-outlined-secondary": {
+            backgroundColor: "transparent",
             border: `1px solid ${colors.secondary}`,
             color: colors.secondary,
-            '&:hover': {
+            "&:hover": {
               backgroundColor: colors.secondary,
               color: colors.white,
             },
           },
-          '&.btn-outlined-confirmation': {
-            backgroundColor: 'transparent',
+          "&.btn-outlined-confirmation": {
+            backgroundColor: "transparent",
             border: `1px solid ${colors.confirmation}`,
             color: colors.confirmation,
-            '&:hover': {
+            "&:hover": {
               backgroundColor: colors.confirmation,
               color: colors.white,
             },
@@ -121,44 +118,43 @@ const config: Config = {
       };
 
       const inputs = {
-        '.input': {
-          padding: '.5rem 1rem',
-          borderRadius: '.375rem',
-          border: 'none', // removed border
+        ".input": {
+          padding: ".5rem 1rem",
+          borderRadius: ".375rem",
+          border: "none", // removed border
           color: colors.black, // text color
-          '&::placeholder': {
+          "&::placeholder": {
             color: colors.inputColor, // placeholder color
-            opacity: '1', // ensured opacity is full
-            transition: 'color 0.3s ease', // added transition for focus
+            opacity: "1", // ensured opacity is full
+            transition: "color 0.3s ease", // added transition for focus
           },
-          '&:focus::placeholder': {
+          "&:focus::placeholder": {
             color: colors.black, // black on focus
           },
-          '&:focus': {
-            outline: 'none', // removed default outline
+          "&:focus": {
+            outline: "none", // removed default outline
           },
-          '&.input-primary': {
+          "&.input-primary": {
             backgroundColor: `${colors.inputColor}`, // low opacity primary color
-            '&:focus': {
+            "&:focus": {
               backgroundColor: `${colors.inputColor}`, // slightly higher opacity on focus
             },
-            '&::placeholder': {
+            "&::placeholder": {
               color: colors.black, // placeholder color
-              opacity: '0.5', // ensured opacity is full
-              transition: 'color 0.3s ease', // added transition for focus
+              opacity: "0.5", // ensured opacity is full
+              transition: "color 0.3s ease", // added transition for focus
             },
           },
 
-
-          '&.input-secondary': {
+          "&.input-secondary": {
             backgroundColor: `${colors.secondary}1A`,
-            '&:focus': {
+            "&:focus": {
               backgroundColor: `${colors.secondary}33`,
             },
           },
-          '&.input-warning': {
+          "&.input-warning": {
             backgroundColor: `${colors.warning}1A`,
-            '&:focus': {
+            "&:focus": {
               backgroundColor: `${colors.warning}33`,
             },
           },
@@ -166,61 +162,59 @@ const config: Config = {
       };
 
       const switches = {
-        '.switch': {
-          width: '3rem',
-          height: '1.5rem',
-          borderRadius: '9999px',
-          backgroundColor: colors.gray[300],
-          position: 'relative',
-          transition: 'background-color 0.3s ease', // added transition
-          '&.switch-primary': {
-            backgroundColor: colors.primary,
+        ".switch": {
+          width: "2rem",
+          height: "1rem",
+          borderRadius: "9999px",
+          backgroundColor: theme("colors.gray.300"),
+          position: "relative",
+          transition: "background-color 0.3s ease",
+          cursor: "pointer",
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          "&.switch-primary": {
+            backgroundColor: theme("colors.primary"),
           },
-          '&.switch-secondary': {
-            backgroundColor: colors.secondary,
-          },
-          '&.switch-warning': {
-            backgroundColor: colors.warning,
-          },
-          '&::after': {
+          "&::after": {
             content: '""',
-            position: 'absolute',
-            top: '0.125rem',
-            left: '0.125rem',
-            width: '1.25rem',
-            height: '1.25rem',
-            borderRadius: '9999px',
-            backgroundColor: colors.white,
-            transition: 'transform 0.2s ease-in-out',
+            position: "absolute",
+            top: "0.125rem",
+            left: "0.125rem",
+            width: "0.75rem",
+            height: "0.75rem",
+            borderRadius: "9999px",
+            backgroundColor: theme("colors.white"),
+            transition: "transform 0.2s ease-in-out",
           },
-          '&.checked::after': {
-            transform: 'translateX(1.5rem)',
+          "&.checked::after": {
+            transform: "translateX(1rem)", // Adjusted for new size
           },
         },
       };
 
       const checkboxes = {
-        '.checkbox': {
-          width: '1rem',
-          height: '1rem',
-          borderRadius: '.25rem',
-          border: '1px solid',
-          transition: 'background-color 0.3s ease', // added transition
-          '&.checkbox-primary': {
+        ".checkbox": {
+          width: "1rem",
+          height: "1rem",
+          borderRadius: ".25rem",
+          border: "1px solid",
+          transition: "background-color 0.3s ease",
+          "&.checkbox-primary": {
             borderColor: colors.primary,
-            '&:checked': {
+            "&:checked": {
               backgroundColor: colors.primary,
             },
           },
-          '&.checkbox-secondary': {
+          "&.checkbox-secondary": {
             borderColor: colors.secondary,
-            '&:checked': {
+            "&:checked": {
               backgroundColor: colors.secondary,
             },
           },
-          '&.checkbox-warning': {
+          "&.checkbox-warning": {
             borderColor: colors.warning,
-            '&:checked': {
+            "&:checked": {
               backgroundColor: colors.warning,
             },
           },
@@ -234,7 +228,6 @@ const config: Config = {
     },
   ],
   colors: colors,
-
 };
 
 function addVariablesForColors({ addBase, theme }: any) {
@@ -250,7 +243,6 @@ function addVariablesForColors({ addBase, theme }: any) {
 
 function getCustomColors() {
   return {
-
     "gray-2": "#F7F9FC",
     "gray-3": "#FAFAFA",
     whiten: "#F1F5F9",

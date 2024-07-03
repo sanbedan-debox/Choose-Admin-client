@@ -104,7 +104,7 @@ const EmailCampaign: React.FC = () => {
 
   return (
     <div>
-      {isLoading && <Loading />} {/* Show loader when isLoading is true */}
+      {isLoading && <Loading />}
       <RoopTable
         data={emailCampaigns}
         itemsPerPage={5}

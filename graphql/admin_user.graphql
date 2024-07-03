@@ -73,8 +73,8 @@ mutation changeUserStatus($id: String!) {
   changeUserStatus(id: $id)
 }
 
-mutation blockAdmin($id: String!) {
-  blockAdmin(id: $id, updateStatus: active)
+mutation blockAdmin($id: String!, $updateStatus: PlatformStatus!) {
+  blockAdmin(id: $id, updateStatus: $updateStatus)
 }
 
 # Mutation to block/unblock an admin

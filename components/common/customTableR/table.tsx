@@ -9,10 +9,10 @@ import {
 } from "react-icons/hi";
 import Select from "react-select";
 import useGlobalStore from "@/store/global";
-import CButton from "../button/button";
-import { ButtonType } from "../button/interface";
+
 import ReusableModal from "../modal/modal";
-// import noDataImage from "../../assets/no-data.svg"; // Import your no data image
+import noDataImage from "../../../assets/svg/noData.svg";
+import Image from "next/image";
 
 interface TableProps {
   data: any[];
@@ -237,7 +237,7 @@ const RoopTable: React.FC<TableProps> = ({
 
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64">
-          {/* <img src={noDataImage} alt="No Data Found" className="h-24 mb-4" /> */}
+          <Image src={noDataImage} alt="No Data Found" className="h-36 mb-4" />
           <p className="text-lg font-semibold">No data to display.</p>
         </div>
       ) : (

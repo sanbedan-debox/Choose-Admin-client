@@ -19,6 +19,7 @@ import { FaTrash, FaEdit, FaShieldAlt } from "react-icons/fa";
 import Switch from "react-switch";
 import { PlatformStatus } from "@/generated/graphql";
 import Loading from "@/components/common/Loader/Loader";
+import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminInterface[]>([]);
@@ -194,7 +195,7 @@ const Admin: React.FC = () => {
   const handleConfirmation = async () => {
     setShowConfirmationModal(false);
     try {
-      const newStatus =
+      const newStatus: PlatformStatus =
         selectedAdminStatus === PlatformStatus.Blocked
           ? PlatformStatus.Active
           : PlatformStatus.Blocked;
@@ -218,21 +219,31 @@ const Admin: React.FC = () => {
     setSelectedAdminId(null);
   };
 
+  // const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+  //   <div>
+  //     <Switch
+  //       onChange={() => handleToggleSwitch(rowData)}
+  //       checked={rowData.status !== PlatformStatus.Blocked}
+  //       onColor="#162CF1"
+  //       onHandleColor="#162CF1"
+  //       handleDiameter={20}
+  //       uncheckedIcon={false}
+  //       checkedIcon={false}
+  //       boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
+  //       activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
+  //       height={12}
+  //       width={30}
+  //       className="react-switch"
+  //     />
+  //   </div>
+  // );
+
   const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
     <div>
-      <Switch
-        onChange={() => handleToggleSwitch(rowData)}
+      <CustomSwitch
         checked={rowData.status !== PlatformStatus.Blocked}
-        onColor="#162CF1"
-        onHandleColor="#162CF1"
-        handleDiameter={20}
-        uncheckedIcon={false}
-        checkedIcon={false}
-        boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-        activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-        height={12}
-        width={30}
-        className="react-switch"
+        onChange={() => handleToggleSwitch(rowData)}
+        label={`Toggle switch for ${rowData._id}`}
       />
     </div>
   );
@@ -278,10 +289,9 @@ const Admin: React.FC = () => {
   return (
     <div className="container mx-auto px-2">
       {loading && <Loading />}
-      : (
       <RoopTable
         data={members}
-        itemsPerPage={5}
+        itemsPerPage={10}
         csvExport
         fullCsv
         csvFileName="admins_data.csv"

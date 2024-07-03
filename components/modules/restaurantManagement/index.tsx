@@ -3,9 +3,10 @@ import React, { useEffect } from "react";
 import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
 import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
 import Switch from "react-switch";
-import useGlobalStore from "@/store/global"; // Adjust path as per your project structure
 import useGlobalLoaderStore from "@/store/loader";
 import Loading from "@/components/common/Loader/Loader";
+import CustomSwitch from "@/components/common/customSwitch/customSwitch";
+import { PlatformStatus } from "@/generated/graphql";
 
 const Reports: React.FC = () => {
   const { isLoading, setLoading } = useGlobalLoaderStore();
@@ -33,26 +34,18 @@ const Reports: React.FC = () => {
     console.log(`Toggling status for ID: ${rowData.status} ${rowData._id}`);
   };
 
-  const renderActions = (rowData: { status: string; _id: string }) => (
-    <Switch
-      onChange={() => toggleStatus(rowData)}
-      checked={rowData.status !== "blocked"}
-      onColor="#162CF1"
-      onHandleColor="#162CF1"
-      handleDiameter={20}
-      uncheckedIcon={false}
-      checkedIcon={false}
-      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-      height={12}
-      width={30}
-      className="react-switch"
-      id="material-switch"
-    />
+  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+    <div>
+      <CustomSwitch
+        checked={rowData.status !== PlatformStatus.Blocked}
+        onChange={() => toggleStatus(rowData)}
+        label={`Toggle switch for ${rowData._id}`}
+      />
+    </div>
   );
 
   const headings = [
-    { title: "Toggle Status", dataKey: "rowData", render: renderActions },
+    { title: "Toggle Status", dataKey: "rowData", render: renderSwitch },
     { title: "id", dataKey: "_id" },
     { title: "status", dataKey: "status" },
   ];

@@ -914,6 +914,7 @@ export type ChangeUserStatusMutation = { __typename?: 'Mutation', changeUserStat
 
 export type BlockAdminMutationVariables = Exact<{
   id: Scalars['String']['input'];
+  updateStatus: PlatformStatus;
 }>;
 
 
@@ -1047,8 +1048,8 @@ export const ChangeUserStatusDocument = gql`
 }
     `;
 export const BlockAdminDocument = gql`
-    mutation blockAdmin($id: String!) {
-  blockAdmin(id: $id, updateStatus: active)
+    mutation blockAdmin($id: String!, $updateStatus: PlatformStatus!) {
+  blockAdmin(id: $id, updateStatus: $updateStatus)
 }
     `;
 export const AdminLogoutDocument = gql`

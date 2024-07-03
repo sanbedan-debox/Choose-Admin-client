@@ -5,6 +5,8 @@ import Switch from "react-switch";
 import useGlobalLoaderStore from "@/store/loader";
 import Loading from "@/components/common/Loader/Loader";
 import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
+import CustomSwitch from "@/components/common/customSwitch/customSwitch";
+import { PlatformStatus } from "@/generated/graphql";
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
@@ -57,22 +59,14 @@ const Reports: React.FC = () => {
     setUserIdToBlock("");
   };
 
-  const renderSwitch = (rowData: { status: string; _id: string }) => (
-    <Switch
-      onChange={() => handleToggleSwitch(rowData)}
-      checked={rowData.status !== "blocked"}
-      onColor="#162CF1"
-      onHandleColor="#162CF1"
-      handleDiameter={20}
-      uncheckedIcon={false}
-      checkedIcon={false}
-      boxShadow="0px 1px 5px rgba(0, 0, 0, 0.6)"
-      activeBoxShadow="0px 0px 1px 10px rgba(0, 0, 0, 0.2)"
-      height={12}
-      width={30}
-      className="react-switch"
-      id="material-switch"
-    />
+  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+    <div>
+      <CustomSwitch
+        checked={rowData.status !== PlatformStatus.Blocked}
+        onChange={() => handleToggleSwitch(rowData)}
+        label={`Toggle switch for ${rowData._id}`}
+      />
+    </div>
   );
 
   const formatDate = (dateString: string) => {
