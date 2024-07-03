@@ -110,11 +110,11 @@ const Reports: React.FC = () => {
         filterable
       />
 
-      {/* Confirmation Modal */}
       <ReusableModal
         isOpen={showConfirmationModal}
         onClose={handleCloseConfirmationModal}
-        title="Are you sure you want to block the user?"
+        title="Are you sure ?"
+        comments="are you sure you want to block the user."
       >
         <div className="flex justify-end space-x-4">
           <button

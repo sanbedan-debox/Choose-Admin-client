@@ -27,7 +27,7 @@ const Admin: React.FC = () => {
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
   const [selectedAdminId, setSelectedAdminId] = useState<any>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-
+  const [selectedAdminStatus, setSelectedAdminStatus] = useState("");
   const [randomPassword, setRandomPassword] = useState(
     generateRandomPassword()
   );
@@ -125,7 +125,7 @@ const Admin: React.FC = () => {
     const newPassword = data.newPassword || randomPassword;
 
     try {
-      const response = await sdk.ResetPasswordAdmin({
+      const response = await sdk.resetPasswordAdmin({
         id: selectedAdminId,
         password: newPassword,
       });
@@ -160,7 +160,6 @@ const Admin: React.FC = () => {
 
     try {
       const response = await sdk.DeleteAdmin({ id: adminToDelete });
-      console.log("Admin deleted successfully:", response);
       setIsDeleteModalOpen(false);
       setAdminToDelete(null);
       fetchAdmins();
@@ -188,20 +187,26 @@ const Admin: React.FC = () => {
     _id: string;
   }) => {
     setSelectedAdminId(rowData._id);
+    setSelectedAdminStatus(rowData.status);
     setShowConfirmationModal(true);
   };
 
   const handleConfirmation = async () => {
     setShowConfirmationModal(false);
     try {
-      const response = await sdk.blockAdmin({ id: selectedAdminId });
-      if (response) {
-        fetchAdmins(); // Refresh admin list on successful toggle
-        setToastData({
-          message: "Admin status updated successfully",
-          type: "success",
-        });
-      }
+      const newStatus =
+        selectedAdminStatus === PlatformStatus.Blocked
+          ? PlatformStatus.Active
+          : PlatformStatus.Blocked;
+      const response = await sdk.blockAdmin({
+        id: selectedAdminId,
+        updateStatus: newStatus,
+      });
+      fetchAdmins();
+      setToastData({
+        message: `Admin status changed to ${newStatus}`,
+        type: "success",
+      });
     } catch (error) {
       console.error("Failed to update admin status:", error);
       setToastData({ message: "Failed to update admin status", type: "error" });
@@ -232,30 +237,6 @@ const Admin: React.FC = () => {
     </div>
   );
 
-  const handleStatusChange = async (
-    id: string,
-    currentStatus: PlatformStatus
-  ) => {
-    try {
-      const newStatus =
-        currentStatus === PlatformStatus.Blocked
-          ? PlatformStatus.Active
-          : PlatformStatus.Blocked;
-      const response = await sdk.blockAdmin({
-        id,
-        updateStatus: newStatus,
-      });
-      fetchAdmins();
-      setToastData({
-        message: `Admin status changed to ${newStatus}`,
-        type: "success",
-      });
-    } catch (error) {
-      console.error("Failed to change status:", error);
-      setToastData({ message: "Failed to change status", type: "error" });
-    }
-  };
-
   const renderActions = (rowData: { _id: string }) => (
     <div className="flex space-x-3">
       <FaTrash
@@ -266,7 +247,6 @@ const Admin: React.FC = () => {
         className="text-blue-500 cursor-pointer"
         onClick={() => {
           setSelectedAdminId(rowData._id);
-          console.log(selectedAdminId);
           setIsChangeRoleModalOpen(true);
         }}
       />
@@ -404,15 +384,13 @@ const Admin: React.FC = () => {
       </ReusableModal>
       <ReusableModal
         title="Change Password"
+        comments="Are you sure you want to change user's password ?"
         isOpen={isChangePassModalOpen}
         onClose={() => setIsChangePassModalOpen(false)}
         width="md"
       >
         <form onSubmit={handleSubmitPass(handleChangePassword)}>
           <div className="mb-4">
-            <h3 className="font-bold mb-2 text-black">
-              Generate or Enter New Password
-            </h3>
             <Controller
               name="newPassword"
               control={controlPass}
@@ -455,13 +433,13 @@ const Admin: React.FC = () => {
       </ReusableModal>
       <ReusableModal
         title="Change Admin Role"
+        comments="Are you sure you want to change Admins role ?"
         isOpen={isChangeRoleModalOpen}
         onClose={() => setIsChangeRoleModalOpen(false)}
         width="md"
       >
         <form onSubmit={handleSubmitRole(handleChangeRole)}>
           <div className="mb-4">
-            <label className="block text-black">Select Role</label>
             <Controller
               name="role"
               control={controlRole}
@@ -501,13 +479,11 @@ const Admin: React.FC = () => {
       </ReusableModal>
       <ReusableModal
         title="Confirm Status Change"
+        comments="Are you sure you want to change the admin's status ?"
         isOpen={showConfirmationModal}
         onClose={handleCloseConfirmationModal}
         width="sm"
       >
-        <p className="text-black mb-4">
-          Are you sure you want to change the admin's status?
-        </p>
         <div className="flex justify-end mt-4">
           <button
             className="btn btn-outlined-confirmation"
@@ -519,13 +495,11 @@ const Admin: React.FC = () => {
       </ReusableModal>
       <ReusableModal
         title="Confirm Deletion"
+        comments="Are you sure you want to delete this admin?"
         isOpen={isDeleteModalOpen}
         onClose={() => setIsDeleteModalOpen(false)}
         width="md"
       >
-        <p className="text-black mb-4">
-          Are you sure you want to delete this admin?
-        </p>
         <div className="flex justify-end mt-4">
           <button
             className="btn btn-outlined-confirmation"

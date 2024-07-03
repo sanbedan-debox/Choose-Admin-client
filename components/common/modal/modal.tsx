@@ -5,8 +5,9 @@ interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
-  width?: "xs" | "sm" | "md" | "lg" | "xl";
+  width?: "xs" | "sm" | "md" | "ml" | "lg" | "xl";
   title: string;
+  comments?: string;
 }
 
 const ReusableModal: React.FC<ModalProps> = ({
@@ -15,6 +16,7 @@ const ReusableModal: React.FC<ModalProps> = ({
   children,
   width = "md",
   title,
+  comments,
 }) => {
   useEffect(() => {
     const handleOutsideClick = (event: MouseEvent) => {
@@ -38,6 +40,7 @@ const ReusableModal: React.FC<ModalProps> = ({
     xs: "w-1/5",
     sm: "w-1/4",
     md: "w-1/3",
+    ml: "w-1/2",
     lg: "w-3/4",
     xl: "w-full",
   };
@@ -45,11 +48,11 @@ const ReusableModal: React.FC<ModalProps> = ({
   return ReactDOM.createPortal(
     <div className="modal-overlay fixed inset-0 bg-white bg-opacity-80 flex items-center justify-center z-50">
       <div
-        className={`rounded shadow-lg bg-white  ${widthClasses[width]} z-10`}
+        className={`rounded shadow-lg bg-white ${widthClasses[width]} z-10`}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className=" py-5 px-6">
-          <div className="flex items-start justify-between py-2 mb-4 rounded-t dark:border-gray-600">
+        <div className="py-5 px-6">
+          <div className="flex items-start justify-between py-2 rounded-t">
             <div className="flex items-center space-x-4">
               <h2 className="text-2xl font-bold text-black">{title}</h2>
             </div>
@@ -76,6 +79,14 @@ const ReusableModal: React.FC<ModalProps> = ({
               <span className="sr-only">Close modal</span>
             </button>
           </div>
+          {comments && (
+            <p
+              className="text-gray-700
+           mb-4"
+            >
+              {comments}
+            </p>
+          )}{" "}
           {children}
         </div>
       </div>

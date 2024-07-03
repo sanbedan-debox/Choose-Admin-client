@@ -52,17 +52,17 @@ query GetAllRestaurants {
   }
 }
 
+# query to reset an admin's password
+query resetPasswordAdmin($id: String!, $password: String!) {
+  resetPasswordAdmin(id: $id, password: $password)
+}
+
 # Mutations
 
 # Mutation to delete an admin by ID
 mutation DeleteAdmin($id: String!) {
   deleteAdmin(id: $id)
 }
-
-# # Mutation to reset an admin's password
-# mutation ResetPasswordAdmin($id: String!, $password: String!) {
-#   resetPasswordAdmin(id: $id, password: $password)
-# }
 
 # Mutation to change an admin's role
 mutation ChangeRole($id: String!, $role: AdminRole!) {

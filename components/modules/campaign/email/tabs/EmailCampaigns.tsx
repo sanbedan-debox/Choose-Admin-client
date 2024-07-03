@@ -99,7 +99,6 @@ const EmailCampaign: React.FC = () => {
   ];
 
   const onSubmit = (data: any) => {
-    console.log("Form Data:", data);
     setCreateEmailCampaignModalOpen(false);
   };
 

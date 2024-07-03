@@ -882,6 +882,14 @@ export type GetAllRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string, status: RestaurantStatus }> };
 
+export type ResetPasswordAdminQueryVariables = Exact<{
+  id: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type ResetPasswordAdminQuery = { __typename?: 'Query', resetPasswordAdmin: boolean };
+
 export type DeleteAdminMutationVariables = Exact<{
   id: Scalars['String']['input'];
 }>;
@@ -1016,6 +1024,11 @@ export const GetAllRestaurantsDocument = gql`
     _id
     status
   }
+}
+    `;
+export const ResetPasswordAdminDocument = gql`
+    query resetPasswordAdmin($id: String!, $password: String!) {
+  resetPasswordAdmin(id: $id, password: $password)
 }
     `;
 export const DeleteAdminDocument = gql`
@@ -1167,6 +1180,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetAllRestaurants(variables?: GetAllRestaurantsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllRestaurantsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAllRestaurantsQuery>(GetAllRestaurantsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllRestaurants', 'query', variables);
+    },
+    resetPasswordAdmin(variables: ResetPasswordAdminQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ResetPasswordAdminQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ResetPasswordAdminQuery>(ResetPasswordAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'resetPasswordAdmin', 'query', variables);
     },
     DeleteAdmin(variables: DeleteAdminMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<DeleteAdminMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<DeleteAdminMutation>(DeleteAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'DeleteAdmin', 'mutation', variables);
