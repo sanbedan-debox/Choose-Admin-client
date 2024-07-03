@@ -94,7 +94,7 @@ const Reports: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      {isLoading && <Loading />}
+      {/* {isLoading && <Loading />} */}
       <RoopTable
         data={restaurantUsers}
         itemsPerPage={10}

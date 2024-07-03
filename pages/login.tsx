@@ -78,7 +78,7 @@ export default function Login() {
                     },
                   })}
                   id="email"
-                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
+                  className="input input-primary"
                   placeholder="Enter your Email Address"
                 />
                 {errors.email && (
@@ -98,7 +98,7 @@ export default function Login() {
                     required: "Password is required",
                   })}
                   id="password"
-                  className="mt-1 border bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
+                  className="input input-primary"
                   placeholder="Enter your Password"
                 />
                 {errors.password && (

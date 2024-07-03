@@ -194,7 +194,7 @@ const RoopTable: React.FC<TableProps> = ({
             placeholder="Search"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="bg-input text-sm rounded-lg block p-2.5  placeholder-gray-400 text-white w-96"
+            className="bg-input text-sm rounded-lg block p-2.5  placeholder-gray-400 text-black w-96"
           />
 
           {filterable && (
@@ -345,7 +345,7 @@ const RoopTable: React.FC<TableProps> = ({
         <div className="flex flex-col space-y-4">
           <Select
             options={options}
-            className="text-black"
+            className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
             placeholder="Select Column"
             value={options.find((option) => option.value === filterColumn)}
             onChange={(selectedOption) =>
@@ -354,7 +354,7 @@ const RoopTable: React.FC<TableProps> = ({
           />
           <Select
             options={operatorOptions}
-            className="text-black"
+            className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
             placeholder="Select Operator"
             value={operatorOptions.find((option) => option.value === operator)}
             onChange={(selectedOption) =>
@@ -366,7 +366,7 @@ const RoopTable: React.FC<TableProps> = ({
             placeholder="Enter Value"
             value={filterValue}
             onChange={(e) => setFilterValue(e.target.value)}
-            className="bg-input text-sm rounded-lg block p-2.5 text-black  placeholder-gray-400  "
+            className="input input-primary"
           />
           <div className="flex justify-end space-x-2">
             <button

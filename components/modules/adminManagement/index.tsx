@@ -314,7 +314,7 @@ const Admin: React.FC = () => {
               type="text"
               placeholder="Enter Name..."
               {...register("name", { required: "Name is required" })}
-              className="mt-1 border bg-input bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
+              className="input input-primary"
             />
             {errors.name && (
               <p className="text-red-500 text-sm">{errors.name.message}</p>
@@ -331,7 +331,7 @@ const Admin: React.FC = () => {
                   message: "Invalid email address",
                 },
               })}
-              className="mt-1 border bg-input bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
+              className="input input-primary"
             />
             {errors.email && (
               <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -349,7 +349,7 @@ const Admin: React.FC = () => {
                   message: "Password must be at least 6 characters long",
                 },
               })}
-              className="mt-1 border bg-input bg-opacity-30 text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black focus:ring-primary-500 focus:border-transparent"
+              className="input input-primary"
             />
             {errors.password && (
               <p className="text-red-500 text-sm">{errors.password.message}</p>
@@ -365,19 +365,21 @@ const Admin: React.FC = () => {
                 <Select
                   {...field}
                   options={roleOptions}
-                  classNames={{
-                    placeholder: () => "!text-gray-400",
-                    control: () =>
-                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-white text-black",
-                    singleValue: () => "!text-black",
-                    option: (state) =>
-                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
-                        state.isFocused || state.isSelected
-                          ? "!bg-transparent !text-black"
-                          : ""
-                      }`,
-                  }}
+                  // classNames={{
+                  //   placeholder: () => "!text-gray-400",
+                  //   control: () =>
+                  //     "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
+                  //   menu: () => "z-[100] !bg-white text-black",
+                  //   singleValue: () => "!text-black",
+                  //   option: (state) =>
+                  //     `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
+                  //       state.isFocused || state.isSelected
+                  //         ? "!bg-transparent !text-black"
+                  //         : ""
+                  //     }`,
+                  // }}
+
+                  className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
                   classNamePrefix="react-select"
                   placeholder="Select Role"
                 />
@@ -409,7 +411,7 @@ const Admin: React.FC = () => {
                   {...field}
                   placeholder="Enter Password..."
                   type="text"
-                  className="mt-1  bg-input text-sm rounded-lg w-full focus:outline-none block p-2.5 border-gray-500 placeholder-gray-400 text-black"
+                  className="input input-primary"
                 />
               )}
             />
@@ -458,19 +460,20 @@ const Admin: React.FC = () => {
                 <Select
                   {...field}
                   options={roleOptions}
-                  classNames={{
-                    placeholder: () => "!text-gray-400",
-                    control: () =>
-                      "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
-                    menu: () => "z-[100] !bg-white text-black",
-                    singleValue: () => "!text-black",
-                    option: (state) =>
-                      `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
-                        state.isFocused || state.isSelected
-                          ? "!bg-transparent !text-black"
-                          : ""
-                      }`,
-                  }}
+                  // classNames={{
+                  //   placeholder: () => "!text-gray-400",
+                  //   control: () =>
+                  //     "!bg-input !border-none !text-sm !rounded-lg !w-full transition duration-150 ease-in-out !shadow-none",
+                  //   menu: () => "z-[100] !bg-white text-black",
+                  //   singleValue: () => "!text-black",
+                  //   option: (state) =>
+                  //     `!text-sm hover:!bg-primary hover:!text-white  focus:!bg-transparent ${
+                  //       state.isFocused || state.isSelected
+                  //         ? "!bg-transparent !text-black"
+                  //         : ""
+                  //     }`,
+                  // }}
+                  className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
                   classNamePrefix="react-select"
                   placeholder="Select Role"
                 />
