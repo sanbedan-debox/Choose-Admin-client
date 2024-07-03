@@ -105,7 +105,10 @@ export const FadeInDiv = ({
             zIndex: isActive(tab) ? 1 : 0,
             opacity: isActive(tab) ? 1 : 0.5,
           }}
-          className={cn("w-full h-full absolute top-0 left-0", className)}
+          className={cn(
+            "w-full h-full absolute top-0 left-0 bg-background",
+            className
+          )}
         >
           {tab.content}
         </div>

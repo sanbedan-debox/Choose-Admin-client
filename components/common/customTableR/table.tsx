@@ -279,7 +279,7 @@ const RoopTable: React.FC<TableProps> = ({
                     ))}
                     {actions.length > 0 && (
                       <td className="py-2 px-4 text-center">
-                        <Menu as="div" className="relative inline-block">
+                        <Menu as="div" className=" inline-block">
                           <Menu.Button className="flex items-center space-x-2">
                             <HiDotsVertical className="h-5 w-5 text-black" />
                           </Menu.Button>
