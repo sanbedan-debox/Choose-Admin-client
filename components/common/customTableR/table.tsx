@@ -262,7 +262,7 @@ const RoopTable: React.FC<TableProps> = ({
         <>
           <div className="overflow-x-auto">
             <table className="min-w-full bg-transparent rounded-lg overflow-hidden">
-              <thead className="bg-white text-black ">
+              <thead className="bg-white text-black text-nowrap ">
                 <tr>
                   {headings.map((heading, index) => (
                     <th
@@ -285,7 +285,7 @@ const RoopTable: React.FC<TableProps> = ({
                     {headings.map((heading, colIndex) => (
                       <td
                         key={colIndex}
-                        className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg text-center"
+                        className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg text-center text-nowrap  "
                       >
                         {heading.render
                           ? heading.render(row)

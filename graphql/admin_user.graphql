@@ -32,18 +32,49 @@ query AdminLogin($email: String!, $password: String!) {
   adminLogin(email: $email, password: $password)
 }
 
-# Query to get all restaurant users
+# # Query to get all restaurant users
+
 query GetAllRestaurantUsers {
   getAllRestaurantUsers {
     _id
     email
+    phone
+    businessName
+    businessType
+    ein
+    ssn
+
+    address {
+      addressLine1 {
+        value
+      }
+      addressLine2 {
+        value
+      }
+      coordinate {
+        coordinates
+      }
+      city {
+        value
+      }
+      state {
+        value
+      }
+      postcode {
+        value
+      }
+    }
+    establishedAt
+    restaurants {
+      _id
+    }
     createdAt
     updatedAt
     status
     firstName
+    lastName
   }
 }
-
 # Query to get all restaurants
 query GetAllRestaurants {
   getAllRestaurants {
@@ -85,4 +116,12 @@ mutation blockAdmin($id: String!, $updateStatus: PlatformStatus!) {
 # Mutation to log out the admin
 query AdminLogout {
   adminLogout
+}
+
+mutation AdminUserDetailsVerification($id: String!) {
+  adminUserDetailsVerification(id: $id)
+}
+
+mutation AdminUserDetailsRejection($content: String!, $id: String!) {
+  adminUserDetailsRejection(content: $content, id: $id)
 }

@@ -80,7 +80,6 @@ const EmailCampaign: React.FC = () => {
     try {
       setLoading(true);
 
-      // Step 1: Upload CSV file to Cloudinary
       let csvDataUrl = null;
       if (selectedTarget?.value === "csv" && csvFile) {
         const formData = new FormData();
@@ -108,23 +107,22 @@ const EmailCampaign: React.FC = () => {
         scheduleTime,
         csvDataUrl,
         customLink: data.customLink || null,
-        filters: {
-          location: data.location || null,
-          industry: data.industry || null,
-          minPay: data.minPay || null,
-          maxPay: data.maxPay || null,
-          employerEmailPending: data.employerEmailPending || null,
-          // Add more filters as needed
-        },
+        // filters: {
+        //   location: data.location || null,
+        //   industry: data.industry || null,
+        //   minPay: data.minPay || null,
+        //   maxPay: data.maxPay || null,
+        //   employerEmailPending: data.employerEmailPending || null,
+        // },
       });
 
       const { getAllEmailCampaigns } = await sdk.GetAllEmailCampaigns();
       setEmailCampaigns(getAllEmailCampaigns);
-      setCreateEmailCampaignModalOpen(false); // Close modal after successful creation
+      setCreateEmailCampaignModalOpen(false);
     } catch (error) {
       console.error("Error creating email campaign:", error);
     } finally {
-      setLoading(false); // Ensure loading state is reset
+      setLoading(false);
     }
   };
 

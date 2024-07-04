@@ -1,18 +1,22 @@
 import React, { useEffect, useState } from "react";
 import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
-import Switch from "react-switch";
 import useGlobalLoaderStore from "@/store/loader";
 import Loading from "@/components/common/Loader/Loader";
 import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import { PlatformStatus } from "@/generated/graphql";
+import { Controller, useForm } from "react-hook-form";
+import useGlobalStore from "@/store/global";
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
-  const { isLoading, setLoading } = useGlobalLoaderStore();
+  const { setLoading } = useGlobalLoaderStore();
+  const { setToastData } = useGlobalStore();
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
-  const [userIdToBlock, setUserIdToBlock] = useState<string>("");
+  const [showApproveModal, setShowApproveModal] = useState(false);
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [selectedUserId, setSelectedUserId] = useState<string>("");
 
   useEffect(() => {
     fetchRestaurantUsers();
@@ -39,13 +43,13 @@ const Reports: React.FC = () => {
 
   const handleToggleSwitch = (rowData: { status: string; _id: string }) => {
     setShowConfirmationModal(true);
-    setUserIdToBlock(rowData._id);
+    setSelectedUserId(rowData._id);
   };
 
   const handleConfirmation = async () => {
     setShowConfirmationModal(false);
     try {
-      const response = await sdk.changeUserStatus({ id: userIdToBlock });
+      const response = await sdk.changeUserStatus({ id: selectedUserId });
       if (response && response.changeUserStatus) {
         fetchRestaurantUsers();
       }
@@ -56,7 +60,64 @@ const Reports: React.FC = () => {
 
   const handleCloseConfirmationModal = () => {
     setShowConfirmationModal(false);
-    setUserIdToBlock("");
+    setSelectedUserId("");
+  };
+
+  const handleCloseApproveModal = () => {
+    setShowApproveModal(false);
+    setSelectedUserId("");
+  };
+  const handleApprovalConfirmation = async () => {
+    setLoading(true);
+    try {
+      const response = await sdk.AdminUserDetailsVerification({
+        id: selectedUserId,
+      });
+      if (response && response.adminUserDetailsVerification) {
+        setToastData({
+          message: "User status updated successfully !",
+          type: "success",
+        });
+        setShowApproveModal(false);
+        setSelectedUserId("");
+      }
+    } catch (error) {
+      console.error("Failed to fetch restaurant users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleRejectConfirmation = async () => {
+    setLoading(true);
+    try {
+      const response = await sdk.AdminUserDetailsVerification({
+        id: selectedUserId,
+      });
+      if (response && response.adminUserDetailsVerification) {
+        setToastData({
+          message: "User status updated successfully !",
+          type: "success",
+        });
+        setShowApproveModal(false);
+        setSelectedUserId("");
+      }
+    } catch (error) {
+      console.error("Failed to fetch restaurant users:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleCloseRejectConfirmation = () => {
+    setShowRejectModal(false);
+    setSelectedUserId("");
+  };
+  const handleApproveVerification = (_id: string) => {
+    setShowApproveModal(true);
+    setSelectedUserId(_id);
+  };
+  const handleRejectVerification = (_id: string) => {
+    setShowRejectModal(true);
+    setSelectedUserId(_id);
   };
 
   const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
@@ -68,6 +129,25 @@ const Reports: React.FC = () => {
       />
     </div>
   );
+
+  const renderVerification = (rowData: { _id: string }) => (
+    <div className="flex flex-col space-y-1">
+      <p
+        onClick={() => handleApproveVerification(rowData._id)}
+        className="text-sm font-semibold text-primary cursor-pointer hover:scale-110"
+      >
+        Approve
+      </p>
+      <p
+        onClick={() => handleRejectVerification(rowData._id)}
+        className="text-sm font-semibold text-primary cursor-pointer hover:scale-110"
+      >
+        Reject
+      </p>
+    </div>
+  );
+
+  const handleRejectUser = () => {};
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -85,12 +165,33 @@ const Reports: React.FC = () => {
 
   const headings = [
     { title: "Toggle Status", dataKey: "status", render: renderSwitch },
+    { title: "Verification", dataKey: "status", render: renderVerification },
     { title: "First Name", dataKey: "firstName" },
+    { title: "Last Name", dataKey: "lastName" },
     { title: "Email", dataKey: "email" },
+    { title: "Phone", dataKey: "phone" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
+    { title: "Business Name", dataKey: "businessName" },
+    { title: "Business Type", dataKey: "businessType" },
+    { title: "EIN", dataKey: "ein" },
+    { title: "SSN", dataKey: "ssn" },
     { title: "Status", dataKey: "status" },
+    { title: "address", dataKey: "address.addressLine1.value" },
   ];
+
+  interface RejectUserInput {
+    reason: string;
+  }
+
+  const {
+    register: registerPass,
+    handleSubmit: handleSubmitPass,
+    reset: resetPass,
+    formState: { errors: errorsPass },
+    setValue: setValuePass,
+    control: controlPass,
+  } = useForm<RejectUserInput>();
 
   return (
     <div className="container mx-auto px-2">
@@ -111,13 +212,72 @@ const Reports: React.FC = () => {
         comments="are you sure you want to block the user."
       >
         <div className="flex justify-end space-x-4">
+          <button className="btn btn-primary" onClick={handleConfirmation}>
+            Yes
+          </button>
+        </div>
+      </ReusableModal>
+      <ReusableModal
+        isOpen={showApproveModal}
+        onClose={handleCloseApproveModal}
+        title="Are you sure ?"
+        comments="are you sure you want to Approve the user."
+      >
+        <div className="flex justify-end space-x-4">
           <button
-            className="btn btn-outlined-confirmation"
-            onClick={handleConfirmation}
+            className="btn btn-primary"
+            onClick={handleApprovalConfirmation}
           >
             Yes
           </button>
         </div>
+      </ReusableModal>
+      <ReusableModal
+        isOpen={showRejectModal}
+        onClose={handleCloseRejectConfirmation}
+        title="Reject User "
+        comments="Please Provide the details to reject the User Details"
+      >
+        <form onSubmit={handleSubmitPass(handleRejectUser)}>
+          <div className="mb-4">
+            <Controller
+              name="reason"
+              control={controlPass}
+              rules={{
+                required: "Reason is required",
+                minLength: {
+                  value: 30,
+                  message: "Reason must be at least 30 characters",
+                },
+                maxLength: {
+                  value: 120,
+                  message: "Reason cannot exceed 120 characters",
+                },
+              }}
+              render={({ field }) => (
+                <input
+                  {...field}
+                  placeholder="Enter Reason"
+                  type="text"
+                  className="input input-primary"
+                />
+              )}
+            />
+            {errorsPass.reason && (
+              <p className="text-red-500 text-sm">
+                {errorsPass.reason.message}
+              </p>
+            )}
+          </div>
+          <div className="flex justify-end mt-4 space-x-2">
+            <button
+              className="btn btn-primary"
+              onClick={handleSubmitPass(handleRejectUser)}
+            >
+              Reject User
+            </button>
+          </div>
+        </form>
       </ReusableModal>
     </div>
   );
