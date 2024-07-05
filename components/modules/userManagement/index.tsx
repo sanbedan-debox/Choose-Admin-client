@@ -140,20 +140,24 @@ const Reports: React.FC = () => {
     </div>
   );
 
-  const renderVerification = (rowData: { _id: string }) => (
+  const renderVerification = (rowData: { _id: string; status: string }) => (
     <div className="flex flex-col space-y-1">
-      <p
-        onClick={() => handleApproveVerification(rowData._id)}
-        className="text-sm font-semibold text-primary cursor-pointer hover:scale-110"
-      >
-        Approve
-      </p>
-      <p
-        onClick={() => handleRejectVerification(rowData._id)}
-        className="text-sm font-semibold text-primary cursor-pointer hover:scale-110"
-      >
-        Reject
-      </p>
+      {"onboardingPending" == rowData.status && (
+        <>
+          <p
+            onClick={() => handleApproveVerification(rowData._id)}
+            className="text-sm font-semibold text-primary cursor-pointer hover:scale-110"
+          >
+            Approve
+          </p>
+          <p
+            onClick={() => handleRejectVerification(rowData._id)}
+            className="text-sm font-semibold text-primary cursor-pointer hover:scale-110"
+          >
+            Reject
+          </p>
+        </>
+      )}
     </div>
   );
 

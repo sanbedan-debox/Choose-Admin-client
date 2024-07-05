@@ -1,10 +1,8 @@
 import React, { useState } from "react";
 import { modules } from "@/components/navigation/common/accessConfig";
-import logo1 from "../../assets/logo/logoWhite.png";
-import Image from "next/image";
+
 import useGlobalStore from "@/store/global";
 import useAuthStore from "@/store/auth";
-import { useRouter } from "next/router";
 
 const Sidebar: React.FC = () => {
   const { setSelectedModule } = useGlobalStore();
@@ -42,7 +40,9 @@ const Sidebar: React.FC = () => {
                 {userName.charAt(0).toUpperCase()}
               </div>
               <div className="flex flex-col">
-                <span className="ml-2 text-black">{userName}</span>
+                <span className="ml-2 font-semibold text-black">
+                  {userName}
+                </span>
                 <span className="ml-2 text-black">{userRole}</span>
               </div>
             </div>

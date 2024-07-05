@@ -4,6 +4,7 @@ import useGlobalStore from "@/store/global";
 import { sdk } from "@/util/graphqlClient";
 import Loading from "@/components/common/Loader/Loader"; // Import your loading component
 import useGlobalLoaderStore from "@/store/loader";
+import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
 
 const EmailTemplate: React.FC = () => {
   const { setEmailBuilderOpen } = useGlobalStore();
@@ -48,13 +49,27 @@ const EmailTemplate: React.FC = () => {
       },
     },
   ];
+  const renderActions = (rowData: { _id: string }) => (
+    <div className="flex space-x-3 ">
+      <FaTrash
+        className="text-red-500 cursor-pointer"
+        // onClick={() => openDeleteModal(rowData._id)}
+      />
+
+      <FaEdit className="text-blue-500 cursor-pointer" />
+      <FaEye
+        className="text-green-500 cursor-pointer"
+        // onClick={() => openChangePassModal(rowData._id)}
+      />
+    </div>
+  );
 
   const headings = [
     { title: "Title", dataKey: "title" },
     { title: "Content", dataKey: "content" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
-    // Add more headings as needed
+    { title: "Actions", dataKey: "_id", render: renderActions },
   ];
 
   return (
@@ -62,7 +77,6 @@ const EmailTemplate: React.FC = () => {
       <RoopTable
         data={emailTemplates}
         itemsPerPage={5}
-        actions={actions}
         csvExport
         fullCsv
         csvFileName="email_templates_data.csv"

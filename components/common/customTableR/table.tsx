@@ -224,6 +224,19 @@ const RoopTable: React.FC<TableProps> = ({
                 />
               </div>
             )}
+            {isFilterApplied && (
+              <button
+                className="btn btn-outlined"
+                onClick={() => {
+                  setCurrentFilterColumn("");
+                  setCurrentOperator("contains");
+                  setCurrentFilterValue("");
+                  applyFilter();
+                }}
+              >
+                Clear
+              </button>
+            )}
           </div>
         )}
 
@@ -328,29 +341,35 @@ const RoopTable: React.FC<TableProps> = ({
             </table>
           </div>
 
-          <div className="flex justify-between items-center mt-4">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="flex items-center space-x-2 text-sm"
-            >
-              <HiChevronLeft />
-              <span>Previous</span>
-            </button>
-            <span className="text-sm">
-              Page {currentPage} of {totalPages}
-            </span>
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className="flex items-center space-x-2 text-sm"
-            >
-              <span>Next</span>
-              <HiChevronRight />
-            </button>
-          </div>
+          {data.length > 0 && (
+            <div className="flex justify-between items-center mt-4">
+              <button
+                onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className={`flex items-center space-x-2 text-sm ${
+                  currentPage === 1 ? "opacity-0 " : ""
+                }`}
+              >
+                <HiChevronLeft />
+                <span>Previous</span>
+              </button>
+              <span className="text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                onClick={() =>
+                  setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                }
+                disabled={currentPage === totalPages}
+                className={`flex items-center space-x-2 text-sm ${
+                  currentPage === totalPages ? "opacity-0 " : ""
+                }`}
+              >
+                <span>Next</span>
+                <HiChevronRight />
+              </button>
+            </div>
+          )}
         </>
       )}
       <ReusableModal

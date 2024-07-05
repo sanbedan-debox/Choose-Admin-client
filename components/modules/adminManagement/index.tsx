@@ -289,7 +289,7 @@ const Admin: React.FC = () => {
         filterable
         mainActions={mainActions}
       />
-      )
+
       <ReusableModal
         title="Add New Admin"
         isOpen={isAddModalOpen}
