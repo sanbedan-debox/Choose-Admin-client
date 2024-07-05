@@ -17,7 +17,9 @@ const Reports: React.FC = () => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
-
+  const [lastRectectedConfirmation, setLastRejectedConfirmation] =
+    useState(false);
+  const [reason, setreson] = useState<string>("");
   useEffect(() => {
     fetchRestaurantUsers();
   }, []);
@@ -67,6 +69,10 @@ const Reports: React.FC = () => {
     setShowApproveModal(false);
     setSelectedUserId("");
   };
+  const handleCloseRejectConformation = () => {
+    setLastRejectedConfirmation(false);
+    setSelectedUserId("");
+  };
   const handleApprovalConfirmation = async () => {
     setLoading(true);
     try {
@@ -78,9 +84,10 @@ const Reports: React.FC = () => {
           message: "User status updated successfully !",
           type: "success",
         });
-        setShowApproveModal(false);
-        setSelectedUserId("");
       }
+      setShowApproveModal(false);
+      setSelectedUserId("");
+      fetchRestaurantUsers;
     } catch (error) {
       console.error("Failed to fetch restaurant users:", error);
     } finally {
@@ -90,17 +97,20 @@ const Reports: React.FC = () => {
   const handleRejectConfirmation = async () => {
     setLoading(true);
     try {
-      const response = await sdk.AdminUserDetailsVerification({
+      const response = await sdk.AdminUserDetailsRejection({
         id: selectedUserId,
+        content: reason,
       });
-      if (response && response.adminUserDetailsVerification) {
+      if (response && response.adminUserDetailsRejection) {
         setToastData({
           message: "User status updated successfully !",
           type: "success",
         });
-        setShowApproveModal(false);
-        setSelectedUserId("");
       }
+      setLastRejectedConfirmation(false);
+      setShowRejectModal(false);
+      setSelectedUserId("");
+      fetchRestaurantUsers;
     } catch (error) {
       console.error("Failed to fetch restaurant users:", error);
     } finally {
@@ -147,7 +157,10 @@ const Reports: React.FC = () => {
     </div>
   );
 
-  const handleRejectUser = () => {};
+  const handleRejectUser = (data: RejectUserInput) => {
+    setLastRejectedConfirmation(true);
+    setreson(data.reason);
+  };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -185,9 +198,7 @@ const Reports: React.FC = () => {
   }
 
   const {
-    register: registerPass,
-    handleSubmit: handleSubmitPass,
-    reset: resetPass,
+    handleSubmit: handleReason,
     formState: { errors: errorsPass },
     setValue: setValuePass,
     control: controlPass,
@@ -233,12 +244,27 @@ const Reports: React.FC = () => {
         </div>
       </ReusableModal>
       <ReusableModal
+        isOpen={lastRectectedConfirmation}
+        onClose={handleCloseRejectConformation}
+        title="Are you sure ?"
+        comments="are you sure you want to Reject the user."
+      >
+        <div className="flex justify-end space-x-4">
+          <button
+            className="btn btn-primary"
+            onClick={handleRejectConfirmation}
+          >
+            Yes
+          </button>
+        </div>
+      </ReusableModal>
+      <ReusableModal
         isOpen={showRejectModal}
         onClose={handleCloseRejectConfirmation}
         title="Reject User "
         comments="Please Provide the details to reject the User Details"
       >
-        <form onSubmit={handleSubmitPass(handleRejectUser)}>
+        <form onSubmit={handleReason(handleRejectUser)}>
           <div className="mb-4">
             <Controller
               name="reason"
@@ -255,11 +281,10 @@ const Reports: React.FC = () => {
                 },
               }}
               render={({ field }) => (
-                <input
+                <textarea
                   {...field}
-                  placeholder="Enter Reason"
-                  type="text"
                   className="input input-primary"
+                  placeholder="Business description"
                 />
               )}
             />
@@ -272,7 +297,7 @@ const Reports: React.FC = () => {
           <div className="flex justify-end mt-4 space-x-2">
             <button
               className="btn btn-primary"
-              onClick={handleSubmitPass(handleRejectUser)}
+              onClick={handleReason(handleRejectUser)}
             >
               Reject User
             </button>
