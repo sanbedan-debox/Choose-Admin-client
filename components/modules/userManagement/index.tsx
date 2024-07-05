@@ -179,6 +179,7 @@ const Reports: React.FC = () => {
   const headings = [
     { title: "Toggle Status", dataKey: "status", render: renderSwitch },
     { title: "Verification", dataKey: "status", render: renderVerification },
+    { title: "Status", dataKey: "status" },
     { title: "First Name", dataKey: "firstName" },
     { title: "Last Name", dataKey: "lastName" },
     { title: "Email", dataKey: "email" },
@@ -189,7 +190,6 @@ const Reports: React.FC = () => {
     { title: "Business Type", dataKey: "businessType" },
     { title: "EIN", dataKey: "ein" },
     { title: "SSN", dataKey: "ssn" },
-    { title: "Status", dataKey: "status" },
     { title: "address", dataKey: "address.addressLine1.value" },
   ];
 
