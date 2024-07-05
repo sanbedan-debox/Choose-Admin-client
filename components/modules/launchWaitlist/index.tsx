@@ -63,7 +63,7 @@ const Admin: React.FC = () => {
         csvFileName="admins_data.csv"
         headings={headings}
         hovered
-        mainActions={mainActions}
+        mainActions={waitListUsers.length > 0 ? mainActions : undefined}
       />
     </div>
   );

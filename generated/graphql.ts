@@ -295,7 +295,11 @@ export type EmailTemplatesObject = {
 
 /** Enum used for storing static values of Estimated Revenue */
 export enum EstimatedRevenueEnum {
-  Above1M = 'Above1M'
+  Above1M = 'Above1M',
+  From0to50K = 'From0to50K',
+  From50Kto200K = 'From50Kto200K',
+  From200Kto500K = 'From200Kto500K',
+  From500Kto1M = 'From500Kto1M'
 }
 
 export type Integration = {
@@ -815,7 +819,10 @@ export enum SoftWareEnum {
 
 /** Enum used for storing static values of Staff Size */
 export enum StaffCountEnum {
-  Above40 = 'Above40'
+  Above40 = 'Above40',
+  From0To10 = 'From0To10',
+  From11to25 = 'From11to25',
+  From26to40 = 'From26to40'
 }
 
 /** Status enum  */

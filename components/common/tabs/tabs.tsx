@@ -73,7 +73,7 @@ export const Tabs = ({
         tabs={tabs}
         active={active}
         key={active.value}
-        className={cn("mt-10", contentClassName)}
+        className={cn("mt-6", contentClassName)}
       />
     </>
   );
@@ -103,7 +103,7 @@ export const FadeInDiv = ({
             scale: isActive(tab) ? 1 : 0.9,
             top: hovering && isActive(tab) ? idx * -50 : 0,
             zIndex: isActive(tab) ? 1 : 0,
-            opacity: isActive(tab) ? 1 : 0.5,
+            opacity: isActive(tab) ? 1 : 0,
           }}
           className={cn(
             "w-full h-full absolute top-0 left-0 bg-background",

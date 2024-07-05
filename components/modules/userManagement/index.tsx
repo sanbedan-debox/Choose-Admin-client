@@ -5,7 +5,7 @@ import useGlobalLoaderStore from "@/store/loader";
 import Loading from "@/components/common/Loader/Loader";
 import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
-import { PlatformStatus } from "@/generated/graphql";
+import { PlatformStatus, UserStatus } from "@/generated/graphql";
 import { Controller, useForm } from "react-hook-form";
 import useGlobalStore from "@/store/global";
 
@@ -142,7 +142,7 @@ const Reports: React.FC = () => {
 
   const renderVerification = (rowData: { _id: string; status: string }) => (
     <div className="flex flex-col space-y-1">
-      {"onboardingPending" == rowData.status && (
+      {UserStatus.InternalVerificationPending === rowData.status ? (
         <>
           <p
             onClick={() => handleApproveVerification(rowData._id)}
@@ -157,6 +157,8 @@ const Reports: React.FC = () => {
             Reject
           </p>
         </>
+      ) : (
+        "N/A"
       )}
     </div>
   );

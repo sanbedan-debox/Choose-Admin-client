@@ -73,7 +73,7 @@ const EmailTemplate: React.FC = () => {
   ];
 
   return (
-    <div className="">
+    <div className="bg-white h-full">
       <RoopTable
         data={emailTemplates}
         itemsPerPage={5}
@@ -82,8 +82,6 @@ const EmailTemplate: React.FC = () => {
         csvFileName="email_templates_data.csv"
         headings={headings}
         mainActions={mainActions}
-        // striped
-        // bordered
         hovered
       />
     </div>

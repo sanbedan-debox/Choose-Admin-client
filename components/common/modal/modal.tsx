@@ -48,9 +48,14 @@ const ReusableModal: React.FC<ModalProps> = ({
   return ReactDOM.createPortal(
     <AnimatePresence>
       {isOpen && (
-        <div className="modal-overlay fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50">
+        <motion.div
+          className="modal-overlay fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
           <motion.div
-            variants={fadeIn("up", "tween", 0, 0.2)}
+            variants={fadeIn("up", "tween", 0, 0.3)}
             initial="hidden"
             animate="show"
             exit="hidden"
@@ -89,7 +94,7 @@ const ReusableModal: React.FC<ModalProps> = ({
               {children}
             </div>
           </motion.div>
-        </div>
+        </motion.div>
       )}
     </AnimatePresence>,
     document.body

@@ -29,7 +29,7 @@ const Heading: React.FC<HeadingProps> = ({ title }) => {
   };
 
   return (
-    <div className="bg-white justify-between items-center px-6 flex  py-3 ">
+    <div className="justify-between items-center px-6 flex  py-3 bg-white flex-1">
       <h1 className="text-xl md:text-xl sm:text-xl lg:text-2xl text-black  font-semibold">
         {title && <>{title} </>}
       </h1>

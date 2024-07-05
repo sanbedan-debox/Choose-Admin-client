@@ -1,13 +1,41 @@
-import { AdminRole } from "@/generated/graphql";
+import { Admin, AdminRole } from "@/generated/graphql";
 
-// export interface AdminInterface {
-//   _id: string;
-//   name: string;
-//   email: string;
-//   type: AdminRole;
-//   createdAt: string;
-//   updatedAt: string;
-// }
+// __typename?: 'Admin';
+//   _id: Scalars['ID']['output'];
+//   accessHistory: Array<AccessHistory>;
+//   blockedBy: Admin;
+//   createdAt: Scalars['DateTimeISO']['output'];
+//   createdBy: Admin;
+//   email: Scalars['String']['output'];
+//   lastLoggedIn?: Maybe<Scalars['DateTimeISO']['output']>;
+//   lastLoggedOut?: Maybe<Scalars['DateTimeISO']['output']>;
+//   name: Scalars['String']['output'];
+//   numberOfResetPassword: Scalars['Float']['output'];
+//   role: AdminRole;
+//   status: PlatformStatus;
+//   unBlockedBy: Admin;
+//   updatedAt: Scalars['DateTimeISO']['output'];
+//   updatedBy: Admin;
+
+type AdminRow = Omit<
+  Admin,
+  | "_id"
+  | "__typename"
+  | "accessHistory"
+  | "createdBy"
+  | "updatedBy"
+  | "blockedBy"
+  | "unBlockedBy"
+>;
+
+export type AdminRowType = {
+  id: string;
+  // createdByName: string;
+  // updatedByName: string;
+  // blockedByName: string;
+  // unBlockedByName: string;
+} & AdminRow;
+
 export interface AddAdminFormInputs {
   name: string;
   email: string;

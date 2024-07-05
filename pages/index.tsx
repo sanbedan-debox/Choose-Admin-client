@@ -25,7 +25,7 @@ const HomePage: React.FC<HomePageProps> = ({
     setUserName(repo.name);
     setUserRole(repo.role);
     setUserId(repo._id);
-  }, [repo, setUserName, setUserRole]);
+  }, [repo, setUserId, setUserName, setUserRole]);
 
   return (
     <div className="bg-white">

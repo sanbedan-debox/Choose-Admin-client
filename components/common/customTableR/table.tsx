@@ -195,13 +195,9 @@ const RoopTable: React.FC<TableProps> = ({
   };
 
   return (
-    <div
-      className={`container mx-auto rounded-lg p-4 bg-white text-black ${
-        isSidebarExpanded ? "max-w-[76rem]" : "max-w-[85rem]"
-      }`}
-    >
+    <div className={`rounded-lg p-4 bg-white text-black`}>
       <div
-        className={`flex  items-center mb-4 ${
+        className={`flex items-center mb-4 ${
           data.length < 1 ? "justify-end" : "justify-between"
         }`}
       >
@@ -212,7 +208,7 @@ const RoopTable: React.FC<TableProps> = ({
               placeholder="Search"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="bg-input text-sm rounded-lg block p-2.5 placeholder-gray-400 text-black w-96"
+              className="bg-[#F1F1F1] text-sm rounded-lg block p-2.5 placeholder-gray-400 text-black w-96"
             />
 
             {filterable && (
@@ -298,7 +294,7 @@ const RoopTable: React.FC<TableProps> = ({
                     {headings.map((heading, colIndex) => (
                       <td
                         key={colIndex}
-                        className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg text-center text-nowrap  "
+                        className="py-2 px-4 first:rounded-tl-lg last:rounded-tr-lg text-center text-nowrap text-sm"
                       >
                         {heading.render
                           ? heading.render(row)
