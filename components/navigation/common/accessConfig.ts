@@ -37,11 +37,11 @@ export const modules = [
     name: "Campaigns",
     roles: ["admin", "master", "normal"],
     subModules: [
-      {
-        name: "Messages",
-        roles: ["admin", "master", "normal"],
-        component: Message,
-      },
+      // {
+      //   name: "Messages",
+      //   roles: ["admin", "master", "normal"],
+      //   component: Message,
+      // },
       {
         name: "Emails",
         roles: ["admin", "master", "normal"],

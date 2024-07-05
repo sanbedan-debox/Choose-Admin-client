@@ -99,14 +99,16 @@ const EmailCampaign: React.FC = () => {
       const targetValue = selectedTarget ? selectedTarget.value : null;
 
       await sdk.CreateEmailCampaign({
-        campaignName: data.name,
-        emailSubject: data.subject,
-        emailTemplate: templateValue,
-        target: targetValue,
-        scheduleType: selectedScheduleType,
-        scheduleTime,
-        csvDataUrl,
-        customLink: data.customLink || null,
+        input: {
+          campaignName: data.name,
+          emailSubject: data.subject,
+          emailTemplate: templateValue ?? "",
+          // target: targetValue as string,
+          // scheduleType: selectedScheduleType as string,
+          scheduleTime,
+          csvDataUrl,
+          customLink: data.customLink || null,
+        },
         // filters: {
         //   location: data.location || null,
         //   industry: data.industry || null,

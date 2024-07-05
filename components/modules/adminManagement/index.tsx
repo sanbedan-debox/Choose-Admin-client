@@ -4,8 +4,8 @@ import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
 import ReusableModal from "@/components/common/modal/modal";
 import {
+  AdminRowType,
   AddAdminFormInputs,
-  AdminInterface,
   ChangePasswordInputs,
   ChangeRoleInputs,
   roleOptions,
@@ -23,7 +23,7 @@ import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import useAuthStore from "@/store/auth";
 
 const Admin: React.FC = () => {
-  const [members, setMembers] = useState<AdminInterface[]>([]);
+  const [members, setMembers] = useState<AdminRowType[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
@@ -36,9 +36,7 @@ const Admin: React.FC = () => {
   const { userId } = useAuthStore();
   const [isChangeRoleModalOpen, setIsChangeRoleModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [adminToDelete, setAdminToDelete] = useState<AdminInterface | null>(
-    null
-  );
+  const [adminToDelete, setAdminToDelete] = useState<AdminRowType | null>(null);
   const { setToastData } = useGlobalStore();
 
   const {
@@ -80,7 +78,18 @@ const Admin: React.FC = () => {
           updatedAt: formatDate(user.updatedAt),
         }));
 
-        setMembers(formattedUsers);
+        setMembers(
+          formattedUsers.map((el) => ({
+            id: el._id,
+            name: el.name,
+            email: el.email,
+            createdAt: el.createdAt,
+            updatedAt: el.updatedAt,
+            numberOfResetPassword: el.numberOfResetPassword,
+            role: el.role,
+            status: el.status,
+          }))
+        );
       }
     } catch (error) {
       console.error("Failed to fetch admin details:", error);
@@ -109,9 +118,20 @@ const Admin: React.FC = () => {
         name: data.name,
         email: data.email,
         password: data.password,
-        role: data.role?.value || "",
+        role: data.role,
       };
-      const response = await sdk.addAdmin({ input });
+      if (!input.role?.value) {
+        return;
+      }
+
+      const response = await sdk.addAdmin({
+        input: {
+          email: input.email,
+          name: input.name,
+          password: input.password,
+          role: input.role?.value,
+        },
+      });
       setIsAddModalOpen(false);
       fetchAdmins();
       setToastData({ message: "Admin added successfully", type: "success" });
@@ -162,7 +182,7 @@ const Admin: React.FC = () => {
     if (!adminToDelete) return;
 
     try {
-      const response = await sdk.DeleteAdmin({ id: adminToDelete });
+      const response = await sdk.DeleteAdmin({ id: adminToDelete.id });
       setIsDeleteModalOpen(false);
       setAdminToDelete(null);
       fetchAdmins();
@@ -272,7 +292,7 @@ const Admin: React.FC = () => {
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
     { title: "status", dataKey: "status" },
-    { title: "Actions", dataKey: "_id", render: renderActions },
+    { title: "Actions", dataKey: "id", render: renderActions },
   ];
 
   return (
@@ -289,7 +309,6 @@ const Admin: React.FC = () => {
         filterable
         mainActions={mainActions}
       />
-      )
       <ReusableModal
         title="Add New Admin"
         isOpen={isAddModalOpen}

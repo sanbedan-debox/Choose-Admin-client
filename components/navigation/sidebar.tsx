@@ -26,7 +26,7 @@ const Sidebar: React.FC = () => {
   return (
     <div
       className={`max-h-none flex flex-col bg-white text-white transition-all duration-300 ${
-        isSidebarExpanded ? "w-64" : "w-20"
+        isSidebarExpanded ? "min-w-64 w-64" : "w-20"
       }`}
     >
       <div className="flex flex-col items-center">
@@ -42,8 +42,12 @@ const Sidebar: React.FC = () => {
                 {userName.charAt(0).toUpperCase()}
               </div>
               <div className="flex flex-col">
-                <span className="ml-2 text-black">{userName}</span>
-                <span className="ml-2 text-black">{userRole}</span>
+                <span className="ml-2 text-black font-semibold line-clamp-1 text-ellipsis">
+                  {userName}
+                </span>
+                <span className="ml-2 text-black text-sm line-clamp-1 text-ellipsis">
+                  {userRole}
+                </span>
               </div>
             </div>
           )}

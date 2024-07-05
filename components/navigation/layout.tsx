@@ -41,9 +41,9 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <div className="flex min-h-screen">
       <Sidebar />
-      <div className="flex-1 bg-[#F3F3F3] ">
+      <div className="flex-1 flex flex-col bg-[#F3F3F3] w-full h-screen overflow-x-hidden">
         <Heading title={selectedModule} />
-        <div className="flex p-6 bg-[#F3F3F3]">
+        <div className="flex p-4 bg-[#F3F3F3] h-full">
           {children}
           {renderModule()}
         </div>

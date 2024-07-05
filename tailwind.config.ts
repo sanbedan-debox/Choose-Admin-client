@@ -27,7 +27,7 @@ const config: Config = {
         background: "#F3F3F3",
         sidebar: "#FFFFFF",
         foreground: "#000000",
-        input: "#F1F1F1",
+        input: "#FFFFFF",
         dropdown: "#FFFFFF",
         switch: "#E5E7EB",
         toggle: "#D1D5DB",
