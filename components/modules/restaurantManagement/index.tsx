@@ -1,5 +1,5 @@
 // src/pages/Reports.tsx
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import RoopTable from "@/components/common/customTableR/table"; // Adjust path as per your project structure
 import { sdk } from "@/util/graphqlClient"; // Adjust path as per your project structure
 import Switch from "react-switch";
@@ -11,24 +11,24 @@ import { PlatformStatus } from "@/generated/graphql";
 const Reports: React.FC = () => {
   const { isLoading, setLoading } = useGlobalLoaderStore();
   const [restaurants, setRestaurants] = React.useState<any[]>([]);
+  const [counter, setCounter] = useState(0);
 
   React.useEffect(() => {
-    fetchRestaurants();
-  }, []);
-
-  const fetchRestaurants = async () => {
-    setLoading(true);
-    try {
-      const response = await sdk.GetAllRestaurants();
-      if (response && response.getAllRestaurants) {
-        setRestaurants(response.getAllRestaurants);
+    const fetchRestaurants = async () => {
+      setLoading(true);
+      try {
+        const response = await sdk.GetAllRestaurants();
+        if (response && response.getAllRestaurants) {
+          setRestaurants(response.getAllRestaurants);
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurants:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch restaurants:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+    fetchRestaurants();
+  }, [setLoading, counter]);
 
   const toggleStatus = (rowData: { status: string; _id: string }) => {
     console.log(`Toggling status for ID: ${rowData.status} ${rowData._id}`);

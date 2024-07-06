@@ -132,10 +132,104 @@ const UnlayerEditor = () => {
     });
   };
 
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
   const saveTestEmail = () => {
-    setShowTestEmailDialog(false);
-    setTestTitle("");
-    setTestEmail("");
+    if (testTitle === "") {
+      setToastData({
+        type: "error",
+        message: "Please enter subject for the test email to continue",
+      });
+      return;
+    }
+
+    if (testTitle.length >= 60) {
+      setToastData({
+        type: "error",
+        message: "Subject must be less than 60 characters",
+      });
+      return;
+    }
+
+    if (testEmail === "") {
+      setToastData({
+        type: "error",
+        message: "Please enter email ids",
+      });
+      return;
+    }
+
+    const emailsArr = testEmail.split(",");
+    const finalArr: string[] = [];
+    for (let i = 0; i < emailsArr.length; i++) {
+      const email = emailsArr[i].trim();
+      if (!validateEmail(email)) {
+        setToastData({
+          type: "error",
+          message: `${email} is not valid, please enter a valid email id`,
+        });
+        return;
+      }
+      finalArr.push(email);
+    }
+
+    if (finalArr.length > 5) {
+      setToastData({
+        type: "error",
+        message: "You can only add upto 5 emails for sending test emails.",
+      });
+      return;
+    }
+
+    try {
+      const unlayer = emailEditorRef.current?.editor;
+
+      if (unlayer === undefined) {
+        setToastData({
+          type: "error",
+          message: "Something went wrong, please try again later!",
+        });
+        return;
+      }
+
+      setLoading(true);
+      unlayer?.exportHtml(async (data) => {
+        const { design, html } = data;
+
+        const response = await sdk.SendTestEmails({
+          input: {
+            emails: finalArr.toString(),
+            html,
+            subject: testTitle,
+          },
+        });
+
+        setLoading(false);
+
+        if (response.sendTestEmails === false) {
+          setToastData({
+            type: "error",
+            message:
+              "Something went wrong while sending the test emails, please try again later!",
+          });
+          return;
+        }
+
+        setToastData({
+          type: "success",
+          message: "Test emails sent successfully!",
+        });
+        setShowTestEmailDialog(false);
+        setTestTitle("");
+        setTestEmail("");
+      });
+    } catch (error) {
+      setLoading(false);
+      console.log(error);
+    }
   };
 
   return (
@@ -239,8 +333,38 @@ const UnlayerEditor = () => {
             placeholder="Enter test email"
           />
           <div className="text-center mt-4 w-full flex justify-end ">
-            <button className="btn btn-primary" onClick={saveTestEmail}>
-              Save
+            <button
+              className={`btn ${
+                loading
+                  ? "btn-primary !opacity-60 !cursor-not-allowed"
+                  : "btn-primary"
+              }`}
+              onClick={saveTestEmail}
+            >
+              {loading ? (
+                <svg
+                  className="animate-spin -ml-1 h-5 w-5 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    stroke-width="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              ) : (
+                "Send"
+              )}
             </button>
           </div>
         </ReusableModal>

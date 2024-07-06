@@ -8,6 +8,7 @@ import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import { PlatformStatus, UserStatus } from "@/generated/graphql";
 import { Controller, useForm } from "react-hook-form";
 import useGlobalStore from "@/store/global";
+import { formatDateString } from "@/util/utils";
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
@@ -20,28 +21,30 @@ const Reports: React.FC = () => {
   const [lastRectectedConfirmation, setLastRejectedConfirmation] =
     useState(false);
   const [reason, setreson] = useState<string>("");
-  useEffect(() => {
-    fetchRestaurantUsers();
-  }, []);
+  const [counter, setCounter] = useState(0);
 
-  const fetchRestaurantUsers = async () => {
-    setLoading(true);
-    try {
-      const response = await sdk.GetAllRestaurantUsers();
-      if (response && response.getAllRestaurantUsers) {
-        const formattedUsers = response.getAllRestaurantUsers.map((user) => ({
-          ...user,
-          createdAt: formatDate(user.createdAt),
-          updatedAt: formatDate(user.updatedAt),
-        }));
-        setRestaurantUsers(formattedUsers);
+  useEffect(() => {
+    const fetchRestaurantUsers = async () => {
+      setLoading(true);
+      try {
+        const response = await sdk.GetAllRestaurantUsers();
+        if (response && response.getAllRestaurantUsers) {
+          const formattedUsers = response.getAllRestaurantUsers.map((user) => ({
+            ...user,
+            createdAt: formatDateString(user.createdAt),
+            updatedAt: formatDateString(user.updatedAt),
+          }));
+          setRestaurantUsers(formattedUsers);
+        }
+      } catch (error) {
+        console.error("Failed to fetch restaurant users:", error);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Failed to fetch restaurant users:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
+
+    fetchRestaurantUsers();
+  }, [counter, setLoading]);
 
   const handleToggleSwitch = (rowData: { status: string; _id: string }) => {
     setShowConfirmationModal(true);
@@ -53,7 +56,7 @@ const Reports: React.FC = () => {
     try {
       const response = await sdk.changeUserStatus({ id: selectedUserId });
       if (response && response.changeUserStatus) {
-        fetchRestaurantUsers();
+        setCounter((prev) => prev + 1);
       }
     } catch (error) {
       console.error("Failed to change user status:", error);
@@ -87,7 +90,7 @@ const Reports: React.FC = () => {
       }
       setShowApproveModal(false);
       setSelectedUserId("");
-      fetchRestaurantUsers;
+      setCounter((prev) => prev + 1);
     } catch (error) {
       console.error("Failed to fetch restaurant users:", error);
     } finally {
@@ -110,7 +113,7 @@ const Reports: React.FC = () => {
       setLastRejectedConfirmation(false);
       setShowRejectModal(false);
       setSelectedUserId("");
-      fetchRestaurantUsers;
+      setCounter((prev) => prev + 1);
     } catch (error) {
       console.error("Failed to fetch restaurant users:", error);
     } finally {
@@ -238,7 +241,7 @@ const Reports: React.FC = () => {
         isOpen={showApproveModal}
         onClose={handleCloseApproveModal}
         title="Are you sure ?"
-        comments="are you sure you want to Approve the user."
+        comments="Are you sure you want to approve the selected user?"
       >
         <div className="flex justify-end space-x-4">
           <button
