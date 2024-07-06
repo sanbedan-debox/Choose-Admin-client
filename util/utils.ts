@@ -5,6 +5,27 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+export const formatDateString = (ds: string): string => {
+  const padTwoDigits = (num: number) => {
+    return num.toString().padStart(2, "0");
+  };
+
+  const date = new Date(ds);
+  const formattedDate = `${padTwoDigits(date.getMonth() + 1)}/${padTwoDigits(
+    date.getDate()
+  )}/${date.getFullYear()} ${padTwoDigits(date.getHours())}:${padTwoDigits(
+    date.getMinutes()
+  )}`;
+
+  return formattedDate;
+};
+
+export const getClickableUrlLink = (link: string) => {
+  return link.startsWith("http://") || link.startsWith("https://")
+    ? link
+    : `https://${link}`;
+};
+
 // export const fadeIn = (
 //   direction: "left" | "right" | "up" | "down",
 //   type: string,

@@ -1,41 +1,54 @@
 import React, { useEffect, useState } from "react";
 import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
-import { WaitlistInterface } from "./interface";
 import useGlobalLoaderStore from "@/store/loader";
 import useCampaignStore from "@/store/campaign";
 import Loading from "@/components/common/Loader/Loader";
 import useGlobalStore from "@/store/global";
+import { formatDateString, getClickableUrlLink } from "@/util/utils";
+import Link from "next/link";
+import { WaitlistInterface } from "./interface";
 
 const Admin: React.FC = () => {
-  const [waitListUsers, setWaitListUsers] = useState<any>([]);
+  const [waitListUsers, setWaitListUsers] = useState<WaitlistInterface[]>([]);
   const { isLoading, setLoading } = useGlobalLoaderStore();
   const { setSelectedModule } = useGlobalStore();
   const { setCreateEmailCampaignModalOpen, setselectedTargetValue } =
     useCampaignStore();
 
   useEffect(() => {
+    const fetchWaitListUsers = async () => {
+      setLoading(true);
+      try {
+        const response = await sdk.GetWaitListUsers();
+        if (response && response.getWaitListUsers) {
+          setWaitListUsers(
+            response.getWaitListUsers.map((el) => ({
+              _id: el._id ?? "",
+              createdAt: formatDateString(el.createdAt ?? ""),
+              email: el.email ?? "",
+              name: el.name ?? "",
+              number: el.number,
+              restaurantName: el.restaurantName ?? "",
+              software: el.software ?? "",
+              website: el.website ?? "",
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch admin details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchWaitListUsers();
-  }, []);
+  }, [setLoading]);
 
   const handleCreateCampaign = () => {
     setSelectedModule("Emails");
     setCreateEmailCampaignModalOpen(true);
     setselectedTargetValue("waitlistUsers");
-  };
-
-  const fetchWaitListUsers = async () => {
-    setLoading(true);
-    try {
-      const response = await sdk.GetWaitListUsers();
-      if (response && response.getWaitListUsers) {
-        setWaitListUsers(response.getWaitListUsers);
-      }
-    } catch (error) {
-      console.error("Failed to fetch admin details:", error);
-    } finally {
-      setLoading(false);
-    }
   };
 
   const mainActions = [
@@ -48,8 +61,25 @@ const Admin: React.FC = () => {
   const headings = [
     { title: "Name", dataKey: "name" },
     { title: "Email", dataKey: "email" },
+    { title: "Mobile", dataKey: "number" },
+    { title: "Restaurant", dataKey: "restaurantName" },
+    {
+      title: "Website",
+      dataKey: "website",
+      render: (data: WaitlistInterface) => {
+        return (
+          <Link
+            className="text-primary"
+            href={getClickableUrlLink(data.website)}
+            target="_blank"
+          >
+            {data.website}
+          </Link>
+        );
+      },
+    },
+    { title: "Software", dataKey: "software" },
     { title: "Created At", dataKey: "createdAt" },
-    { title: "Updated At", dataKey: "updatedAt" },
   ];
 
   return (

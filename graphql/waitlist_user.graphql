@@ -8,8 +8,11 @@ query GetWaitListUsers {
     _id
     name
     email
+    website
+    number
+    restaurantName
+    software
     createdAt
-    updatedAt
   }
 }
 

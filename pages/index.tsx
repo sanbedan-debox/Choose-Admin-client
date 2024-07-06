@@ -6,6 +6,7 @@ import { sdk } from "@/util/graphqlClient";
 import useAuthStore from "@/store/auth";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { parseCookies } from "nookies";
+import PreviewEditor from "@/components/modules/campaign/email/unlayer/preview";
 
 type HomePageProps = {
   repo: {
@@ -18,7 +19,7 @@ type HomePageProps = {
 const HomePage: React.FC<HomePageProps> = ({
   repo,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
-  const { EmailBuilderOpen } = useGlobalStore();
+  const { EmailBuilderOpen, emailPreviewState } = useGlobalStore();
   const { setUserRole, setUserName, setUserId } = useAuthStore();
 
   useEffect(() => {
@@ -29,7 +30,17 @@ const HomePage: React.FC<HomePageProps> = ({
 
   return (
     <div className="bg-white">
-      {EmailBuilderOpen ? <UnlayerEditor /> : <Layout />}
+      {EmailBuilderOpen ? (
+        <UnlayerEditor />
+      ) : emailPreviewState.open ? (
+        <PreviewEditor
+          closeHandler={emailPreviewState.closeHandler}
+          design={emailPreviewState.design}
+          title={emailPreviewState.title}
+        />
+      ) : (
+        <Layout />
+      )}
     </div>
   );
 };

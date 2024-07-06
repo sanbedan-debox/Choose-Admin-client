@@ -17,6 +17,23 @@ type Store = {
   setSelectedModule: (moduleSelected: string) => void;
   EmailBuilderOpen: boolean;
   setEmailBuilderOpen: (open: boolean) => void;
+  emailPreviewState: {
+    open: boolean;
+    closeHandler: () => void;
+    design: string;
+    title: string;
+  };
+  setEmailPreivewState: ({
+    open,
+    closeHandler,
+    design,
+    title,
+  }: {
+    open: boolean;
+    closeHandler: () => void;
+    design: string;
+    title: string;
+  }) => void;
   isModalOpen: boolean;
   setModalOpen: (open: boolean) => void;
   modalData: ModalData | null;
@@ -33,6 +50,18 @@ const useGlobalStore = create<Store>((set) => ({
     set({ selectedModule: moduleSelected }),
   EmailBuilderOpen: false,
   setEmailBuilderOpen: (open: boolean) => set({ EmailBuilderOpen: open }),
+  emailPreviewState: {
+    open: false,
+    closeHandler: () => {},
+    design: "",
+    title: "",
+  },
+  setEmailPreivewState: (data: {
+    open: boolean;
+    closeHandler: () => void;
+    design: string;
+    title: string;
+  }) => set({ emailPreviewState: data }),
   isModalOpen: false,
   setModalOpen: (open: boolean) => set({ isModalOpen: open }),
   modalData: null,

@@ -79,7 +79,7 @@ const RoopTable: React.FC<TableProps> = ({
     setCurrentFilterColumn(filterColumn);
     setCurrentOperator(operator);
     setCurrentFilterValue(filterValue);
-  }, [showFilterModal]);
+  }, [filterColumn, filterValue, operator, showFilterModal]);
 
   const operatorOptions = [
     { value: "contains", label: "Contains" },

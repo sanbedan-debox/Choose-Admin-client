@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import Select from "react-select";
 import RoopTable from "@/components/common/customTableR/table";
 import { sdk } from "@/util/graphqlClient";
@@ -27,7 +27,7 @@ const Admin: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
-  const [selectedAdminId, setSelectedAdminId] = useState<any>(null);
+  const [selectedAdminId, setSelectedAdminId] = useState<string | null>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedAdminStatus, setSelectedAdminStatus] = useState("");
   const [randomPassword, setRandomPassword] = useState(
@@ -36,8 +36,9 @@ const Admin: React.FC = () => {
   const { userId } = useAuthStore();
   const [isChangeRoleModalOpen, setIsChangeRoleModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [adminToDelete, setAdminToDelete] = useState<AdminRowType | null>(null);
+  const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
   const { setToastData } = useGlobalStore();
+  const [counter, setCounter] = useState(0);
 
   const {
     register,
@@ -63,42 +64,7 @@ const Admin: React.FC = () => {
     control: controlRole,
   } = useForm<ChangeRoleInputs>();
 
-  useEffect(() => {
-    fetchAdmins();
-  }, []);
-
-  const fetchAdmins = async () => {
-    setLoading(true);
-    try {
-      const response = await sdk.GetAdmins();
-      if (response && response.getAdmins) {
-        const formattedUsers = response.getAdmins.map((user) => ({
-          ...user,
-          createdAt: formatDate(user.createdAt),
-          updatedAt: formatDate(user.updatedAt),
-        }));
-
-        setMembers(
-          formattedUsers.map((el) => ({
-            id: el._id,
-            name: el.name,
-            email: el.email,
-            createdAt: el.createdAt,
-            updatedAt: el.updatedAt,
-            numberOfResetPassword: el.numberOfResetPassword,
-            role: el.role,
-            status: el.status,
-          }))
-        );
-      }
-    } catch (error) {
-      console.error("Failed to fetch admin details:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const formatDate = (dateString: string) => {
+  const formatDate = useCallback((dateString: string) => {
     const date = new Date(dateString);
     const formattedDate = `${padTwoDigits(date.getMonth() + 1)}/${padTwoDigits(
       date.getDate()
@@ -106,7 +72,41 @@ const Admin: React.FC = () => {
       date.getMinutes()
     )}`;
     return formattedDate;
-  };
+  }, []);
+
+  useEffect(() => {
+    const fetch = async () => {
+      setLoading(true);
+      try {
+        const response = await sdk.GetAdmins();
+        if (response && response.getAdmins) {
+          const formattedUsers = response.getAdmins.map((user) => ({
+            ...user,
+            createdAt: formatDate(user.createdAt),
+            updatedAt: formatDate(user.updatedAt),
+          }));
+
+          setMembers(
+            formattedUsers.map((el) => ({
+              id: el._id,
+              name: el.name,
+              email: el.email,
+              createdAt: el.createdAt,
+              updatedAt: el.updatedAt,
+              numberOfResetPassword: el.numberOfResetPassword,
+              role: el.role,
+              status: el.status,
+            }))
+          );
+        }
+      } catch (error) {
+        console.error("Failed to fetch admin details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetch();
+  }, [formatDate, counter]);
 
   const padTwoDigits = (num: number) => {
     return num.toString().padStart(2, "0");
@@ -133,7 +133,7 @@ const Admin: React.FC = () => {
         },
       });
       setIsAddModalOpen(false);
-      fetchAdmins();
+      setCounter((prev) => prev + 1);
       setToastData({ message: "Admin added successfully", type: "success" });
     } catch (error) {
       console.error("Failed to add admin:", error);
@@ -148,12 +148,12 @@ const Admin: React.FC = () => {
     const newPassword = data.newPassword || randomPassword;
 
     try {
-      const response = await sdk.resetPasswordAdmin({
+      await sdk.resetPasswordAdmin({
         id: selectedAdminId,
         password: newPassword,
       });
       setIsChangePassModalOpen(false);
-      fetchAdmins();
+      setCounter((prev) => prev + 1);
       setToastData({ message: "Password reset successfully", type: "success" });
     } catch (error) {
       console.error("Failed to reset password:", error);
@@ -165,12 +165,12 @@ const Admin: React.FC = () => {
     if (!selectedAdminId || !data.role) return;
 
     try {
-      const response = await sdk.ChangeRole({
+      sdk.ChangeRole({
         id: selectedAdminId,
         role: data.role.value,
       });
       setIsChangeRoleModalOpen(false);
-      fetchAdmins();
+      setCounter((prev) => prev + 1);
       setToastData({ message: "Role changed successfully", type: "success" });
     } catch (error) {
       console.error("Failed to change role:", error);
@@ -182,10 +182,10 @@ const Admin: React.FC = () => {
     if (!adminToDelete) return;
 
     try {
-      const response = await sdk.DeleteAdmin({ id: adminToDelete.id });
+      await sdk.DeleteAdmin({ id: adminToDelete.toString() });
       setIsDeleteModalOpen(false);
       setAdminToDelete(null);
-      fetchAdmins();
+      setCounter((prev) => prev + 1);
       setToastData({ message: "Admin deleted successfully", type: "success" });
     } catch (error) {
       console.error("Failed to delete admin:", error);
@@ -194,6 +194,7 @@ const Admin: React.FC = () => {
   };
 
   const openDeleteModal = (id: any) => {
+    console.log(id);
     setAdminToDelete(id);
     setIsDeleteModalOpen(true);
   };
@@ -207,14 +208,15 @@ const Admin: React.FC = () => {
 
   const handleToggleSwitch = (rowData: {
     status: PlatformStatus;
-    _id: string;
+    id: string;
   }) => {
-    setSelectedAdminId(rowData._id);
+    setSelectedAdminId(rowData.id);
     setSelectedAdminStatus(rowData.status);
     setShowConfirmationModal(true);
   };
 
   const handleConfirmation = async () => {
+    if (!selectedAdminId) return;
     setShowConfirmationModal(false);
     try {
       const newStatus: PlatformStatus =
@@ -225,7 +227,7 @@ const Admin: React.FC = () => {
         id: selectedAdminId,
         updateStatus: newStatus,
       });
-      fetchAdmins();
+      setCounter((prev) => prev + 1);
       setToastData({
         message: `Admin status changed to ${newStatus}`,
         type: "success",
@@ -241,38 +243,38 @@ const Admin: React.FC = () => {
     setSelectedAdminId(null);
   };
 
-  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+  const renderSwitch = (rowData: { status: PlatformStatus; id: string }) => (
     <div>
-      {userId !== rowData._id && (
+      {userId !== rowData.id && (
         <CustomSwitch
           checked={rowData.status !== PlatformStatus.Blocked}
           onChange={() => handleToggleSwitch(rowData)}
-          label={`Toggle switch for ${rowData._id}`}
+          label={`Toggle switch for ${rowData.id}`}
         />
       )}
     </div>
   );
 
-  const renderActions = (rowData: { _id: string }) => (
+  const renderActions = (rowData: { id: string }) => (
     <div className="flex space-x-3">
-      {userId !== rowData._id && (
+      {userId !== rowData.id && (
         <>
           <FaTrash
             className="text-red-500 cursor-pointer"
-            onClick={() => openDeleteModal(rowData._id)}
+            onClick={() => openDeleteModal(rowData.id)}
           />
         </>
       )}
       <FaEdit
         className="text-blue-500 cursor-pointer"
         onClick={() => {
-          setSelectedAdminId(rowData._id);
+          setSelectedAdminId(rowData.id);
           setIsChangeRoleModalOpen(true);
         }}
       />
       <FaShieldAlt
         className="text-green-500 cursor-pointer"
-        onClick={() => openChangePassModal(rowData._id)}
+        onClick={() => openChangePassModal(rowData.id)}
       />
     </div>
   );

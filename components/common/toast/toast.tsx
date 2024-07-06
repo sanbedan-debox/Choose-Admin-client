@@ -14,8 +14,8 @@ export const Toast: FC<ToastProps> = ({ message, type }) => {
     switch (type) {
       case "success":
         return {
-          container: "text-gray-400 bg-primary bg-opacity-20",
-          icon: "bg-green-800 text-green-200",
+          container: "text-white bg-primary",
+          icon: "bg-white text-primary",
           iconPath: (
             <svg
               className="w-5 h-5"
@@ -30,8 +30,8 @@ export const Toast: FC<ToastProps> = ({ message, type }) => {
         };
       case "error":
         return {
-          container: " text-gray-400 bg-gray-800",
-          icon: " bg-red-800 text-red-200",
+          container: "text-white bg-red-500",
+          icon: "bg-white text-red-500",
           iconPath: (
             <svg
               className="w-5 h-5"
@@ -46,8 +46,8 @@ export const Toast: FC<ToastProps> = ({ message, type }) => {
         };
       case "warning":
         return {
-          container: " text-gray-400 bg-gray-800",
-          icon: " bg-orange-700 text-orange-200",
+          container: "text-white bg-blue-500",
+          icon: "bg-white text-blue-500",
           iconPath: (
             <svg
               className="w-5 h-5"
@@ -97,7 +97,7 @@ export const Toast: FC<ToastProps> = ({ message, type }) => {
       <div className="ms-3 text-sm font-normal">{message}</div>
       <button
         type="button"
-        className="ms-auto -mx-1.5 -my-1.5    rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 inline-flex items-center justify-center h-8 w-8 text-gray-500 hover:text-white bg-gray-800  hover:bg-gray-700"
+        className="ms-auto -mx-1.5 -my-1.5 rounded-lg p-1.5 inline-flex items-center justify-center h-8 w-8 text-white"
         aria-label="Close"
         onClick={() => setToastData(null)}
       >

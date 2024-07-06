@@ -125,3 +125,7 @@ mutation AdminUserDetailsVerification($id: String!) {
 mutation AdminUserDetailsRejection($content: String!, $id: String!) {
   adminUserDetailsRejection(content: $content, id: $id)
 }
+
+query GetUsersForTarget($target: EmailCampaignTargetTypes!) {
+  getUsersForTarget(target: $target)
+}
