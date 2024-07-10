@@ -4,6 +4,7 @@ import { sdk } from "@/util/graphqlClient";
 import useGlobalStore from "@/store/global";
 import CButton from "../button/button";
 import { ButtonType } from "../button/interface";
+import { extractErrorMessage } from "@/util/utils";
 
 interface HeadingProps {
   title?: string;
@@ -20,10 +21,11 @@ const Heading: React.FC<HeadingProps> = ({ title }) => {
         message: "Sucessfully Logged Out",
         type: "success",
       });
-    } catch (error) {
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
       setToastData({
-        message: "Please enter a valid email address",
         type: "error",
+        message: errorMessage,
       });
     }
   };

@@ -7,6 +7,7 @@ import useGlobalStore from "@/store/global";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
+import { extractErrorMessage } from "@/util/utils";
 
 interface IFormInput {
   email: string;
@@ -38,9 +39,12 @@ export default function Login() {
 
         router.replace("/");
       }
-    } catch (error) {
-      console.error("Login failed:", error);
-      setToastData({ message: "Login Failed", type: "error" });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 

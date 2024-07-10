@@ -78,6 +78,29 @@ query GetAllRestaurants {
   getAllRestaurants {
     _id
     status
+    name {
+      value
+    }
+    address {
+      addressLine1 {
+        value
+      }
+      addressLine2 {
+        value
+      }
+      state {
+        value
+      }
+      postcode {
+        value
+      }
+      place {
+        displayName
+      }
+    }
+    website
+    category
+    type
   }
 }
 

@@ -21,6 +21,7 @@ import { PlatformStatus } from "@/generated/graphql";
 import Loading from "@/components/common/Loader/Loader";
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import useAuthStore from "@/store/auth";
+import { extractErrorMessage } from "@/util/utils";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminRowType[]>([]);
@@ -99,8 +100,12 @@ const Admin: React.FC = () => {
             }))
           );
         }
-      } catch (error) {
-        console.error("Failed to fetch admin details:", error);
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }
@@ -135,9 +140,12 @@ const Admin: React.FC = () => {
       setIsAddModalOpen(false);
       setCounter((prev) => prev + 1);
       setToastData({ message: "Admin added successfully", type: "success" });
-    } catch (error) {
-      console.error("Failed to add admin:", error);
-      setToastData({ message: "Failed to add admin", type: "error" });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 
@@ -155,9 +163,12 @@ const Admin: React.FC = () => {
       setIsChangePassModalOpen(false);
       setCounter((prev) => prev + 1);
       setToastData({ message: "Password reset successfully", type: "success" });
-    } catch (error) {
-      console.error("Failed to reset password:", error);
-      setToastData({ message: "Failed to reset password", type: "error" });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 
@@ -172,9 +183,12 @@ const Admin: React.FC = () => {
       setIsChangeRoleModalOpen(false);
       setCounter((prev) => prev + 1);
       setToastData({ message: "Role changed successfully", type: "success" });
-    } catch (error) {
-      console.error("Failed to change role:", error);
-      setToastData({ message: "Failed to change role", type: "error" });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 
@@ -187,9 +201,12 @@ const Admin: React.FC = () => {
       setAdminToDelete(null);
       setCounter((prev) => prev + 1);
       setToastData({ message: "Admin deleted successfully", type: "success" });
-    } catch (error) {
-      console.error("Failed to delete admin:", error);
-      setToastData({ message: "Failed to delete admin", type: "error" });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 
@@ -232,9 +249,12 @@ const Admin: React.FC = () => {
         message: `Admin status changed to ${newStatus}`,
         type: "success",
       });
-    } catch (error) {
-      console.error("Failed to update admin status:", error);
-      setToastData({ message: "Failed to update admin status", type: "error" });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 

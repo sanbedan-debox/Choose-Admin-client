@@ -5,7 +5,7 @@ import { sdk } from "@/util/graphqlClient";
 import Loading from "@/components/common/Loader/Loader"; // Import your loading component
 import useGlobalLoaderStore from "@/store/loader";
 import { FaEdit, FaEye, FaTrash } from "react-icons/fa";
-import { formatDateString } from "@/util/utils";
+import { extractErrorMessage, formatDateString } from "@/util/utils";
 import ReusableModal from "@/components/common/modal/modal";
 import { GraphQLError } from "graphql";
 
@@ -107,9 +107,12 @@ const EmailTemplate: React.FC = () => {
             createdBy: el.createdBy?.name ?? "",
           }))
         );
-      } catch (error) {
-        console.error("Error fetching email templates:", error);
-        // Handle error fetching data (e.g., show error message)
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }

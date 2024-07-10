@@ -47,6 +47,7 @@ export type AddCategoryInput = {
   availability?: InputMaybe<Array<AvailabilityInput>>;
   desc: MasterCommonInput;
   name: MasterCommonInput;
+  restaurantId: Scalars['String']['input'];
   status: StatusEnum;
 };
 
@@ -151,6 +152,7 @@ export type AddressInfo = {
   addressLine2?: Maybe<MasterCommon>;
   city: MasterCommon;
   coordinate?: Maybe<LocationCommon>;
+  place?: Maybe<Places>;
   postcode: MasterCommon;
   state: MasterCommon;
 };
@@ -159,7 +161,8 @@ export type AddressInfoInput = {
   addressLine1: MasterCommonInput;
   addressLine2?: InputMaybe<MasterCommonInput>;
   city: MasterCommonInput;
-  coordinate?: InputMaybe<LocationCommonInput>;
+  coordinate: LocationCommonInput;
+  place: PlaceInput;
   postcode: MasterCommonInput;
   state: MasterCommonInput;
 };
@@ -226,6 +229,7 @@ export type Category = {
   createdAt: Scalars['DateTimeISO']['output'];
   desc: MasterCommon;
   items: Array<ItemInfo>;
+  menu: Menu;
   name: MasterCommon;
   restaurantId: Restaurant;
   status: StatusEnum;
@@ -420,6 +424,7 @@ export type Item = {
   _id: Scalars['ID']['output'];
   applySalesTax: Scalars['Boolean']['output'];
   availability?: Maybe<Array<Availability>>;
+  category: Category;
   createdAt: Scalars['DateTimeISO']['output'];
   desc: MasterCommon;
   hasNuts: Scalars['Boolean']['output'];
@@ -593,6 +598,7 @@ export type Mutation = {
   deleteModifier: Scalars['Boolean']['output'];
   deleteTaxRate: Scalars['Boolean']['output'];
   deleteTaxRateFromRestaurant: Scalars['Boolean']['output'];
+  getItemByCategory: Item;
   removeCategoryFromMenu: Scalars['Boolean']['output'];
   removeItemFromCategory: Scalars['Boolean']['output'];
   removeModifierFromModifierGroup: Scalars['Boolean']['output'];
@@ -624,7 +630,6 @@ export type MutationAddAdminArgs = {
 
 export type MutationAddCategoryArgs = {
   input: AddCategoryInput;
-  restaurantId: Scalars['String']['input'];
 };
 
 
@@ -813,6 +818,12 @@ export type MutationDeleteTaxRateFromRestaurantArgs = {
 };
 
 
+export type MutationGetItemByCategoryArgs = {
+  itemId: Scalars['String']['input'];
+  modifierGroupId: Scalars['String']['input'];
+};
+
+
 export type MutationRemoveCategoryFromMenuArgs = {
   categoryId: Scalars['String']['input'];
   menuId: Scalars['String']['input'];
@@ -921,6 +932,23 @@ export type MutationVerifyUserDetailsArgs = {
   input: VerifyUserDetails;
 };
 
+export type PlaceDetail = {
+  __typename?: 'PlaceDetail';
+  latitude: Scalars['Float']['output'];
+  longitude: Scalars['Float']['output'];
+};
+
+export type PlaceInput = {
+  displayName: Scalars['String']['input'];
+  placeId: Scalars['String']['input'];
+};
+
+export type Places = {
+  __typename?: 'Places';
+  displayName: Scalars['String']['output'];
+  placeId: Scalars['String']['output'];
+};
+
 /** Restaurant user status */
 export enum PlatformStatus {
   Active = 'active',
@@ -962,6 +990,7 @@ export type Query = {
   getAllTimezones: Array<Timezone>;
   getCategories: Array<Category>;
   getCategory: Category;
+  getCategoryByMenu: Category;
   getItem: Item;
   getItems: Item;
   getMenu: Menu;
@@ -970,6 +999,8 @@ export type Query = {
   getModifierGroup: ModifierGroup;
   getModifierGroups: Array<ModifierGroup>;
   getModifiers: Array<Modifier>;
+  getPlaceDetails?: Maybe<PlaceDetail>;
+  getPlacesList: Array<Places>;
   getRestaurantDetails: Restaurant;
   getRestaurantOnboardingData: Restaurant;
   getTaxRate: TaxRate;
@@ -994,11 +1025,6 @@ export type QueryAdminLoginArgs = {
 
 
 export type QueryChangeRestaurantStatusFromUserArgs = {
-  id: Scalars['String']['input'];
-};
-
-
-export type QueryCompleteRestaurantOnboardingArgs = {
   id: Scalars['String']['input'];
 };
 
@@ -1032,6 +1058,11 @@ export type QueryGetCategoriesArgs = {
 
 export type QueryGetCategoryArgs = {
   id: Scalars['String']['input'];
+};
+
+
+export type QueryGetCategoryByMenuArgs = {
+  menuId: Scalars['String']['input'];
 };
 
 
@@ -1074,6 +1105,16 @@ export type QueryGetModifierGroupsArgs = {
 
 export type QueryGetModifiersArgs = {
   restaurantId: Scalars['String']['input'];
+};
+
+
+export type QueryGetPlaceDetailsArgs = {
+  placeId: Scalars['String']['input'];
+};
+
+
+export type QueryGetPlacesListArgs = {
+  input: Scalars['String']['input'];
 };
 
 
@@ -1317,7 +1358,6 @@ export type UpdateModifierInput = {
 };
 
 export type UpdateRestaurantDetailsInput = {
-  _id?: InputMaybe<Scalars['String']['input']>;
   address?: InputMaybe<AddressInfoInput>;
   availability?: InputMaybe<Array<AvailabilityInput>>;
   beverageCategory?: InputMaybe<Array<BeverageCategory>>;
@@ -1466,7 +1506,7 @@ export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestauran
 export type GetAllRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string, status: RestaurantStatus }> };
+export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string, status: RestaurantStatus, website?: string | null, category: Array<RestaurantCategory>, type: RestaurantType, name: { __typename?: 'MasterCommon', value: string }, address: { __typename?: 'AddressInfo', addressLine1: { __typename?: 'MasterCommon', value: string }, addressLine2?: { __typename?: 'MasterCommon', value: string } | null, state: { __typename?: 'MasterCommon', value: string }, postcode: { __typename?: 'MasterCommon', value: string }, place?: { __typename?: 'Places', displayName: string } | null } }> };
 
 export type ResetPasswordAdminQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1661,6 +1701,29 @@ export const GetAllRestaurantsDocument = gql`
   getAllRestaurants {
     _id
     status
+    name {
+      value
+    }
+    address {
+      addressLine1 {
+        value
+      }
+      addressLine2 {
+        value
+      }
+      state {
+        value
+      }
+      postcode {
+        value
+      }
+      place {
+        displayName
+      }
+    }
+    website
+    category
+    type
   }
 }
     `;

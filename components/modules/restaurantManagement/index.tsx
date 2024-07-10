@@ -7,11 +7,15 @@ import useGlobalLoaderStore from "@/store/loader";
 import Loading from "@/components/common/Loader/Loader";
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import { PlatformStatus } from "@/generated/graphql";
+import { extractErrorMessage, getClickableUrlLink } from "@/util/utils";
+import useGlobalStore from "@/store/global";
+import Link from "next/link";
 
 const Reports: React.FC = () => {
   const { isLoading, setLoading } = useGlobalLoaderStore();
   const [restaurants, setRestaurants] = React.useState<any[]>([]);
   const [counter, setCounter] = useState(0);
+  const { setToastData } = useGlobalStore();
 
   React.useEffect(() => {
     const fetchRestaurants = async () => {
@@ -21,8 +25,12 @@ const Reports: React.FC = () => {
         if (response && response.getAllRestaurants) {
           setRestaurants(response.getAllRestaurants);
         }
-      } catch (error) {
-        console.error("Failed to fetch restaurants:", error);
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }
@@ -44,12 +52,38 @@ const Reports: React.FC = () => {
     </div>
   );
 
-  const headings = [
-    { title: "Toggle Status", dataKey: "rowData", render: renderSwitch },
-    { title: "id", dataKey: "_id" },
-    { title: "status", dataKey: "status" },
-  ];
+  // const headings = [
+  //   { title: "Toggle Status", dataKey: "rowData", render: renderSwitch },
+  //   { title: "id", dataKey: "_id" },
+  //   { title: "status", dataKey: "status" },
+  // ];
 
+  const headings = [
+    { title: "Toggle Status", dataKey: "status", render: renderSwitch },
+    { title: "Status", dataKey: "status" },
+    { title: "Name", dataKey: "name.value" },
+    {
+      title: "Website",
+      dataKey: "website",
+      render: (rowData: { website: string }) => {
+        rowData.website = rowData.website ? rowData.website : "";
+
+        return (
+          <Link
+            className="text-primary"
+            href={getClickableUrlLink(rowData.website)}
+            target="_blank"
+          >
+            {rowData.website}
+          </Link>
+        );
+      },
+    },
+    { title: "Category", dataKey: "category" },
+    { title: "Type", dataKey: "type" },
+    { title: "address", dataKey: "address.addressLine1.value" },
+    { title: "place", dataKey: "address.place.displayName" },
+  ];
   return (
     <div className="container mx-auto px-2">
       {isLoading && <Loading />}

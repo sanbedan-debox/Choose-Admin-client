@@ -5,14 +5,18 @@ import useGlobalLoaderStore from "@/store/loader";
 import useCampaignStore from "@/store/campaign";
 import Loading from "@/components/common/Loader/Loader";
 import useGlobalStore from "@/store/global";
-import { formatDateString, getClickableUrlLink } from "@/util/utils";
+import {
+  extractErrorMessage,
+  formatDateString,
+  getClickableUrlLink,
+} from "@/util/utils";
 import Link from "next/link";
 import { WaitlistInterface } from "./interface";
 
 const Admin: React.FC = () => {
   const [waitListUsers, setWaitListUsers] = useState<WaitlistInterface[]>([]);
   const { isLoading, setLoading } = useGlobalLoaderStore();
-  const { setSelectedModule } = useGlobalStore();
+  const { setSelectedModule, setToastData } = useGlobalStore();
   const { setCreateEmailCampaignModalOpen, setselectedTargetValue } =
     useCampaignStore();
 
@@ -35,8 +39,12 @@ const Admin: React.FC = () => {
             }))
           );
         }
-      } catch (error) {
-        console.error("Failed to fetch admin details:", error);
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }

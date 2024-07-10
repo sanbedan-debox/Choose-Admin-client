@@ -14,7 +14,7 @@ import {
 import useGlobalStore from "@/store/global";
 import moment from "moment";
 import Link from "next/link";
-import { getClickableUrlLink } from "@/util/utils";
+import { extractErrorMessage, getClickableUrlLink } from "@/util/utils";
 
 const targetOptions = [
   { value: EmailCampaignTargetTypes.Waitlist, label: "Waitlist Users" },
@@ -91,8 +91,12 @@ const EmailCampaign: React.FC = () => {
             content: el.content,
           }))
         );
-      } catch (error) {
-        console.error("Error fetching email templates:", error);
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }
@@ -135,8 +139,12 @@ const EmailCampaign: React.FC = () => {
           })
         );
         await fetchEmailTemplates();
-      } catch (error) {
-        console.error("Error fetching email campaigns:", error);
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }
@@ -153,8 +161,12 @@ const EmailCampaign: React.FC = () => {
           target: (selectedTarget?.value ?? "") as EmailCampaignTargetTypes,
         });
         setUsersCount(getUsersForTarget);
-      } catch (error) {
-        console.error("Error fetching users count:", error);
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }
@@ -447,7 +459,13 @@ const EmailCampaign: React.FC = () => {
 
         reader.readAsText(file);
       }
-    } catch (error) {}
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
+    }
   };
 
   const headings = [

@@ -8,7 +8,7 @@ import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import { PlatformStatus, UserStatus } from "@/generated/graphql";
 import { Controller, useForm } from "react-hook-form";
 import useGlobalStore from "@/store/global";
-import { formatDateString } from "@/util/utils";
+import { extractErrorMessage, formatDateString } from "@/util/utils";
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
@@ -36,8 +36,12 @@ const Reports: React.FC = () => {
           }));
           setRestaurantUsers(formattedUsers);
         }
-      } catch (error) {
-        console.error("Failed to fetch restaurant users:", error);
+      } catch (error: any) {
+        const errorMessage = extractErrorMessage(error);
+        setToastData({
+          type: "error",
+          message: errorMessage,
+        });
       } finally {
         setLoading(false);
       }
@@ -58,8 +62,12 @@ const Reports: React.FC = () => {
       if (response && response.changeUserStatus) {
         setCounter((prev) => prev + 1);
       }
-    } catch (error) {
-      console.error("Failed to change user status:", error);
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 
@@ -91,8 +99,12 @@ const Reports: React.FC = () => {
       setShowApproveModal(false);
       setSelectedUserId("");
       setCounter((prev) => prev + 1);
-    } catch (error) {
-      console.error("Failed to fetch restaurant users:", error);
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     } finally {
       setLoading(false);
     }
@@ -114,8 +126,12 @@ const Reports: React.FC = () => {
       setShowRejectModal(false);
       setSelectedUserId("");
       setCounter((prev) => prev + 1);
-    } catch (error) {
-      console.error("Failed to fetch restaurant users:", error);
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     } finally {
       setLoading(false);
     }

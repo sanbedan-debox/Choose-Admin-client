@@ -106,3 +106,18 @@ export const fadeIn = (
     },
   };
 };
+
+
+export const extractErrorMessage = (error: any): string => {
+  const errorJson = JSON.parse(JSON.stringify(error));
+  if (
+    errorJson &&
+    errorJson.response &&
+    errorJson.response.errors &&
+    errorJson.response.errors[0].message
+  ) {
+    return errorJson.response.errors[0].message.toString().replace("Error: ", "");
+  } else {
+    return error.toString();
+  }
+};

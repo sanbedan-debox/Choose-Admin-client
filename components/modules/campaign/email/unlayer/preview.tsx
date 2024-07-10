@@ -4,6 +4,7 @@ import { EditorRef, EmailEditorProps } from "react-email-editor";
 import useGlobalStore from "@/store/global";
 import { sdk } from "@/util/graphqlClient";
 import ReusableModal from "@/components/common/modal/modal";
+import { extractErrorMessage } from "@/util/utils";
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
 });
@@ -151,9 +152,13 @@ const PreviewEditor = ({
         });
         handleTestMailDialogClose();
       });
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
-      console.log(error);
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
     }
   };
 
