@@ -42,8 +42,6 @@ query GetAllRestaurantUsers {
     businessName
     businessType
     ein
-    ssn
-
     address {
       addressLine1 {
         value
