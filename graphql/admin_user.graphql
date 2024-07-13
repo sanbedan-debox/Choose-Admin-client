@@ -88,6 +88,9 @@ query GetAllRestaurants {
       addressLine2 {
         value
       }
+      city {
+        value
+      }
       state {
         value
       }
@@ -98,6 +101,9 @@ query GetAllRestaurants {
         displayName
       }
     }
+    beverageCategory
+    foodType
+    meatType
     website
     category
     type

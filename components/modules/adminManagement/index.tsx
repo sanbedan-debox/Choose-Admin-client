@@ -211,7 +211,7 @@ const Admin: React.FC = () => {
   };
 
   const openDeleteModal = (id: any) => {
-    console.log(id);
+    // console.log(id);
     setAdminToDelete(id);
     setIsDeleteModalOpen(true);
   };
@@ -265,18 +265,20 @@ const Admin: React.FC = () => {
 
   const renderSwitch = (rowData: { status: PlatformStatus; id: string }) => (
     <div>
-      {userId !== rowData.id && (
+      {userId !== rowData.id ? (
         <CustomSwitch
           checked={rowData.status !== PlatformStatus.Blocked}
           onChange={() => handleToggleSwitch(rowData)}
           label={`Toggle switch for ${rowData.id}`}
         />
+      ) : (
+        "N/A"
       )}
     </div>
   );
 
   const renderActions = (rowData: { id: string }) => (
-    <div className="flex space-x-3">
+    <div className="flex space-x-3 justify-center items-center">
       {userId !== rowData.id && (
         <>
           <FaTrash

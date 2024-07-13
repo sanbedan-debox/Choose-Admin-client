@@ -80,9 +80,13 @@ const Reports: React.FC = () => {
       },
     },
     { title: "Category", dataKey: "category" },
-    { title: "Type", dataKey: "type" },
-    { title: "address", dataKey: "address.addressLine1.value" },
-    { title: "place", dataKey: "address.place.displayName" },
+    { title: "Restaurant Type", dataKey: "type" },
+    { title: "Food Type", dataKey: "foodType" },
+    { title: "Meat Type", dataKey: "meatType" },
+    { title: "Address", dataKey: "address.place.displayName" },
+    { title: "City", dataKey: "address.city.value" },
+    // { title: "State", dataKey: "address.state.value" },
+    { title: "Zipcode", dataKey: "address.postcode.value" },
   ];
   return (
     <div className="container mx-auto px-2">
