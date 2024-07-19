@@ -1,0 +1,67 @@
+query GetAllStates {
+  getAllStates {
+    _id
+    value
+    status
+    abbreviation
+    # createdBy{
+    #   name
+    # }
+    # updatedBy{
+    #   name
+    # }
+    createdAt
+    updatedAt
+    createdAt
+  }
+}
+
+mutation updateStateStatus($id: String!) {
+  updateStateStatus(id: $id)
+}
+
+mutation addState($input: AddStateInput!) {
+  addState(input: $input)
+}
+
+query GetAllTimezones {
+  getAllTimezones {
+    _id
+    value
+    status
+    gmtOffset
+
+    createdAt
+    updatedAt
+    createdAt
+  }
+}
+
+mutation AddTimezone($input: AddTimezoneInput!) {
+  addTimezone(input: $input)
+}
+
+mutation updateTimezoneStatus($id: String!) {
+  updateTimezoneStatus(id: $id)
+}
+
+mutation AddCuisine($input: AddCuisineInput!) {
+  addCuisine(input: $input)
+}
+
+mutation UpdateCuisineStatus($id: String!) {
+  updateCuisineStatus(id: $id)
+}
+
+query getAllCuisines {
+  getAllCuisines {
+    _id
+    value
+    status
+    description
+
+    createdAt
+    updatedAt
+    createdAt
+  }
+}

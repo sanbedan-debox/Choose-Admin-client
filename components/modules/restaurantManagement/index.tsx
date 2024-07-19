@@ -79,8 +79,17 @@ const Reports: React.FC = () => {
         );
       },
     },
-    { title: "Category", dataKey: "category" },
-    { title: "Restaurant Type", dataKey: "type" },
+    {
+      title: "Category",
+      dataKey: "category",
+      render: (rowData: { category: [] }) => {
+        return <div>{rowData.category.join(", ")}</div>;
+      },
+    },
+    {
+      title: "Restaurant Type",
+      dataKey: "type",
+    },
     { title: "Food Type", dataKey: "foodType" },
     { title: "Meat Type", dataKey: "meatType" },
     { title: "Address", dataKey: "address.place.displayName" },
@@ -90,9 +99,8 @@ const Reports: React.FC = () => {
   ];
   return (
     <div className="container mx-auto px-2">
-      {isLoading && <Loading />}
-
       <RoopTable
+        loading={isLoading}
         data={restaurants}
         itemsPerPage={10}
         headings={headings}

@@ -92,8 +92,8 @@ const Admin: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      {isLoading && <Loading />}
       <RoopTable
+        loading={isLoading}
         data={waitListUsers}
         itemsPerPage={10}
         csvExport

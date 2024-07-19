@@ -1,5 +1,6 @@
 import React from "react";
 import RoopTable from "@/components/common/customTableR/table";
+import useGlobalLoaderStore from "@/store/loader";
 
 const MssgTemplate: React.FC = () => {
   const members = [
@@ -171,10 +172,12 @@ const MssgTemplate: React.FC = () => {
     { title: "Role", dataKey: "role" },
     { title: "Join", dataKey: "access.join.hello" },
   ];
+  const { isLoading, setLoading } = useGlobalLoaderStore();
 
   return (
     <div>
       <RoopTable
+        loading={isLoading}
         data={members}
         itemsPerPage={5}
         actions={actions}

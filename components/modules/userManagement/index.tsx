@@ -9,10 +9,12 @@ import { PlatformStatus, UserStatus } from "@/generated/graphql";
 import { Controller, useForm } from "react-hook-form";
 import useGlobalStore from "@/store/global";
 import { extractErrorMessage, formatDateString } from "@/util/utils";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
-  const { setLoading } = useGlobalLoaderStore();
+  const { setLoading, isLoading } = useGlobalLoaderStore();
   const { setToastData } = useGlobalStore();
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [showApproveModal, setShowApproveModal] = useState(false);
@@ -54,10 +56,12 @@ const Reports: React.FC = () => {
     setShowConfirmationModal(true);
     setSelectedUserId(rowData._id);
   };
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const handleConfirmation = async () => {
     setShowConfirmationModal(false);
     try {
+      setBtnLoading(true);
       const response = await sdk.changeUserStatus({ id: selectedUserId });
       if (response && response.changeUserStatus) {
         setCounter((prev) => prev + 1);
@@ -68,6 +72,8 @@ const Reports: React.FC = () => {
         type: "error",
         message: errorMessage,
       });
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -85,8 +91,9 @@ const Reports: React.FC = () => {
     setSelectedUserId("");
   };
   const handleApprovalConfirmation = async () => {
-    setLoading(true);
     try {
+      setLoading(true);
+      setBtnLoading(true);
       const response = await sdk.AdminUserDetailsVerification({
         id: selectedUserId,
       });
@@ -107,11 +114,13 @@ const Reports: React.FC = () => {
       });
     } finally {
       setLoading(false);
+      setBtnLoading(false);
     }
   };
   const handleRejectConfirmation = async () => {
-    setLoading(true);
     try {
+      setBtnLoading(true);
+      setLoading(true);
       const response = await sdk.AdminUserDetailsRejection({
         id: selectedUserId,
         content: reason,
@@ -133,6 +142,7 @@ const Reports: React.FC = () => {
         message: errorMessage,
       });
     } finally {
+      setBtnLoading(false);
       setLoading(false);
     }
   };
@@ -235,6 +245,7 @@ const Reports: React.FC = () => {
     <div className="container mx-auto px-2">
       {/* {isLoading && <Loading />} */}
       <RoopTable
+        loading={isLoading}
         data={restaurantUsers}
         itemsPerPage={10}
         headings={headings}
@@ -250,9 +261,13 @@ const Reports: React.FC = () => {
         comments="are you sure you want to block the user."
       >
         <div className="flex justify-end space-x-4">
-          <button className="btn btn-primary" onClick={handleConfirmation}>
+          <CButton
+            loading={btnLoading}
+            variant={ButtonType.Primary}
+            onClick={handleConfirmation}
+          >
             Yes
-          </button>
+          </CButton>
         </div>
       </ReusableModal>
       <ReusableModal
@@ -262,12 +277,13 @@ const Reports: React.FC = () => {
         comments="Are you sure you want to approve the selected user?"
       >
         <div className="flex justify-end space-x-4">
-          <button
-            className="btn btn-primary"
+          <CButton
+            loading={btnLoading}
+            variant={ButtonType.Primary}
             onClick={handleApprovalConfirmation}
           >
             Yes
-          </button>
+          </CButton>
         </div>
       </ReusableModal>
       <ReusableModal
@@ -277,12 +293,13 @@ const Reports: React.FC = () => {
         comments="are you sure you want to Reject the user."
       >
         <div className="flex justify-end space-x-4">
-          <button
-            className="btn btn-primary"
+          <CButton
+            loading={btnLoading}
+            variant={ButtonType.Primary}
             onClick={handleRejectConfirmation}
           >
             Yes
-          </button>
+          </CButton>
         </div>
       </ReusableModal>
       <ReusableModal
@@ -322,12 +339,13 @@ const Reports: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4 space-x-2">
-            <button
-              className="btn btn-primary"
+            <CButton
+              loading={btnLoading}
+              variant={ButtonType.Primary}
               onClick={handleReason(handleRejectUser)}
             >
               Reject User
-            </button>
+            </CButton>
           </div>
         </form>
       </ReusableModal>

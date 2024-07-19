@@ -40,7 +40,6 @@ const Admin: React.FC = () => {
   const [adminToDelete, setAdminToDelete] = useState<string | null>(null);
   const { setToastData } = useGlobalStore();
   const [counter, setCounter] = useState(0);
-
   const {
     register,
     handleSubmit,
@@ -148,7 +147,7 @@ const Admin: React.FC = () => {
       });
     }
   };
-
+  const [btnLoading, setBtnLoading] = useState(false);
   const handleChangePassword: SubmitHandler<ChangePasswordInputs> = async (
     data
   ) => {
@@ -156,6 +155,7 @@ const Admin: React.FC = () => {
     const newPassword = data.newPassword || randomPassword;
 
     try {
+      setBtnLoading(true);
       await sdk.resetPasswordAdmin({
         id: selectedAdminId,
         password: newPassword,
@@ -169,6 +169,8 @@ const Admin: React.FC = () => {
         type: "error",
         message: errorMessage,
       });
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -196,6 +198,7 @@ const Admin: React.FC = () => {
     if (!adminToDelete) return;
 
     try {
+      setBtnLoading(true);
       await sdk.DeleteAdmin({ id: adminToDelete.toString() });
       setIsDeleteModalOpen(false);
       setAdminToDelete(null);
@@ -207,6 +210,8 @@ const Admin: React.FC = () => {
         type: "error",
         message: errorMessage,
       });
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -236,6 +241,7 @@ const Admin: React.FC = () => {
     if (!selectedAdminId) return;
     setShowConfirmationModal(false);
     try {
+      setBtnLoading(true);
       const newStatus: PlatformStatus =
         selectedAdminStatus === PlatformStatus.Blocked
           ? PlatformStatus.Active
@@ -255,6 +261,8 @@ const Admin: React.FC = () => {
         type: "error",
         message: errorMessage,
       });
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -321,8 +329,8 @@ const Admin: React.FC = () => {
 
   return (
     <div className="container mx-auto px-2">
-      {loading && <Loading />}
       <RoopTable
+        loading={loading}
         data={members}
         itemsPerPage={10}
         csvExport
@@ -423,7 +431,7 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4">
-            <button className="btn btn-primary">Add Admin</button>
+            <CButton variant={ButtonType.Primary}>Add Admin</CButton>
           </div>
         </form>
       </ReusableModal>
@@ -456,7 +464,7 @@ const Admin: React.FC = () => {
           </div>
           <div className="flex justify-end mt-4 space-x-2">
             <button
-              className="btn btn-outlined"
+              className="btn btn-primary"
               onClick={(e) => {
                 e.preventDefault();
                 const newPassword = generateRandomPassword();
@@ -467,12 +475,13 @@ const Admin: React.FC = () => {
               Generate Password
             </button>
 
-            <button
-              className="btn btn-primary"
+            <CButton
+              loading={btnLoading}
+              variant={ButtonType.Primary}
               onClick={handleSubmitPass(handleChangePassword)}
             >
               Change Password
-            </button>
+            </CButton>
           </div>
         </form>
       </ReusableModal>
@@ -504,7 +513,7 @@ const Admin: React.FC = () => {
             )}
           </div>
           <div className="flex justify-end mt-4 space-x-2">
-            <button className="btn btn-primary">Change Role</button>
+            <CButton variant={ButtonType.Primary}>Change Role</CButton>
           </div>
         </form>
       </ReusableModal>
@@ -516,9 +525,13 @@ const Admin: React.FC = () => {
         width="sm"
       >
         <div className="flex justify-end mt-4">
-          <button className="btn btn-primary" onClick={handleConfirmation}>
+          <CButton
+            loading={btnLoading}
+            variant={ButtonType.Primary}
+            onClick={handleConfirmation}
+          >
             Yes
-          </button>
+          </CButton>
         </div>
       </ReusableModal>
       <ReusableModal
@@ -529,9 +542,13 @@ const Admin: React.FC = () => {
         width="md"
       >
         <div className="flex justify-end mt-4">
-          <button className="btn btn-primary" onClick={handleDeleteAdmin}>
+          <CButton
+            loading={btnLoading}
+            variant={ButtonType.Primary}
+            onClick={handleDeleteAdmin}
+          >
             Yes
-          </button>
+          </CButton>
         </div>
       </ReusableModal>
     </div>

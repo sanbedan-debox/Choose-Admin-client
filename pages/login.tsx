@@ -8,6 +8,8 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { GetServerSideProps } from "next";
 import { parseCookies } from "nookies";
 import { extractErrorMessage } from "@/util/utils";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
 
 interface IFormInput {
   email: string;
@@ -24,11 +26,13 @@ export default function Login() {
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
+  const [btnLoading, setBtnLoading] = React.useState(false);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     const { email, password } = data;
 
     try {
+      setBtnLoading(true);
       const response = await sdk.AdminLogin({
         email,
         password,
@@ -45,6 +49,8 @@ export default function Login() {
         type: "error",
         message: errorMessage,
       });
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -110,7 +116,13 @@ export default function Login() {
                 )}
               </div>
               <div className="flex justify-end mt-6">
-                <button className="btn btn-primary w-full">Sign In</button>
+                <CButton
+                  loading={btnLoading}
+                  variant={ButtonType.Primary}
+                  className="w-full"
+                >
+                  Sign In
+                </CButton>
               </div>
             </form>
           </div>

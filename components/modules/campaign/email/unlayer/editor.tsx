@@ -7,6 +7,8 @@ import { AddEmailTemplateInput } from "@/generated/graphql";
 import { sdk } from "@/util/graphqlClient";
 import ReusableModal from "@/components/common/modal/modal";
 import { extractErrorMessage } from "@/util/utils";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
 
 const EmailEditor = dynamic(() => import("react-email-editor"), {
   ssr: false,
@@ -137,6 +139,7 @@ const UnlayerEditor = () => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
   };
+  const [btnLoading, setBtnLoading] = useState(false);
 
   const saveTestEmail = () => {
     if (testTitle === "") {
@@ -186,6 +189,7 @@ const UnlayerEditor = () => {
     }
 
     try {
+      setBtnLoading(true);
       const unlayer = emailEditorRef.current?.editor;
 
       if (unlayer === undefined) {
@@ -234,6 +238,8 @@ const UnlayerEditor = () => {
         type: "error",
         message: errorMessage,
       });
+    } finally {
+      setBtnLoading(false);
     }
   };
 
@@ -273,15 +279,23 @@ const UnlayerEditor = () => {
         />
       </div>
       <div className="text-center flex float-end space-x-4">
-        <button className="btn btn-outlined" onClick={handleClose}>
+        <CButton variant={ButtonType.Primary} onClick={handleClose}>
           Close
-        </button>
-        <button className="btn btn-primary" onClick={handleSaveClick}>
+        </CButton>
+        <CButton
+          loading={btnLoading}
+          variant={ButtonType.Primary}
+          onClick={handleSaveClick}
+        >
           Save
-        </button>
-        <button className="btn btn-primary" onClick={handleTestEmailClick}>
+        </CButton>
+        <CButton
+          loading={btnLoading}
+          variant={ButtonType.Primary}
+          onClick={handleTestEmailClick}
+        >
           Test Email
-        </button>
+        </CButton>
       </div>
       {showSaveDialog && (
         <ReusableModal
@@ -338,39 +352,13 @@ const UnlayerEditor = () => {
             placeholder="Enter test email"
           />
           <div className="text-center mt-4 w-full flex justify-end ">
-            <button
-              className={`btn ${
-                loading
-                  ? "btn-primary !opacity-60 !cursor-not-allowed"
-                  : "btn-primary"
-              }`}
+            <CButton
+              loading={btnLoading}
+              variant={ButtonType.Primary}
               onClick={saveTestEmail}
             >
-              {loading ? (
-                <svg
-                  className="animate-spin -ml-1 h-5 w-5 text-white"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                >
-                  <circle
-                    className="opacity-25"
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    stroke-width="4"
-                  ></circle>
-                  <path
-                    className="opacity-75"
-                    fill="currentColor"
-                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                  ></path>
-                </svg>
-              ) : (
-                "Send"
-              )}
-            </button>
+              "Send"
+            </CButton>
           </div>
         </ReusableModal>
       )}

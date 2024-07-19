@@ -3,6 +3,9 @@ import { Emails } from "@/components/modules/campaign/email";
 import { Message } from "@/components/modules/campaign/messages";
 import Dashboard from "@/components/modules/dashboard";
 import LaunchWaitlist from "@/components/modules/launchWaitlist";
+import MasterCuisines from "@/components/modules/masters/Cuisines";
+import MasterStates from "@/components/modules/masters/states";
+import MasterTimezones from "@/components/modules/masters/timezones";
 import Reports from "@/components/modules/restaurantManagement";
 import UserManagement from "@/components/modules/userManagement";
 
@@ -46,6 +49,27 @@ export const modules = [
         name: "Emails",
         roles: ["admin", "master", "normal"],
         component: Emails,
+      },
+    ],
+  },
+  {
+    name: "Masters",
+    roles: ["admin", "master", "normal"],
+    subModules: [
+      {
+        name: "States",
+        roles: ["admin", "master", "normal"],
+        component: MasterStates,
+      },
+      {
+        name: "TimeZones",
+        roles: ["admin", "master", "normal"],
+        component: MasterTimezones,
+      },
+      {
+        name: "Cuisines",
+        roles: ["admin", "master", "normal"],
+        component: MasterCuisines,
       },
     ],
   },

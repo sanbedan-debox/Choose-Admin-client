@@ -13,6 +13,9 @@ import useGlobalStore from "@/store/global";
 import ReusableModal from "../modal/modal";
 import noDataImage from "../../../assets/svg/noData.svg";
 import Image from "next/image";
+import { FaSpinner } from "react-icons/fa";
+import { ButtonType } from "../button/interface";
+import CButton from "../button/button";
 
 interface TableProps {
   data: any[];
@@ -31,6 +34,7 @@ interface TableProps {
   bordered?: boolean;
   hovered?: boolean;
   filterable?: boolean;
+  loading?: boolean;
 }
 
 const RoopTable: React.FC<TableProps> = ({
@@ -46,6 +50,7 @@ const RoopTable: React.FC<TableProps> = ({
   bordered = false,
   hovered = false,
   filterable = false,
+  loading = false,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
@@ -221,8 +226,8 @@ const RoopTable: React.FC<TableProps> = ({
               </div>
             )}
             {isFilterApplied && (
-              <button
-                className="btn btn-outlined"
+              <CButton
+                variant={ButtonType.Primary}
                 onClick={() => {
                   setCurrentFilterColumn("");
                   setCurrentOperator("contains");
@@ -231,26 +236,27 @@ const RoopTable: React.FC<TableProps> = ({
                 }}
               >
                 Clear
-              </button>
+              </CButton>
             )}
           </div>
         )}
 
         <div className="flex">
           {mainActions.map((action, index) => (
-            <button
+            <CButton
               key={index}
-              className="btn btn-primary mr-2"
+              className="mr-2"
+              variant={ButtonType.Primary}
               onClick={action.onClick}
             >
               {action.label}
-            </button>
+            </CButton>
           ))}
           {data.length > 0 && csvExport && (
             <div className="flex space-x-2">
-              <button className="btn btn-primary" onClick={handleExportClick}>
+              <CButton variant={ButtonType.Primary} onClick={handleExportClick}>
                 Export to CSV
-              </button>
+              </CButton>
               <CSVLink
                 id="csvLink"
                 data={data}
@@ -264,8 +270,18 @@ const RoopTable: React.FC<TableProps> = ({
       </div>
       {data.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-64">
-          <Image src={noDataImage} alt="No Data Found" className="h-36 mb-4" />
-          <p className="text-lg font-semibold">No data to display.</p>
+          {loading ? (
+            <FaSpinner className="animate-spin h-10 w-10 text-primary text-5xl" />
+          ) : (
+            <div className="flex flex-col items-center justify-center ">
+              <Image
+                src={noDataImage}
+                alt="No Data Found"
+                className="h-36 mb-4"
+              />
+              <p className="text-lg font-semibold">No data to display.</p>
+            </div>
+          )}
         </div>
       ) : (
         <>

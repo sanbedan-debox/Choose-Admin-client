@@ -46,6 +46,7 @@ export type AddAdminInput = {
 export type AddCategoryInput = {
   availability?: InputMaybe<Array<AvailabilityInput>>;
   desc: MasterCommonInput;
+  items?: InputMaybe<Array<Scalars['String']['input']>>;
   name: MasterCommonInput;
 };
 
@@ -91,6 +92,7 @@ export type AddItemInput = {
 
 export type AddMenuInput = {
   availability?: InputMaybe<Array<AvailabilityInput>>;
+  categories?: InputMaybe<Array<Scalars['String']['input']>>;
   name: MasterCommonInput;
   taxRateId?: InputMaybe<Scalars['String']['input']>;
   type: MenuTypeEnum;
@@ -663,7 +665,7 @@ export type MutationAddCategoryArgs = {
 
 
 export type MutationAddCategoryToMenuArgs = {
-  categoryId: Scalars['String']['input'];
+  categoryId: Array<Scalars['String']['input']>;
   menuId: Scalars['String']['input'];
 };
 
@@ -727,7 +729,6 @@ export type MutationAddTaxRateArgs = {
 
 
 export type MutationAddTaxRateInRestaurantArgs = {
-  restaurantId: Scalars['String']['input'];
   taxRateId: Scalars['String']['input'];
 };
 
@@ -846,7 +847,6 @@ export type MutationDeleteTaxRateArgs = {
 
 
 export type MutationDeleteTaxRateFromRestaurantArgs = {
-  restaurantId: Scalars['String']['input'];
   taxId: Scalars['String']['input'];
 };
 
@@ -1026,6 +1026,7 @@ export type Query = {
   getItem: Item;
   getItems: Array<Item>;
   getMenu: Menu;
+  getMenuByRestaurant: Array<Menu>;
   getMenusByType: Array<Menu>;
   getModifier: Modifier;
   getModifierGroup: ModifierGroup;
@@ -1057,6 +1058,11 @@ export type QueryAdminLoginArgs = {
 };
 
 
+export type QueryCompleteRestaurantOnboardingArgs = {
+  isCompleted: Scalars['Boolean']['input'];
+};
+
+
 export type QueryEmailOtpVerificationArgs = {
   email: Scalars['String']['input'];
   key: Scalars['String']['input'];
@@ -1080,6 +1086,18 @@ export type QueryGenerateOtpForNumberVerificationArgs = {
 
 
 export type QueryGetAllEmailTemplatesArgs = {
+  filter?: InputMaybe<PaginatedFilter>;
+  page?: Scalars['Float']['input'];
+};
+
+
+export type QueryGetAllRestaurantUsersArgs = {
+  filter?: InputMaybe<PaginatedFilter>;
+  page?: Scalars['Float']['input'];
+};
+
+
+export type QueryGetAllRestaurantsArgs = {
   filter?: InputMaybe<PaginatedFilter>;
   page?: Scalars['Float']['input'];
 };
@@ -1113,14 +1131,14 @@ export type QueryGetItemsArgs = {
 
 
 export type QueryGetMenuArgs = {
-  id: Scalars['String']['input'];
-  type: MenuTypeEnum;
+  id?: InputMaybe<Scalars['String']['input']>;
+  type?: InputMaybe<MenuTypeEnum>;
 };
 
 
 export type QueryGetMenusByTypeArgs = {
   id: Scalars['String']['input'];
-  type: MenuTypeEnum;
+  type?: InputMaybe<MenuTypeEnum>;
 };
 
 
@@ -1216,7 +1234,7 @@ export type Restaurant = {
   socialInfo?: Maybe<SocialInfo>;
   status: RestaurantStatus;
   taxRates?: Maybe<Array<TaxRateInfo>>;
-  timezone?: Maybe<Scalars['String']['output']>;
+  timezone?: Maybe<MasterCommon>;
   type?: Maybe<RestaurantType>;
   updatedAt: Scalars['DateTimeISO']['output'];
   user: User;
@@ -1309,6 +1327,7 @@ export type TaxRate = {
   createdAt: Scalars['DateTimeISO']['output'];
   default: Scalars['Boolean']['output'];
   name: MasterCommon;
+  restaurantId: Restaurant;
   salesTax: MasterCommonNumber;
   updatedAt: Scalars['DateTimeISO']['output'];
   user: User;
@@ -1375,7 +1394,7 @@ export type UpdateMenuInput = {
   _id: Scalars['String']['input'];
   availability?: InputMaybe<Array<AvailabilityInput>>;
   name?: InputMaybe<MasterCommonInput>;
-  taxes?: InputMaybe<TaxRateInput>;
+  taxRateId?: InputMaybe<Scalars['String']['input']>;
   type?: InputMaybe<MenuTypeEnum>;
 };
 
@@ -1404,7 +1423,7 @@ export type UpdateRestaurantDetailsInput = {
   meatType?: InputMaybe<MeatType>;
   name?: InputMaybe<MasterCommonInput>;
   socialInfo?: InputMaybe<SocialInfoInput>;
-  timezone?: InputMaybe<Scalars['String']['input']>;
+  timezone?: InputMaybe<MasterCommonInput>;
   type?: InputMaybe<RestaurantType>;
   website?: InputMaybe<Scalars['String']['input']>;
 };
@@ -1650,6 +1669,63 @@ export type GetAllEmailCampaignsQueryVariables = Exact<{ [key: string]: never; }
 
 
 export type GetAllEmailCampaignsQuery = { __typename?: 'Query', getAllEmailCampaigns: Array<{ __typename?: 'EmailCampaignsObject', _id: string, campaignName: string, emailSubject: string, status: EmailCampaignStatusEnum, target: EmailCampaignTargetTypes, usersCount: number, scheduleType: EmailCampaignScheduleTypes, scheduleTime?: any | null, csvDataUrl?: string | null, logUrl?: string | null, createdAt: any, updatedAt: any, emailTemplate: { __typename?: 'EmailBuilderTemplate', _id: string, title: string }, stats: { __typename?: 'EmailCampaignStats', mailsSent: number, mailsDelivered: number, mailsOpened: Array<{ __typename?: 'EmailCampaignEventHistory', email: string, date: any }>, mailsClicked: Array<{ __typename?: 'EmailCampaignEventHistory', email: string, date: any }> }, createdBy: { __typename?: 'Admin', name: string }, updatedBy: { __typename?: 'Admin', name: string } }> };
+
+export type GetAllStatesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllStatesQuery = { __typename?: 'Query', getAllStates: Array<{ __typename?: 'State', _id: string, value: string, status: boolean, abbreviation?: string | null, createdAt: any, updatedAt: any }> };
+
+export type UpdateStateStatusMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateStateStatusMutation = { __typename?: 'Mutation', updateStateStatus: boolean };
+
+export type AddStateMutationVariables = Exact<{
+  input: AddStateInput;
+}>;
+
+
+export type AddStateMutation = { __typename?: 'Mutation', addState: boolean };
+
+export type GetAllTimezonesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllTimezonesQuery = { __typename?: 'Query', getAllTimezones: Array<{ __typename?: 'Timezone', _id: string, value: string, status: boolean, gmtOffset: number, createdAt: any, updatedAt: any }> };
+
+export type AddTimezoneMutationVariables = Exact<{
+  input: AddTimezoneInput;
+}>;
+
+
+export type AddTimezoneMutation = { __typename?: 'Mutation', addTimezone: boolean };
+
+export type UpdateTimezoneStatusMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateTimezoneStatusMutation = { __typename?: 'Mutation', updateTimezoneStatus: boolean };
+
+export type AddCuisineMutationVariables = Exact<{
+  input: AddCuisineInput;
+}>;
+
+
+export type AddCuisineMutation = { __typename?: 'Mutation', addCuisine: boolean };
+
+export type UpdateCuisineStatusMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type UpdateCuisineStatusMutation = { __typename?: 'Mutation', updateCuisineStatus: boolean };
+
+export type GetAllCuisinesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetAllCuisinesQuery = { __typename?: 'Query', getAllCuisines: Array<{ __typename?: 'Cuisine', _id: string, value: string, status: boolean, description?: string | null, createdAt: any, updatedAt: any }> };
 
 export type GetWaitListUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1901,6 +1977,75 @@ export const GetAllEmailCampaignsDocument = gql`
   }
 }
     `;
+export const GetAllStatesDocument = gql`
+    query GetAllStates {
+  getAllStates {
+    _id
+    value
+    status
+    abbreviation
+    createdAt
+    updatedAt
+    createdAt
+  }
+}
+    `;
+export const UpdateStateStatusDocument = gql`
+    mutation updateStateStatus($id: String!) {
+  updateStateStatus(id: $id)
+}
+    `;
+export const AddStateDocument = gql`
+    mutation addState($input: AddStateInput!) {
+  addState(input: $input)
+}
+    `;
+export const GetAllTimezonesDocument = gql`
+    query GetAllTimezones {
+  getAllTimezones {
+    _id
+    value
+    status
+    gmtOffset
+    createdAt
+    updatedAt
+    createdAt
+  }
+}
+    `;
+export const AddTimezoneDocument = gql`
+    mutation AddTimezone($input: AddTimezoneInput!) {
+  addTimezone(input: $input)
+}
+    `;
+export const UpdateTimezoneStatusDocument = gql`
+    mutation updateTimezoneStatus($id: String!) {
+  updateTimezoneStatus(id: $id)
+}
+    `;
+export const AddCuisineDocument = gql`
+    mutation AddCuisine($input: AddCuisineInput!) {
+  addCuisine(input: $input)
+}
+    `;
+export const UpdateCuisineStatusDocument = gql`
+    mutation UpdateCuisineStatus($id: String!) {
+  updateCuisineStatus(id: $id)
+}
+    `;
+export const GetAllCuisinesDocument = gql`
+    query getAllCuisines {
+  getAllCuisines {
+    _id
+    value
+    status
+    description
+    createdAt
+    updatedAt
+    createdAt
+  }
+}
+    `;
 export const GetWaitListUsersDocument = gql`
     query GetWaitListUsers {
   getWaitListUsers {
@@ -1988,6 +2133,33 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     GetAllEmailCampaigns(variables?: GetAllEmailCampaignsQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllEmailCampaignsQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetAllEmailCampaignsQuery>(GetAllEmailCampaignsDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllEmailCampaigns', 'query', variables);
+    },
+    GetAllStates(variables?: GetAllStatesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllStatesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllStatesQuery>(GetAllStatesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllStates', 'query', variables);
+    },
+    updateStateStatus(variables: UpdateStateStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateStateStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateStateStatusMutation>(UpdateStateStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateStateStatus', 'mutation', variables);
+    },
+    addState(variables: AddStateMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddStateMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddStateMutation>(AddStateDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'addState', 'mutation', variables);
+    },
+    GetAllTimezones(variables?: GetAllTimezonesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllTimezonesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllTimezonesQuery>(GetAllTimezonesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetAllTimezones', 'query', variables);
+    },
+    AddTimezone(variables: AddTimezoneMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddTimezoneMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddTimezoneMutation>(AddTimezoneDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AddTimezone', 'mutation', variables);
+    },
+    updateTimezoneStatus(variables: UpdateTimezoneStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateTimezoneStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateTimezoneStatusMutation>(UpdateTimezoneStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'updateTimezoneStatus', 'mutation', variables);
+    },
+    AddCuisine(variables: AddCuisineMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<AddCuisineMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<AddCuisineMutation>(AddCuisineDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'AddCuisine', 'mutation', variables);
+    },
+    UpdateCuisineStatus(variables: UpdateCuisineStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<UpdateCuisineStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<UpdateCuisineStatusMutation>(UpdateCuisineStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'UpdateCuisineStatus', 'mutation', variables);
+    },
+    getAllCuisines(variables?: GetAllCuisinesQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetAllCuisinesQuery> {
+      return withWrapper((wrappedRequestHeaders) => client.request<GetAllCuisinesQuery>(GetAllCuisinesDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'getAllCuisines', 'query', variables);
     },
     GetWaitListUsers(variables?: GetWaitListUsersQueryVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<GetWaitListUsersQuery> {
       return withWrapper((wrappedRequestHeaders) => client.request<GetWaitListUsersQuery>(GetWaitListUsersDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'GetWaitListUsers', 'query', variables);
