@@ -21,9 +21,9 @@ export const modules = [
     component: Admin,
   },
   {
-    name: "Restaurant Management",
-    roles: ["admin", "normal", "master"],
-    component: Reports,
+    name: "Launch Waitlist",
+    roles: ["admin", "master", "normal"],
+    component: LaunchWaitlist,
   },
   {
     name: "Users Management",
@@ -31,11 +31,10 @@ export const modules = [
     component: UserManagement,
   },
   {
-    name: "Launch Waitlist",
-    roles: ["admin", "master", "normal"],
-    component: LaunchWaitlist,
+    name: "Restaurant Management",
+    roles: ["admin", "normal", "master"],
+    component: Reports,
   },
-
   {
     name: "Campaigns",
     roles: ["admin", "master", "normal"],
@@ -62,7 +61,7 @@ export const modules = [
         component: MasterStates,
       },
       {
-        name: "TimeZones",
+        name: "Timezones",
         roles: ["admin", "master", "normal"],
         component: MasterTimezones,
       },

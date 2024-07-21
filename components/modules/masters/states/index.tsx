@@ -55,7 +55,7 @@ const MasterStates: React.FC = () => {
     fetchMasterStates();
   }, [counter, setLoading]);
 
-  const handleToggleSwitch = (rowData: { status: string; _id: string }) => {
+  const handleToggleSwitch = (rowData: { status: boolean; _id: string }) => {
     setShowConfirmationModal(true);
     setSelectedUserId(rowData._id);
   };
@@ -118,10 +118,10 @@ const MasterStates: React.FC = () => {
     }
   };
 
-  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+  const renderSwitch = (rowData: { status: boolean; _id: string }) => (
     <div>
       <CustomSwitch
-        checked={rowData.status !== PlatformStatus.Blocked}
+        checked={rowData.status}
         onChange={() => handleToggleSwitch(rowData)}
         label={`Toggle switch for ${rowData._id}`}
       />
@@ -177,15 +177,18 @@ const MasterStates: React.FC = () => {
       <ReusableModal
         title="Add New State"
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          reset();
+        }}
         width="md"
       >
         <form onSubmit={handleSubmit(handleAddState)}>
           <div className="mb-4">
-            <label className="block text-black">Value</label>
+            <label className="block text-black">Name</label>
             <input
               type="text"
-              placeholder="Enter Name..."
+              placeholder="Enter name..."
               {...register("value", { required: "Name is required" })}
               className="input input-primary"
             />
@@ -194,11 +197,11 @@ const MasterStates: React.FC = () => {
             )}
           </div>
           <div className="mb-4">
-            <label className="block text-black">Email</label>
+            <label className="block text-black">Abbreviation</label>
             <input
-              placeholder="Enter Email..."
+              placeholder="Enter abbreviation..."
               {...register("abbreviation", {
-                required: "abbreviation is required",
+                required: "Abbreviation is required",
               })}
               className="input input-primary"
             />

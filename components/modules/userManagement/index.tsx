@@ -258,7 +258,7 @@ const Reports: React.FC = () => {
         isOpen={showConfirmationModal}
         onClose={handleCloseConfirmationModal}
         title="Are you sure ?"
-        comments="are you sure you want to block the user."
+        comments="Are you sure you want to update the selected user's status?"
       >
         <div className="flex justify-end space-x-4">
           <CButton

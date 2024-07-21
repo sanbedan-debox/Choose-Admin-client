@@ -591,11 +591,11 @@ export type ModifierInfo = {
 export type Mutation = {
   __typename?: 'Mutation';
   addAdmin: Scalars['Boolean']['output'];
+  addCategoriesToMenu: Scalars['Boolean']['output'];
   addCategory: Scalars['Boolean']['output'];
-  addCategoryToMenu: Scalars['Boolean']['output'];
   addCuisine: Scalars['Boolean']['output'];
   addItem: Scalars['Boolean']['output'];
-  addItemToCategory: Scalars['Boolean']['output'];
+  addItemsToCategory: Scalars['Boolean']['output'];
   addMenu: Scalars['Boolean']['output'];
   addModifier: Scalars['Boolean']['output'];
   addModifierGroup: Scalars['Boolean']['output'];
@@ -659,14 +659,14 @@ export type MutationAddAdminArgs = {
 };
 
 
-export type MutationAddCategoryArgs = {
-  input: AddCategoryInput;
+export type MutationAddCategoriesToMenuArgs = {
+  categoryIds: Array<Scalars['String']['input']>;
+  menuId: Scalars['String']['input'];
 };
 
 
-export type MutationAddCategoryToMenuArgs = {
-  categoryId: Array<Scalars['String']['input']>;
-  menuId: Scalars['String']['input'];
+export type MutationAddCategoryArgs = {
+  input: AddCategoryInput;
 };
 
 
@@ -677,12 +677,13 @@ export type MutationAddCuisineArgs = {
 
 export type MutationAddItemArgs = {
   input: AddItemInput;
+  modifierGroups: Array<Scalars['String']['input']>;
 };
 
 
-export type MutationAddItemToCategoryArgs = {
+export type MutationAddItemsToCategoryArgs = {
   categoryId: Scalars['String']['input'];
-  itemId: Scalars['String']['input'];
+  itemIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -698,6 +699,7 @@ export type MutationAddModifierArgs = {
 
 export type MutationAddModifierGroupArgs = {
   input: AddModifierGroupInput;
+  modifiers: Array<Scalars['String']['input']>;
 };
 
 
@@ -709,7 +711,7 @@ export type MutationAddModifierGroupToItemArgs = {
 
 export type MutationAddModifierToModifierGroupArgs = {
   modifierGroupId: Scalars['String']['input'];
-  modifierId: Scalars['String']['input'];
+  modifierIds: Array<Scalars['String']['input']>;
 };
 
 
@@ -1560,7 +1562,7 @@ export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestauran
 export type GetAllRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string, status: RestaurantStatus, beverageCategory?: Array<BeverageCategory> | null, foodType?: Array<FoodType> | null, meatType?: MeatType | null, website?: string | null, category?: Array<RestaurantCategory> | null, type?: RestaurantType | null, name: { __typename?: 'MasterCommon', value: string }, address?: { __typename?: 'AddressInfo', addressLine1: { __typename?: 'MasterCommon', value: string }, addressLine2?: { __typename?: 'MasterCommon', value: string } | null, city: { __typename?: 'MasterCommon', value: string }, state: { __typename?: 'MasterCommon', value: string }, postcode: { __typename?: 'MasterCommon', value: string }, place?: { __typename?: 'Places', displayName: string } | null } | null }> };
+export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string, status: RestaurantStatus, beverageCategory?: Array<BeverageCategory> | null, foodType?: Array<FoodType> | null, meatType?: MeatType | null, website?: string | null, category?: Array<RestaurantCategory> | null, type?: RestaurantType | null, name: { __typename?: 'MasterCommon', value: string }, address?: { __typename?: 'AddressInfo', addressLine1: { __typename?: 'MasterCommon', value: string }, addressLine2?: { __typename?: 'MasterCommon', value: string } | null, city: { __typename?: 'MasterCommon', value: string }, state: { __typename?: 'MasterCommon', value: string }, postcode: { __typename?: 'MasterCommon', value: string }, place?: { __typename?: 'Places', displayName: string } | null } | null, timezone?: { __typename?: 'MasterCommon', value: string } | null }> };
 
 export type ResetPasswordAdminQueryVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1591,6 +1593,13 @@ export type ChangeUserStatusMutationVariables = Exact<{
 
 
 export type ChangeUserStatusMutation = { __typename?: 'Mutation', changeUserStatus: boolean };
+
+export type ChangeRestaurantStatusMutationVariables = Exact<{
+  id: Scalars['String']['input'];
+}>;
+
+
+export type ChangeRestaurantStatusMutation = { __typename?: 'Mutation', changeRestaurantStatus: boolean };
 
 export type BlockAdminMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -1835,6 +1844,9 @@ export const GetAllRestaurantsDocument = gql`
         displayName
       }
     }
+    timezone {
+      value
+    }
     beverageCategory
     foodType
     meatType
@@ -1862,6 +1874,11 @@ export const ChangeRoleDocument = gql`
 export const ChangeUserStatusDocument = gql`
     mutation changeUserStatus($id: String!) {
   changeUserStatus(id: $id)
+}
+    `;
+export const ChangeRestaurantStatusDocument = gql`
+    mutation changeRestaurantStatus($id: String!) {
+  changeRestaurantStatus(id: $id)
 }
     `;
 export const BlockAdminDocument = gql`
@@ -2097,6 +2114,9 @@ export function getSdk(client: GraphQLClient, withWrapper: SdkFunctionWrapper = 
     },
     changeUserStatus(variables: ChangeUserStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ChangeUserStatusMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<ChangeUserStatusMutation>(ChangeUserStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'changeUserStatus', 'mutation', variables);
+    },
+    changeRestaurantStatus(variables: ChangeRestaurantStatusMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<ChangeRestaurantStatusMutation> {
+      return withWrapper((wrappedRequestHeaders) => client.request<ChangeRestaurantStatusMutation>(ChangeRestaurantStatusDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'changeRestaurantStatus', 'mutation', variables);
     },
     blockAdmin(variables: BlockAdminMutationVariables, requestHeaders?: GraphQLClientRequestHeaders): Promise<BlockAdminMutation> {
       return withWrapper((wrappedRequestHeaders) => client.request<BlockAdminMutation>(BlockAdminDocument, variables, {...requestHeaders, ...wrappedRequestHeaders}), 'blockAdmin', 'mutation', variables);

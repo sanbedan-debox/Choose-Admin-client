@@ -55,7 +55,7 @@ const MasterCuisines: React.FC = () => {
     fetchMasterCuisines();
   }, [counter, setLoading]);
 
-  const handleToggleSwitch = (rowData: { status: string; _id: string }) => {
+  const handleToggleSwitch = (rowData: { status: boolean; _id: string }) => {
     setShowConfirmationModal(true);
     setSelectedUserId(rowData._id);
   };
@@ -117,10 +117,10 @@ const MasterCuisines: React.FC = () => {
     }
   };
 
-  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+  const renderSwitch = (rowData: { status: boolean; _id: string }) => (
     <div>
       <CustomSwitch
-        checked={rowData.status !== PlatformStatus.Blocked}
+        checked={rowData.status}
         onChange={() => handleToggleSwitch(rowData)}
         label={`Toggle switch for ${rowData._id}`}
       />
@@ -176,16 +176,19 @@ const MasterCuisines: React.FC = () => {
       <ReusableModal
         title="Add New Cuisine"
         isOpen={isAddModalOpen}
-        onClose={() => setIsAddModalOpen(false)}
+        onClose={() => {
+          setIsAddModalOpen(false);
+          reset();
+        }}
         width="md"
       >
         <form onSubmit={handleSubmit(handleAddTImezone)}>
           <div className="mb-4">
-            <label className="block text-black">Value</label>
+            <label className="block text-black">Cuisine name</label>
             <input
               type="text"
-              placeholder="Enter Value..."
-              {...register("value", { required: "Name is required" })}
+              placeholder="Enter cuisine name..."
+              {...register("value", { required: "Cuisine name is required" })}
               className="input input-primary"
             />
             {errors.value && (
@@ -195,9 +198,9 @@ const MasterCuisines: React.FC = () => {
           <div className="mb-4">
             <label className="block text-black">Description</label>
             <textarea
-              placeholder="Enter Description..."
+              placeholder="Enter description..."
               {...register("description", {
-                required: "description is required",
+                required: "Cuisine description is required",
               })}
               className="input input-primary"
             />

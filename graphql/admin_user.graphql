@@ -101,6 +101,9 @@ query GetAllRestaurants {
         displayName
       }
     }
+    timezone {
+      value
+    }
     beverageCategory
     foodType
     meatType
@@ -129,6 +132,10 @@ mutation ChangeRole($id: String!, $role: AdminRole!) {
 
 mutation changeUserStatus($id: String!) {
   changeUserStatus(id: $id)
+}
+
+mutation changeRestaurantStatus($id: String!) {
+  changeRestaurantStatus(id: $id)
 }
 
 mutation blockAdmin($id: String!, $updateStatus: PlatformStatus!) {

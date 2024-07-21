@@ -10,9 +10,65 @@ import { PlatformStatus } from "@/generated/graphql";
 import { extractErrorMessage, getClickableUrlLink } from "@/util/utils";
 import useGlobalStore from "@/store/global";
 import Link from "next/link";
+import ReusableModal from "@/components/common/modal/modal";
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
+
+const formatCategoryArray = (categories: string[]): string => {
+  let arr = [];
+  for (let i = 0; i < categories.length; i++) {
+    const cate = categories[i];
+    switch (cate) {
+      case "CloudKitchen":
+        arr.push("Cloud Kitchen");
+        break;
+      case "DineIn":
+        arr.push("Dine-In");
+        break;
+      case "PremiumDineIn":
+        arr.push("Premium Dine-In");
+        break;
+      case "QSR":
+        arr.push("QSR");
+        break;
+      case "Takeout":
+        arr.push("Takeout");
+        break;
+
+      default:
+        break;
+    }
+  }
+  return arr.join(", ");
+};
+
+const formatFoodTypeArray = (foodTypes: string[]): string => {
+  let arr = [];
+  for (let i = 0; i < foodTypes.length; i++) {
+    const item = foodTypes[i];
+    switch (item) {
+      case "NonVegetarian":
+        arr.push("Non-Vegetarian");
+        break;
+      case "Vegetarian":
+        arr.push("Vegetarian");
+        break;
+      case "Vegan":
+        arr.push("Vegan");
+        break;
+
+      default:
+        break;
+    }
+  }
+  return arr.join(", ");
+};
 
 const Reports: React.FC = () => {
   const { isLoading, setLoading } = useGlobalLoaderStore();
+  const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+  const [selectedRestaurantId, setSelectedRestaurantId] = useState<string>("");
+  const [btnLoading, setBtnLoading] = useState(false);
   const [restaurants, setRestaurants] = React.useState<any[]>([]);
   const [counter, setCounter] = useState(0);
   const { setToastData } = useGlobalStore();
@@ -39,7 +95,8 @@ const Reports: React.FC = () => {
   }, [setLoading, counter]);
 
   const toggleStatus = (rowData: { status: string; _id: string }) => {
-    console.log(`Toggling status for ID: ${rowData.status} ${rowData._id}`);
+    setShowConfirmationModal(true);
+    setSelectedRestaurantId(rowData._id);
   };
 
   const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
@@ -57,6 +114,32 @@ const Reports: React.FC = () => {
   //   { title: "id", dataKey: "_id" },
   //   { title: "status", dataKey: "status" },
   // ];
+
+  const handleConfirmation = async () => {
+    setShowConfirmationModal(false);
+    try {
+      setBtnLoading(true);
+      const response = await sdk.changeRestaurantStatus({
+        id: selectedRestaurantId,
+      });
+      if (response && response.changeRestaurantStatus) {
+        setCounter((prev) => prev + 1);
+      }
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  const handleCloseConfirmationModal = () => {
+    setShowConfirmationModal(false);
+    setSelectedRestaurantId("");
+  };
 
   const headings = [
     { title: "Toggle Status", dataKey: "status", render: renderSwitch },
@@ -82,23 +165,46 @@ const Reports: React.FC = () => {
     {
       title: "Category",
       dataKey: "category",
-      render: (rowData: { category: [] }) => {
-        return <div>{rowData.category.join(", ")}</div>;
+      render: (rowData: { category: string[] }) => {
+        return <p>{formatCategoryArray(rowData.category)}</p>;
       },
     },
     {
       title: "Restaurant Type",
       dataKey: "type",
     },
-    { title: "Food Type", dataKey: "foodType" },
+    {
+      title: "Food Type",
+      dataKey: "foodType",
+      render: (rowData: { foodType: string[] }) => {
+        return <p>{formatFoodTypeArray(rowData.foodType)}</p>;
+      },
+    },
     { title: "Meat Type", dataKey: "meatType" },
     { title: "Address", dataKey: "address.place.displayName" },
     { title: "City", dataKey: "address.city.value" },
-    // { title: "State", dataKey: "address.state.value" },
+    { title: "State", dataKey: "address.state.value" },
+    { title: "Timezone", dataKey: "timezone.value" },
     { title: "Zipcode", dataKey: "address.postcode.value" },
   ];
   return (
     <div className="container mx-auto px-2">
+      <ReusableModal
+        isOpen={showConfirmationModal}
+        onClose={handleCloseConfirmationModal}
+        title="Are you sure ?"
+        comments="Are you sure you want to update the selected restaurant's status?"
+      >
+        <div className="flex justify-end space-x-4">
+          <CButton
+            loading={btnLoading}
+            variant={ButtonType.Primary}
+            onClick={handleConfirmation}
+          >
+            Yes
+          </CButton>
+        </div>
+      </ReusableModal>
       <RoopTable
         loading={isLoading}
         data={restaurants}
