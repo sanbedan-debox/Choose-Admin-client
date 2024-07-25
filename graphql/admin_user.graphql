@@ -39,33 +39,6 @@ query GetAllRestaurantUsers {
     _id
     email
     phone
-    businessName
-    businessType
-    ein
-    address {
-      addressLine1 {
-        value
-      }
-      addressLine2 {
-        value
-      }
-      coordinate {
-        coordinates
-      }
-      city {
-        value
-      }
-      state {
-        value
-      }
-      postcode {
-        value
-      }
-    }
-    establishedAt
-    restaurants {
-      _id
-    }
     createdAt
     updatedAt
     status

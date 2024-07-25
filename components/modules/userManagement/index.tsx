@@ -221,13 +221,6 @@ const Reports: React.FC = () => {
     { title: "Phone", dataKey: "phone" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
-    { title: "Business Name", dataKey: "businessName" },
-    { title: "Business Type", dataKey: "businessType" },
-    { title: "EIN", dataKey: "ein" },
-    { title: "Address", dataKey: "address.addressLine1.value" },
-    { title: "City", dataKey: "address.city.value" },
-    { title: "State", dataKey: "address.state.value" },
-    { title: "Zipcode", dataKey: "address.postcode.value" },
   ];
 
   interface RejectUserInput {
