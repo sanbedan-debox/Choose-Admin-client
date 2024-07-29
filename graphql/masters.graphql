@@ -65,3 +65,68 @@ query getAllCuisines {
     createdAt
   }
 }
+
+mutation AddPermission($input: AddPermissionInput!) {
+  addPermission(input: $input)
+}
+
+mutation UpdatePermissionPreselect($id: String!, $preselect: [UserRole!]!) {
+  updatePermissionPreselect(preselect: $preselect, id: $id)
+}
+
+query GetAllPermissions {
+  getAllPermissions {
+    _id
+    type
+    preselect
+    isFunction
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+mutation AddConfig($input: AddConfigInput!) {
+  addConfig(input: $input)
+}
+
+mutation UpdateConfig($id: String!, $value: Float!) {
+  updateConfig(id: $id, value: $value)
+}
+
+query GetAllConfigs {
+  getAllConfigs {
+    _id
+    type
+    value
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}
+
+query GetConfig($type: ConfigTypeEnum!) {
+  getConfig(type: $type) {
+    _id
+    type
+    value
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}

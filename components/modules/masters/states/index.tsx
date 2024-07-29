@@ -145,7 +145,7 @@ const MasterStates: React.FC = () => {
     },
   ];
   return (
-    <div className="container mx-auto px-2">
+    <div className="w-full mx-auto px-2">
       {/* {isLoading && <Loading />} */}
       <RoopTable
         loading={isLoading}

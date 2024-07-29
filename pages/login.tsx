@@ -10,6 +10,7 @@ import { parseCookies } from "nookies";
 import { extractErrorMessage } from "@/util/utils";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 interface IFormInput {
   email: string;
@@ -20,6 +21,7 @@ interface IFormInput {
 export default function Login() {
   const router = useRouter();
   const { setToastData } = useGlobalStore();
+  const [showPass, setShowPass] = React.useState<boolean>(false);
 
   const {
     register,
@@ -55,9 +57,9 @@ export default function Login() {
   };
 
   return (
-    <section className=" bg-white min-h-screen">
+    <section className=" bg-neutral-100 min-h-screen">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-        <div className="w-full rounded-lg shadow border md:mt-0 sm:max-w-md xl:p-0 bg-dot-white/[0.12] md:bg-dot-white/[0.15] border-gray-700">
+        <div className="w-full rounded-lg bg-white md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
             <div className="relative z-10 flex items-center gap-16 justify-center">
               <Image className="mb-4" src={logo1} alt="Logo" width={200} />
@@ -74,7 +76,7 @@ export default function Login() {
                   htmlFor="email"
                   className="block mb-2 text-sm font-medium text-black"
                 >
-                  Email Address
+                  Email
                 </label>
                 <input
                   type="email"
@@ -100,15 +102,36 @@ export default function Login() {
                 >
                   Password
                 </label>
-                <input
-                  type="password"
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                  id="password"
-                  className="input input-primary"
-                  placeholder="Enter your Password"
-                />
+                <div className="relative">
+                  <input
+                    type={showPass ? "text" : "password"}
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                    id="password"
+                    className="input input-primary relative pr-8"
+                    placeholder="Enter your Password"
+                  />
+                  {showPass ? (
+                    <button
+                      className="absolute top-0 right-3 bottom-0 h-full flex justify-center items-center"
+                      onClick={() => {
+                        setShowPass((prev) => !prev);
+                      }}
+                    >
+                      <FaEye className="fill-neutral-400 z-50" />
+                    </button>
+                  ) : (
+                    <button
+                      className="absolute top-0 right-3 bottom-0 h-full flex justify-center items-center"
+                      onClick={() => {
+                        setShowPass((prev) => !prev);
+                      }}
+                    >
+                      <FaEyeSlash className="fill-neutral-400 z-50" />
+                    </button>
+                  )}
+                </div>
                 {errors.password && (
                   <p className="text-red-500 text-sm">
                     {errors.password.message}

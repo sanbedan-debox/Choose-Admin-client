@@ -27,7 +27,7 @@ export function Emails() {
   ];
 
   return (
-    <div className="container mx-auto ">
+    <div className="w-full mx-auto p-2">
       <div className="h-auto [perspective:1000px] relative flex flex-col mx-auto w-full items-start justify-start">
         <Tabs
           activeTabClassName="text-white"

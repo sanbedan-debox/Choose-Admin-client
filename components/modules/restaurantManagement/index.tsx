@@ -188,7 +188,7 @@ const Reports: React.FC = () => {
     { title: "Zipcode", dataKey: "address.postcode.value" },
   ];
   return (
-    <div className="container mx-auto px-2">
+    <div className="w-full mx-auto px-2">
       <ReusableModal
         isOpen={showConfirmationModal}
         onClose={handleCloseConfirmationModal}

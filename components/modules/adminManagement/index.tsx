@@ -328,7 +328,7 @@ const Admin: React.FC = () => {
   ];
 
   return (
-    <div className="container mx-auto px-2">
+    <div className="w-full mx-auto px-2">
       <RoopTable
         loading={loading}
         data={members}

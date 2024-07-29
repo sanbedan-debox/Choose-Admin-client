@@ -5,7 +5,7 @@ import useGlobalStore from "@/store/global";
 import useAuthStore from "@/store/auth";
 
 const Sidebar: React.FC = () => {
-  const { setSelectedModule } = useGlobalStore();
+  const { setSelectedModule, selectedModule } = useGlobalStore();
   const { userRole, userName } = useAuthStore();
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
@@ -91,20 +91,15 @@ const Sidebar: React.FC = () => {
                   {module.subModules ? (
                     <li className="cursor-pointer mb-1">
                       <div
-                        className="flex justify-between items-center hover:bg-primary group rounded-lg"
+                        className={`flex justify-between items-center ${
+                          selectedModule === module.name
+                            ? "bg-primary"
+                            : "bg-white"
+                        } hover:bg-primary group rounded-lg`}
                         onClick={() => toggleDropdown(module.name)}
                       >
                         <div className="flex items-center p-2 text-black group-hover:text-white">
-                          <svg
-                            className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white "
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 22 21"
-                          >
-                            <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                            <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                          </svg>
+                          <module.icon size={18} />
                           {isSidebarExpanded && (
                             <span className="ms-3">{module.name}</span>
                           )}
@@ -144,18 +139,13 @@ const Sidebar: React.FC = () => {
                                   onClick={() =>
                                     setSelectedModule(subModule.name)
                                   }
-                                  className="flex items-center p-2 rounded-lg text-black hover:bg-primary   hover:text-white group"
+                                  className={`flex items-center p-2 rounded-lg ${
+                                    selectedModule === subModule.name
+                                      ? "bg-primary text-white"
+                                      : "text-black"
+                                  } hover:bg-primary hover:text-white group`}
                                 >
-                                  <svg
-                                    className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white"
-                                    aria-hidden="true"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    fill="currentColor"
-                                    viewBox="0 0 22 21"
-                                  >
-                                    <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                                    <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                                  </svg>
+                                  <subModule.icon size={18} />
                                   {isSidebarExpanded && (
                                     <span className="ms-3">
                                       {subModule.name}
@@ -169,24 +159,19 @@ const Sidebar: React.FC = () => {
                     </li>
                   ) : (
                     <li className="cursor-pointer mb-1" key={module.name}>
-                      <a
+                      <button
                         onClick={() => setSelectedModule(module.name)}
-                        className="flex items-center p-2 rounded-lg  text-black hover:text-white hover:bg-primary  group"
+                        className={`flex items-center p-2 rounded-lg ${
+                          selectedModule === module.name
+                            ? "bg-primary text-white"
+                            : "text-black"
+                        } hover:text-white hover:bg-primary  group w-full`}
                       >
-                        <svg
-                          className="w-5 h-5 transition duration-75 text-gray-700 group-hover:text-white"
-                          aria-hidden="true"
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="currentColor"
-                          viewBox="0 0 22 21"
-                        >
-                          <path d="M16.975 11H10V4.025a1 1 0 0 0-1.066-.998 8.5 8.5 0 1 0 9.039 9.039.999.999 0 0 0-1-1.066h.002Z" />
-                          <path d="M12.5 0c-.157 0-.311.01-.565.027A1 1 0 0 0 11 1.02V10h8.975a1 1 0 0 0 1-.935c.013-.188.028-.374.028-.565A8.51 8.51 0 0 0 12.5 0Z" />
-                        </svg>
+                        <module.icon size={18} />
                         {isSidebarExpanded && (
                           <span className="ms-3">{module.name}</span>
                         )}
-                      </a>
+                      </button>
                     </li>
                   )}
                 </React.Fragment>

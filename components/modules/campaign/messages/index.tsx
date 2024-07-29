@@ -27,7 +27,7 @@ export function Message() {
   ];
 
   return (
-    <div className="container mx-auto px-2">
+    <div className="w-full mx-auto px-2">
       <div className="h-[20rem] md:h-[35rem] [perspective:1000px] relative b flex flex-col max-w-7xl mx-auto w-full  items-start justify-start ">
         <Tabs tabs={tabs} />
       </div>
