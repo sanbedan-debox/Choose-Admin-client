@@ -10,6 +10,7 @@ import { extractErrorMessage, formatDateString } from "@/util/utils";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
+import { FaEdit } from "react-icons/fa";
 
 const formatType = (type: ConfigTypeEnum): string => {
   switch (type) {
@@ -29,6 +30,9 @@ interface FormInput {
   type: { value: ConfigTypeEnum; label: string };
   value: number;
 }
+interface FormEditInput {
+  value: number;
+}
 
 const MasterConfigs: React.FC = () => {
   const [masterConfigs, setMasterConfigs] = useState<any[]>([]);
@@ -45,6 +49,15 @@ const MasterConfigs: React.FC = () => {
     setValue,
     control,
   } = useForm<FormInput>();
+
+  const {
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    reset: resetEdit,
+    formState: { errors: editErrors },
+    setValue: setEditValue,
+    control: editControl,
+  } = useForm<FormEditInput>();
 
   useEffect(() => {
     const fetchMasterConfigs = async () => {
@@ -97,6 +110,7 @@ const MasterConfigs: React.FC = () => {
           ...input,
         },
       });
+
       if (!response.addConfig) {
         setToastData({
           message: "Config cannot be added!",
@@ -122,7 +136,55 @@ const MasterConfigs: React.FC = () => {
       setBtnLoading(false);
     }
   };
+  const handleEditConfig: SubmitHandler<FormEditInput> = async (data) => {
+    try {
+      setBtnLoading(true);
 
+      const response = await sdk.UpdateConfig({
+        id: selectedAdminId || "",
+        value: parseFloat(data.value.toString()),
+      });
+
+      if (!response.updateConfig) {
+        setToastData({
+          message: "Config cannot be updated!",
+          type: "error",
+        });
+        return;
+      }
+
+      resetEdit();
+      setIsChangeConfigs(false);
+      setCounter((prev) => prev + 1);
+      setToastData({
+        message: "Config updated successfully",
+        type: "success",
+      });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  const [isChangeConfigs, setIsChangeConfigs] = useState(false);
+  const [selectedAdminId, setSelectedAdminId] = useState<string | null>(null);
+
+  const renderActions = (rowData: { _id: string }) => (
+    <div className="flex space-x-3 justify-center items-center">
+      <FaEdit
+        className="text-blue-500 cursor-pointer"
+        onClick={() => {
+          setSelectedAdminId(rowData._id);
+          setIsChangeConfigs(true);
+        }}
+      />
+    </div>
+  );
   const headings = [
     {
       title: "Type",
@@ -139,6 +201,7 @@ const MasterConfigs: React.FC = () => {
     { title: "Updated By", dataKey: "updatedBy.name" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
+    { title: "Actions", dataKey: "id", render: renderActions },
   ];
 
   const mainActions = [
@@ -210,6 +273,33 @@ const MasterConfigs: React.FC = () => {
               className="btn btn-primary"
             >
               Add Config
+            </CButton>
+          </div>
+        </form>
+      </ReusableModal>
+      <ReusableModal
+        title="Change Config Value"
+        comments="Are you sure you want to change the config value?"
+        isOpen={isChangeConfigs}
+        onClose={() => setIsChangeConfigs(false)}
+        width="md"
+      >
+        <form onSubmit={handleEditSubmit(handleEditConfig)}>
+          <div className="mb-4">
+            <input
+              {...editRegister("value", {
+                required: { value: true, message: "Value is required" },
+              })}
+              placeholder="Enter value"
+              className="input input-primary"
+            />
+            {editErrors.value && (
+              <p className="text-red-500 text-sm">{editErrors.value.message}</p>
+            )}
+          </div>
+          <div className="flex justify-end mt-4 space-x-2">
+            <CButton variant={ButtonType.Primary} type="submit">
+              Change Value
             </CButton>
           </div>
         </form>

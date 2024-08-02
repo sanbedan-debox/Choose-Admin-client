@@ -3,7 +3,7 @@ import RoopTable from "@/components/common/customTableR/table";
 import Select from "react-select";
 import { sdk } from "@/util/graphqlClient";
 import useGlobalLoaderStore from "@/store/loader";
-import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
+import ReusableModal from "@/components/common/modal/modal";
 import {
   AddPermissionInput,
   PermissionTypeEnum,
@@ -15,6 +15,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
+import { FaEdit } from "react-icons/fa";
 
 const formatPreselectArray = (preselect: UserRole[]): string => {
   let arr = [];
@@ -87,6 +88,10 @@ interface FormInput {
   isFunction: boolean;
 }
 
+interface EditFormInput {
+  preselect: { value: UserRole; label: string }[];
+}
+
 const MasterPermissions: React.FC = () => {
   const [masterPermissions, setMasterPermissions] = useState<any[]>([]);
   const { setLoading, isLoading } = useGlobalLoaderStore();
@@ -94,6 +99,8 @@ const MasterPermissions: React.FC = () => {
 
   const [counter, setCounter] = useState(0);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -102,6 +109,15 @@ const MasterPermissions: React.FC = () => {
     setValue,
     control,
   } = useForm<FormInput>();
+
+  const {
+    register: editRegister,
+    handleSubmit: handleEditSubmit,
+    reset: resetEdit,
+    formState: { errors: editErrors },
+    setValue: setEditValue,
+    control: editControl,
+  } = useForm<EditFormInput>();
 
   useEffect(() => {
     const fetchMasterPermissions = async () => {
@@ -205,6 +221,55 @@ const MasterPermissions: React.FC = () => {
     }
   };
 
+  const handleEditPermission: SubmitHandler<EditFormInput> = async (data) => {
+    try {
+      setBtnLoading(true);
+
+      const response = await sdk.UpdatePermissionPreselect({
+        id: selectedAdminId || "",
+        preselect: data.preselect.map((el) => el.value),
+      });
+
+      if (!response.updatePermissionPreselect) {
+        setToastData({
+          message: "Permission cannot be updated!",
+          type: "error",
+        });
+        return;
+      }
+
+      resetEdit();
+      setIsEditModalOpen(false);
+      setCounter((prev) => prev + 1);
+      setToastData({
+        message: "Permission updated successfully",
+        type: "success",
+      });
+    } catch (error: any) {
+      const errorMessage = extractErrorMessage(error);
+      setToastData({
+        type: "error",
+        message: errorMessage,
+      });
+    } finally {
+      setBtnLoading(false);
+    }
+  };
+
+  const [selectedAdminId, setSelectedAdminId] = useState<string | null>(null);
+
+  const renderActions = (rowData: { _id: string }) => (
+    <div className="flex space-x-3 justify-center items-center">
+      <FaEdit
+        className="text-blue-500 cursor-pointer"
+        onClick={() => {
+          setSelectedAdminId(rowData._id);
+          setIsEditModalOpen(true);
+        }}
+      />
+    </div>
+  );
+
   const headings = [
     {
       title: "Type",
@@ -231,6 +296,7 @@ const MasterPermissions: React.FC = () => {
     { title: "Updated By", dataKey: "updatedBy.name" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
+    { title: "Actions", dataKey: "actions", render: renderActions },
   ];
 
   const mainActions = [
@@ -239,9 +305,9 @@ const MasterPermissions: React.FC = () => {
       onClick: () => setIsAddModalOpen(true),
     },
   ];
+
   return (
     <div className="w-full mx-auto px-2">
-      {/* {isLoading && <Loading />} */}
       <RoopTable
         loading={isLoading}
         data={masterPermissions}
@@ -339,6 +405,55 @@ const MasterPermissions: React.FC = () => {
               className="btn btn-primary"
             >
               Add Permission
+            </CButton>
+          </div>
+        </form>
+      </ReusableModal>
+
+      <ReusableModal
+        title="Edit Permission"
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          resetEdit();
+        }}
+        width="md"
+      >
+        <form onSubmit={handleEditSubmit(handleEditPermission)}>
+          <div className="mb-4">
+            <Select
+              {...editRegister("preselect", {
+                required: {
+                  value: true,
+                  message: "Atleast one role is required",
+                },
+              })}
+              onChange={(newVal) => {
+                setEditValue(
+                  "preselect",
+                  newVal.map((el) => ({ label: el.label, value: el.value }))
+                );
+              }}
+              options={roleOptions}
+              isMulti
+              className="mt-1 text-sm rounded-lg w-full focus:outline-none text-left text-black"
+              classNamePrefix="react-select"
+              placeholder="Select Role"
+            />
+            {editErrors.preselect && (
+              <p className="text-red-500 text-sm">
+                {editErrors.preselect.message}
+              </p>
+            )}
+          </div>
+
+          <div className="flex justify-end mt-4">
+            <CButton
+              loading={btnLoading}
+              variant={ButtonType.Primary}
+              className="btn btn-primary"
+            >
+              Update Permission
             </CButton>
           </div>
         </form>
