@@ -80,21 +80,15 @@ export type AddEmailTemplateInput = {
 };
 
 export type AddItemInput = {
-  applySalesTax: Scalars['Boolean']['input'];
   availability?: InputMaybe<Array<AvailabilityInput>>;
   desc?: InputMaybe<MasterCommonInput>;
-  hasNuts: Scalars['Boolean']['input'];
   image?: InputMaybe<Scalars['String']['input']>;
-  isGlutenFree: Scalars['Boolean']['input'];
-  isHalal: Scalars['Boolean']['input'];
-  isSpicy: Scalars['Boolean']['input'];
-  isVegan: Scalars['Boolean']['input'];
   name: MasterCommonInput;
-  popularItem: Scalars['Boolean']['input'];
+  options?: Array<OptionsInput>;
   price: MasterCommonInputNumber;
   priceOptions: Array<PriceOptionsInput>;
   status: StatusEnum;
-  upSellItem: Scalars['Boolean']['input'];
+  subCategory?: InputMaybe<ItemSubCategoryInput>;
   visibility?: InputMaybe<Array<VisibilityInput>>;
 };
 
@@ -149,6 +143,12 @@ export type AddRestaurantInput = {
 export type AddStateInput = {
   abbreviation: Scalars['String']['input'];
   value: Scalars['String']['input'];
+};
+
+export type AddSubCategoryInput = {
+  category: Scalars['String']['input'];
+  desc: MasterCommonInput;
+  name: MasterCommonInput;
 };
 
 export type AddTeamMemberInput = {
@@ -524,25 +524,20 @@ export enum IntegrationPlatformEnum {
 export type Item = {
   __typename?: 'Item';
   _id: Scalars['ID']['output'];
-  applySalesTax: Scalars['Boolean']['output'];
   availability?: Maybe<Array<Availability>>;
   category: Category;
   createdAt: Scalars['DateTimeISO']['output'];
   desc: MasterCommon;
-  hasNuts: Scalars['Boolean']['output'];
   image?: Maybe<Scalars['String']['output']>;
-  isGlutenFree: Scalars['Boolean']['output'];
-  isHalal: Scalars['Boolean']['output'];
-  isSpicy: Scalars['Boolean']['output'];
-  isVegan: Scalars['Boolean']['output'];
   modifierGroup: Array<ModifierGroupInfo>;
   name: MasterCommon;
-  popularItem: Scalars['Boolean']['output'];
+  options: Array<Options>;
+  orderLimit?: Maybe<Scalars['Float']['output']>;
   price: MasterCommonNumber;
   priceOptions: Array<PriceOptions>;
   restaurantId: Restaurant;
   status: StatusEnum;
-  upSellItem: Scalars['Boolean']['output'];
+  subCategory?: Maybe<ItemSubCategory>;
   updatedAt: Scalars['DateTimeISO']['output'];
   user: User;
   visibility: Array<Visibility>;
@@ -580,6 +575,21 @@ export enum ItemOptionsEnum {
   PopularItem = 'PopularItem',
   UpSellItem = 'UpSellItem'
 }
+
+export type ItemSubCategory = {
+  __typename?: 'ItemSubCategory';
+  category?: Maybe<Scalars['String']['output']>;
+  desc: Scalars['String']['output'];
+  id?: Maybe<Scalars['String']['output']>;
+  name: Scalars['String']['output'];
+};
+
+export type ItemSubCategoryInput = {
+  category?: InputMaybe<Scalars['String']['input']>;
+  desc: Scalars['String']['input'];
+  id?: InputMaybe<Scalars['String']['input']>;
+  name: Scalars['String']['input'];
+};
 
 export type LocationCommon = {
   __typename?: 'LocationCommon';
@@ -718,6 +728,7 @@ export type Mutation = {
   addPermission: Scalars['Boolean']['output'];
   addRestaurant: Scalars['Boolean']['output'];
   addState: Scalars['Boolean']['output'];
+  addSubCategory: Scalars['Boolean']['output'];
   addTaxRate: Scalars['String']['output'];
   addTaxRateInRestaurant: Scalars['Boolean']['output'];
   addTeamMember: Scalars['Boolean']['output'];
@@ -768,6 +779,7 @@ export type Mutation = {
   updatePermissionPreselect: Scalars['Boolean']['output'];
   updateRestaurant: Scalars['Boolean']['output'];
   updateStateStatus: Scalars['Boolean']['output'];
+  updateSubCategory: Scalars['Boolean']['output'];
   updateTaxRate: Scalars['Boolean']['output'];
   updateTimezoneStatus: Scalars['Boolean']['output'];
   updateUserProfile: Scalars['Boolean']['output'];
@@ -859,6 +871,11 @@ export type MutationAddRestaurantArgs = {
 
 export type MutationAddStateArgs = {
   input: AddStateInput;
+};
+
+
+export type MutationAddSubCategoryArgs = {
+  input: AddSubCategoryInput;
 };
 
 
@@ -1111,6 +1128,11 @@ export type MutationUpdateStateStatusArgs = {
 };
 
 
+export type MutationUpdateSubCategoryArgs = {
+  input: UpdateSubCategoryInput;
+};
+
+
 export type MutationUpdateTaxRateArgs = {
   input: UpdateTaxRateInput;
 };
@@ -1133,6 +1155,23 @@ export type MutationVerifyTeamEmailArgs = {
 
 export type MutationVerifyUserDetailsArgs = {
   input: VerifyUserDetails;
+};
+
+export type Options = {
+  __typename?: 'Options';
+  _id: Scalars['ID']['output'];
+  desc: Scalars['String']['output'];
+  displayName: Scalars['String']['output'];
+  status: Scalars['Boolean']['output'];
+  type: ItemOptionsEnum;
+};
+
+export type OptionsInput = {
+  _id: Scalars['String']['input'];
+  desc: Scalars['String']['input'];
+  displayName: Scalars['String']['input'];
+  status: Scalars['Boolean']['input'];
+  type: ItemOptionsEnum;
 };
 
 export type PaginatedFilter = {
@@ -1244,6 +1283,7 @@ export type Query = {
   getAllTimezones: Array<Timezone>;
   getBusinessDetails: Business;
   getBusinessOnboardingDetails?: Maybe<Business>;
+  getCSVTemplate: Scalars['String']['output'];
   getCategories: Array<Category>;
   getCategory: Category;
   getCategoryByMenu: Category;
@@ -1261,6 +1301,8 @@ export type Query = {
   getPlacesList: Array<Places>;
   getRestaurantDetails: Restaurant;
   getRestaurantOnboardingData: Restaurant;
+  getSubCategories: Array<SubCategory>;
+  getSubCategory: SubCategory;
   getTaxRate: TaxRate;
   getTaxRates: Array<TaxRate>;
   getTeamMembers: Array<SubUser>;
@@ -1397,6 +1439,17 @@ export type QueryGetPlaceDetailsArgs = {
 
 export type QueryGetPlacesListArgs = {
   input: Scalars['String']['input'];
+};
+
+
+export type QueryGetSubCategoriesArgs = {
+  filter?: InputMaybe<PaginatedFilter>;
+  page?: Scalars['Float']['input'];
+};
+
+
+export type QueryGetSubCategoryArgs = {
+  id: Scalars['String']['input'];
 };
 
 
@@ -1559,6 +1612,18 @@ export enum StatusEnum {
   Inactive = 'inactive'
 }
 
+export type SubCategory = {
+  __typename?: 'SubCategory';
+  _id: Scalars['ID']['output'];
+  category: Category;
+  createdAt: Scalars['DateTimeISO']['output'];
+  desc: Scalars['String']['output'];
+  name: Scalars['String']['output'];
+  restaurantId: Restaurant;
+  updatedAt: Scalars['DateTimeISO']['output'];
+  user: User;
+};
+
 export type SubUser = {
   __typename?: 'SubUser';
   _id?: Maybe<User>;
@@ -1626,21 +1691,15 @@ export type UpdateCategoryInput = {
 
 export type UpdateItemInput = {
   _id: Scalars['String']['input'];
-  applySalesTax?: InputMaybe<Scalars['Boolean']['input']>;
   availability?: InputMaybe<Array<AvailabilityInput>>;
   desc?: InputMaybe<MasterCommonInput>;
-  hasNuts?: InputMaybe<Scalars['Boolean']['input']>;
   image?: InputMaybe<Scalars['String']['input']>;
-  isGlutenFree?: InputMaybe<Scalars['Boolean']['input']>;
-  isHalal?: InputMaybe<Scalars['Boolean']['input']>;
-  isSpicy?: InputMaybe<Scalars['Boolean']['input']>;
-  isVegan?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<MasterCommonInput>;
-  popularItem?: InputMaybe<Scalars['Boolean']['input']>;
+  options?: Array<OptionsInput>;
   price?: InputMaybe<MasterCommonInputNumber>;
   priceOptions?: InputMaybe<Array<PriceOptionsInput>>;
   status?: InputMaybe<StatusEnum>;
-  upSellItem?: InputMaybe<Scalars['Boolean']['input']>;
+  subCategory?: InputMaybe<ItemSubCategoryInput>;
   visibility?: InputMaybe<Array<VisibilityInput>>;
 };
 
@@ -1703,6 +1762,12 @@ export type UpdateRestaurantInput = {
   socialInfo?: InputMaybe<SocialInfoInput>;
   status: RestaurantStatus;
   timezone?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type UpdateSubCategoryInput = {
+  desc?: InputMaybe<MasterCommonInput>;
+  id: Scalars['String']['input'];
+  name?: InputMaybe<MasterCommonInput>;
 };
 
 export type UpdateTaxRateInput = {
@@ -1850,7 +1915,7 @@ export type AdminLoginQuery = { __typename?: 'Query', adminLogin: string };
 export type GetAllRestaurantUsersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestaurantUsers: Array<{ __typename?: 'User', _id: string, email: string, phone: string, createdAt: any, updatedAt: any, status: UserStatus, firstName: string, lastName: string }> };
+export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestaurantUsers: Array<{ __typename?: 'User', _id: string, email: string, phone: string, createdAt: any, updatedAt: any, status: UserStatus, firstName: string, lastName: string, businessInfo?: { __typename?: 'Business', businessName?: string | null, estimatedRevenue?: EstimatedRevenueEnum | null, employeeSize?: StaffCountEnum | null, businessType?: BusinessTypeEnum | null, address?: { __typename?: 'AddressInfo', addressLine1: { __typename?: 'MasterCommon', value: string }, state: { __typename?: 'MasterCommon', value: string }, place?: { __typename?: 'Places', displayName: string } | null, city: { __typename?: 'MasterCommon', value: string }, postcode: { __typename?: 'MasterCommon', value: string } } | null } | null }> };
 
 export type GetAllRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -2145,6 +2210,29 @@ export const GetAllRestaurantUsersDocument = gql`
     status
     firstName
     lastName
+    businessInfo {
+      businessName
+      estimatedRevenue
+      employeeSize
+      businessType
+      address {
+        addressLine1 {
+          value
+        }
+        state {
+          value
+        }
+        place {
+          displayName
+        }
+        city {
+          value
+        }
+        postcode {
+          value
+        }
+      }
+    }
   }
 }
     `;

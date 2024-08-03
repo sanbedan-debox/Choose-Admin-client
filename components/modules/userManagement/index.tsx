@@ -5,7 +5,13 @@ import useGlobalLoaderStore from "@/store/loader";
 import Loading from "@/components/common/Loader/Loader";
 import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
-import { PlatformStatus, UserStatus } from "@/generated/graphql";
+import {
+  BusinessTypeEnum,
+  EstimatedRevenueEnum,
+  PlatformStatus,
+  StaffCountEnum,
+  UserStatus,
+} from "@/generated/graphql";
 import { Controller, useForm } from "react-hook-form";
 import useGlobalStore from "@/store/global";
 import { extractErrorMessage, formatDateString } from "@/util/utils";
@@ -211,6 +217,55 @@ const Reports: React.FC = () => {
     return num.toString().padStart(2, "0");
   };
 
+  const formatEstimatedRevinue = (role: string): string => {
+    console.log(role);
+    switch (role) {
+      case EstimatedRevenueEnum.Above1M:
+        return "Above 1M";
+      case EstimatedRevenueEnum.From0to50K:
+        return "$0 to $50K";
+      case EstimatedRevenueEnum.From200Kto500K:
+        return "$200K to $500K";
+      case EstimatedRevenueEnum.From500Kto1M:
+        return "$500K to $1M";
+      case EstimatedRevenueEnum.From50Kto200K:
+        return "$50K to $200K";
+
+      default:
+        return "";
+    }
+  };
+  const formatStaffCountEnum = (value: StaffCountEnum) => {
+    switch (value) {
+      case StaffCountEnum.From0To10:
+        return "0 to 10";
+      case StaffCountEnum.From11to25:
+        return "11 to 25";
+      case StaffCountEnum.From26to40:
+        return "26 to 40";
+      case StaffCountEnum.Above40:
+        return "Above 41";
+      default:
+        return "";
+    }
+  };
+
+  const formatBusinessTypeEnum = (value: BusinessTypeEnum) => {
+    switch (value) {
+      case BusinessTypeEnum.Lp:
+        return "LP";
+      case BusinessTypeEnum.Llp:
+        return "LLP";
+      case BusinessTypeEnum.Llc:
+        return "LLC";
+      case BusinessTypeEnum.Corporation:
+        return "Corporation";
+      case BusinessTypeEnum.SoleProprietor:
+        return "Sole Proprietor";
+      default:
+        return "";
+    }
+  };
   const headings = [
     { title: "Toggle Status", dataKey: "status", render: renderSwitch },
     { title: "Verification", dataKey: "status", render: renderVerification },
@@ -219,6 +274,44 @@ const Reports: React.FC = () => {
     { title: "Last Name", dataKey: "lastName" },
     { title: "Email", dataKey: "email" },
     { title: "Phone", dataKey: "phone" },
+    {
+      title: "Business Name",
+      dataKey: "businessInfo",
+      render: (rowData: { businessInfo: { businessName: string } }) => {
+        return <p>{rowData?.businessInfo?.businessName}</p>;
+      },
+    },
+    {
+      title: "Estimated Revenue",
+      dataKey: "estimatedRevenue",
+      render: (rowData: { businessInfo: { estimatedRevenue: string } }) => {
+        return (
+          <p>{formatEstimatedRevinue(rowData.businessInfo.estimatedRevenue)}</p>
+        );
+      },
+    },
+    {
+      title: "Employee Size",
+      dataKey: "Employee Size",
+      render: (rowData: { businessInfo: { employeeSize: StaffCountEnum } }) => {
+        return <p>{formatStaffCountEnum(rowData.businessInfo.employeeSize)}</p>;
+      },
+    },
+    {
+      title: "BusinessType",
+      dataKey: "bussinessType",
+      render: (rowData: {
+        businessInfo: { businessType: BusinessTypeEnum };
+      }) => {
+        return (
+          <p>{formatBusinessTypeEnum(rowData.businessInfo.businessType)}</p>
+        );
+      },
+    },
+    { title: "Address", dataKey: "businessInfo.address.place.displayName" },
+    { title: "City", dataKey: "businessInfo.address.city.value" },
+    { title: "State", dataKey: "businessInfo.address.state.value" },
+    { title: "Zipcode", dataKey: "businessInfo.address.postcode.value" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
   ];

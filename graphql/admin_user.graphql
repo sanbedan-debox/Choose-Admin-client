@@ -33,7 +33,6 @@ query AdminLogin($email: String!, $password: String!) {
 }
 
 # # Query to get all restaurant users
-
 query GetAllRestaurantUsers {
   getAllRestaurantUsers {
     _id
@@ -44,6 +43,29 @@ query GetAllRestaurantUsers {
     status
     firstName
     lastName
+    businessInfo {
+      businessName
+      estimatedRevenue
+      employeeSize
+      businessType
+      address {
+        addressLine1 {
+          value
+        }
+        state {
+          value
+        }
+        place {
+          displayName
+        }
+        city {
+          value
+        }
+        postcode {
+          value
+        }
+      }
+    }
   }
 }
 # Query to get all restaurants
