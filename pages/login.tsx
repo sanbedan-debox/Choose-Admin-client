@@ -113,23 +113,23 @@ export default function Login() {
                     placeholder="Enter your Password"
                   />
                   {showPass ? (
-                    <button
+                    <span
                       className="absolute top-0 right-3 bottom-0 h-full flex justify-center items-center"
                       onClick={() => {
                         setShowPass((prev) => !prev);
                       }}
                     >
                       <FaEye className="fill-neutral-400 z-50" />
-                    </button>
+                    </span>
                   ) : (
-                    <button
+                    <span
                       className="absolute top-0 right-3 bottom-0 h-full flex justify-center items-center"
                       onClick={() => {
                         setShowPass((prev) => !prev);
                       }}
                     >
                       <FaEyeSlash className="fill-neutral-400 z-50" />
-                    </button>
+                    </span>
                   )}
                 </div>
                 {errors.password && (

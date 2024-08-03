@@ -130,3 +130,28 @@ query GetConfig($type: ConfigTypeEnum!) {
     updatedAt
   }
 }
+
+mutation AddItemOption($input: AddItemOptionInput!) {
+  addItemOption(input: $input)
+}
+
+mutation UpdateItemOption($input: UpdateItemOptionInput!) {
+  updateItemOption(input: $input)
+}
+
+query GetAllItemOptions {
+  getAllItemOptions {
+    _id
+    type
+    displayName
+    desc
+    createdBy {
+      name
+    }
+    updatedBy {
+      name
+    }
+    createdAt
+    updatedAt
+  }
+}

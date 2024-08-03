@@ -19,6 +19,7 @@ import {
 import { CiUser, CiShop, CiDatabase } from "react-icons/ci";
 import MasterPermissions from "@/components/modules/masters/permissions";
 import MasterConfigs from "@/components/modules/masters/configs";
+import MasterItemOptions from "@/components/modules/masters/itemOptions";
 
 export const modules = [
   {
@@ -97,6 +98,12 @@ export const modules = [
         name: "Configs",
         roles: ["admin", "master", "normal"],
         component: MasterConfigs,
+        icon: CiDatabase,
+      },
+      {
+        name: "Item Options",
+        roles: ["admin", "master", "normal"],
+        component: MasterItemOptions,
         icon: CiDatabase,
       },
     ],
