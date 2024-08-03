@@ -236,6 +236,12 @@ const MasterConfigs: React.FC = () => {
         <form onSubmit={handleSubmit(handleAddConfig)}>
           <div className="mb-4">
             <Select
+              classNames={{
+                option: (state) =>
+                  `!text-sm hover:!bg-primary hover:!text-white focus:!bg-transparent  ${
+                    state.isSelected ? "!bg-primary text-white" : ""
+                  }  `,
+              }}
               {...register("type", {
                 required: { value: true, message: "Type is required" },
               })}

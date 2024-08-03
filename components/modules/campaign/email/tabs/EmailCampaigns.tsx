@@ -588,6 +588,12 @@ const EmailCampaign: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  classNames={{
+                    option: (state) =>
+                      `!text-sm hover:!bg-primary hover:!text-white focus:!bg-transparent  ${
+                        state.isSelected ? "!bg-primary text-white" : ""
+                      }  `,
+                  }}
                   {...field}
                   options={emailTemplates}
                   value={selectedTemplate}
@@ -628,6 +634,12 @@ const EmailCampaign: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  classNames={{
+                    option: (state) =>
+                      `!text-sm hover:!bg-primary hover:!text-white focus:!bg-transparent  ${
+                        state.isSelected ? "!bg-primary text-white" : ""
+                      }  `,
+                  }}
                   {...field}
                   options={targetOptions}
                   value={selectedTarget}
@@ -656,6 +668,12 @@ const EmailCampaign: React.FC = () => {
               control={control}
               render={({ field }) => (
                 <Select
+                  classNames={{
+                    option: (state) =>
+                      `!text-sm hover:!bg-primary hover:!text-white focus:!bg-transparent  ${
+                        state.isSelected ? "!bg-primary text-white" : ""
+                      }  `,
+                  }}
                   {...field}
                   options={[
                     { value: EmailCampaignScheduleTypes.Now, label: "Now" },

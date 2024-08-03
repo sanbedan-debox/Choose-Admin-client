@@ -331,6 +331,12 @@ const MasterPermissions: React.FC = () => {
         <form onSubmit={handleSubmit(handleAddPermission)}>
           <div className="mb-4">
             <Select
+              classNames={{
+                option: (state) =>
+                  `!text-sm hover:!bg-primary hover:!text-white focus:!bg-transparent  ${
+                    state.isSelected ? "!bg-primary text-white" : ""
+                  }  `,
+              }}
               {...register("type", {
                 required: { value: true, message: "Type is required" },
               })}
@@ -350,6 +356,12 @@ const MasterPermissions: React.FC = () => {
           </div>
           <div className="mb-4">
             <Select
+              classNames={{
+                option: (state) =>
+                  `!text-sm hover:!bg-primary hover:!text-white focus:!bg-transparent  ${
+                    state.isSelected ? "!bg-primary text-white" : ""
+                  }  `,
+              }}
               {...register("preselect", {
                 required: {
                   value: true,
@@ -422,6 +434,12 @@ const MasterPermissions: React.FC = () => {
         <form onSubmit={handleEditSubmit(handleEditPermission)}>
           <div className="mb-4">
             <Select
+              classNames={{
+                option: (state) =>
+                  `!text-sm hover:!bg-primary hover:!text-white focus:!bg-transparent  ${
+                    state.isSelected ? "!bg-primary text-white" : ""
+                  }  `,
+              }}
               {...editRegister("preselect", {
                 required: {
                   value: true,
