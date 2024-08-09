@@ -20,6 +20,8 @@ const formatType = (type: ConfigTypeEnum): string => {
       return "Processing Fee";
     case ConfigTypeEnum.TrialDays:
       return "Trial Days";
+    case ConfigTypeEnum.MaxCsvRows:
+      return "Max CSV Rows";
 
     default:
       return "";
@@ -88,14 +90,10 @@ const MasterConfigs: React.FC = () => {
 
   const [btnLoading, setBtnLoading] = useState(false);
 
-  const typeOptions = [
-    {
-      value: ConfigTypeEnum.MonthlySubscription,
-      label: "Monthly Subscription",
-    },
-    { value: ConfigTypeEnum.ProcessingFee, label: "Processing Fee" },
-    { value: ConfigTypeEnum.TrialDays, label: "Trial Days" },
-  ];
+  const typeOptions = Object.values(ConfigTypeEnum).map((e) => ({
+    value: e as ConfigTypeEnum,
+    label: formatType(e as ConfigTypeEnum),
+  }));
 
   const handleAddConfig: SubmitHandler<FormInput> = async (data) => {
     try {

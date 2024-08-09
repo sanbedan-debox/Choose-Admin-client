@@ -309,9 +309,9 @@ const Reports: React.FC = () => {
       },
     },
     { title: "Address", dataKey: "businessInfo.address.place.displayName" },
-    { title: "City", dataKey: "businessInfo.address.city.value" },
-    { title: "State", dataKey: "businessInfo.address.state.value" },
-    { title: "Zipcode", dataKey: "businessInfo.address.postcode.value" },
+    { title: "City", dataKey: "businessInfo.address.city" },
+    { title: "State", dataKey: "businessInfo.address.state.stateName" },
+    { title: "Zipcode", dataKey: "businessInfo.address.zipcode" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
   ];

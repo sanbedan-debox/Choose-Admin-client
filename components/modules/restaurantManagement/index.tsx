@@ -144,7 +144,7 @@ const Reports: React.FC = () => {
   const headings = [
     { title: "Toggle Status", dataKey: "status", render: renderSwitch },
     { title: "Status", dataKey: "status" },
-    { title: "Name", dataKey: "name.value" },
+    { title: "Name", dataKey: "name" },
     {
       title: "Website",
       dataKey: "website",
@@ -182,10 +182,10 @@ const Reports: React.FC = () => {
     },
     { title: "Meat Type", dataKey: "meatType" },
     { title: "Address", dataKey: "address.place.displayName" },
-    { title: "City", dataKey: "address.city.value" },
-    { title: "State", dataKey: "address.state.value" },
-    { title: "Timezone", dataKey: "timezone.value" },
-    { title: "Zipcode", dataKey: "address.postcode.value" },
+    { title: "City", dataKey: "address.city" },
+    { title: "State", dataKey: "address.state.stateName" },
+    { title: "Timezone", dataKey: "timezone.timezoneName" },
+    { title: "Zipcode", dataKey: "address.zipcode" },
   ];
   return (
     <div className="w-full mx-auto px-2">
