@@ -1824,12 +1824,12 @@ export type GetAllRestaurantUsersQueryVariables = Exact<{
 }>;
 
 
-export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestaurantUsers: Array<{ __typename?: 'User', _id: string, email: string, phone: string, createdAt: any, updatedAt: any, status: UserStatus, firstName: string, lastName: string, businessInfo?: { __typename?: 'Business', businessName?: string | null, estimatedRevenue?: EstimatedRevenueEnum | null, employeeSize?: StaffCountEnum | null, businessType?: BusinessTypeEnum | null, address?: { __typename?: 'AddressInfo', addressLine1: string, city: string, zipcode: number, state: { __typename?: 'StateData', stateName: string }, place?: { __typename?: 'Places', displayName: string } | null } | null } | null }> };
+export type GetAllRestaurantUsersQuery = { __typename?: 'Query', getAllRestaurantUsers: Array<{ __typename?: 'User', _id: string, email: string, phone: string, createdAt: any, updatedAt: any, status: UserStatus, firstName: string, lastName: string, businessInfo?: { __typename?: 'Business', businessName?: string | null, estimatedRevenue?: EstimatedRevenueEnum | null, employeeSize?: StaffCountEnum | null, businessType?: BusinessTypeEnum | null, address?: { __typename?: 'AddressInfo', addressLine1: string, city: string, zipcode: number, state: { __typename?: 'StateData', stateId: string, stateName: string }, place?: { __typename?: 'Places', displayName: string } | null } | null } | null }> };
 
 export type GetAllRestaurantsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string, status: RestaurantStatus, name: string, beverageCategory?: Array<BeverageCategory> | null, foodType?: Array<FoodType> | null, meatType?: MeatType | null, website?: string | null, category?: Array<RestaurantCategory> | null, type?: RestaurantType | null, address?: { __typename?: 'AddressInfo', addressLine1: string, addressLine2?: string | null, city: string, zipcode: number, state: { __typename?: 'StateData', stateName: string }, place?: { __typename?: 'Places', displayName: string } | null } | null, timezone?: { __typename?: 'TimezoneData', timezoneName: string } | null }> };
+export type GetAllRestaurantsQuery = { __typename?: 'Query', getAllRestaurants: Array<{ __typename?: 'Restaurant', _id: string, status: RestaurantStatus, name: string, beverageCategory?: Array<BeverageCategory> | null, foodType?: Array<FoodType> | null, meatType?: MeatType | null, website?: string | null, category?: Array<RestaurantCategory> | null, type?: RestaurantType | null, address?: { __typename?: 'AddressInfo', addressLine1: string, addressLine2?: string | null, city: string, zipcode: number, state: { __typename?: 'StateData', stateId: string, stateName: string }, place?: { __typename?: 'Places', displayName: string } | null } | null, timezone?: { __typename?: 'TimezoneData', timezoneId: string, timezoneName: string } | null }> };
 
 export type ChangeRoleMutationVariables = Exact<{
   id: Scalars['String']['input'];
@@ -2116,6 +2116,7 @@ export const GetAllRestaurantUsersDocument = gql`
       address {
         addressLine1
         state {
+          stateId
           stateName
         }
         place {
@@ -2139,14 +2140,17 @@ export const GetAllRestaurantsDocument = gql`
       addressLine2
       city
       state {
+        stateId
         stateName
       }
+      zipcode
       zipcode
       place {
         displayName
       }
     }
     timezone {
+      timezoneId
       timezoneName
     }
     beverageCategory

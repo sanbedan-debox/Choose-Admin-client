@@ -357,7 +357,7 @@ const UnlayerEditor = () => {
               variant={ButtonType.Primary}
               onClick={saveTestEmail}
             >
-              "Send"
+              {"Send"}
             </CButton>
           </div>
         </ReusableModal>

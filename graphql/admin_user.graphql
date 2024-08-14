@@ -54,6 +54,7 @@ query GetAllRestaurantUsers($page: Float) {
       address {
         addressLine1
         state {
+          stateId
           stateName
         }
         place {
@@ -76,14 +77,17 @@ query GetAllRestaurants {
       addressLine2
       city
       state {
+        stateId
         stateName
       }
+      zipcode
       zipcode
       place {
         displayName
       }
     }
     timezone {
+      timezoneId
       timezoneName
     }
     beverageCategory
