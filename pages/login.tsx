@@ -11,17 +11,20 @@ import { extractErrorMessage } from "@/util/utils";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import ReusableModal from "@/components/common/modal/modal";
 
 interface IFormInput {
   email: string;
-  password: string;
   persistent: boolean;
 }
 
 export default function Login() {
   const router = useRouter();
   const { setToastData } = useGlobalStore();
-  const [showPass, setShowPass] = React.useState<boolean>(false);
+  const [showOTPModal, setShowOTPModal] = React.useState<boolean>(false);
+  const [otp, setOtp] = React.useState<string>("");
+  const [otpKey, setOtpKey] = React.useState<string>("");
+  const [userEmail, setUserEmail] = React.useState<string>(""); // store the email
 
   const {
     register,
@@ -31,19 +34,16 @@ export default function Login() {
   const [btnLoading, setBtnLoading] = React.useState(false);
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    const { email, password } = data;
-
+    const { email } = data;
     try {
       setBtnLoading(true);
-      const response = await sdk.AdminLogin({
-        email,
-        password,
-      });
+      const response = await sdk.AdminLogin({ email });
 
-      if (response) {
-        setToastData({ message: "Login Successful", type: "success" });
-
-        router.replace("/");
+      if (response && response.adminLogin) {
+        setUserEmail(email);
+        setOtpKey(response.adminLogin);
+        setShowOTPModal(true);
+        setToastData({ message: "OTP sent to your email", type: "success" });
       }
     } catch (error: any) {
       const errorMessage = extractErrorMessage(error);
@@ -95,49 +95,7 @@ export default function Login() {
                   <p className="text-red-500 text-sm">{errors.email.message}</p>
                 )}
               </div>
-              <div className="col-span-2">
-                <label
-                  htmlFor="password"
-                  className="block mb-2 text-sm font-medium text-black"
-                >
-                  Password
-                </label>
-                <div className="relative">
-                  <input
-                    type={showPass ? "text" : "password"}
-                    {...register("password", {
-                      required: "Password is required",
-                    })}
-                    id="password"
-                    className="input input-primary relative pr-8"
-                    placeholder="Enter your Password"
-                  />
-                  {showPass ? (
-                    <span
-                      className="absolute top-0 right-3 bottom-0 h-full flex justify-center items-center"
-                      onClick={() => {
-                        setShowPass((prev) => !prev);
-                      }}
-                    >
-                      <FaEye className="fill-neutral-400 z-50" />
-                    </span>
-                  ) : (
-                    <span
-                      className="absolute top-0 right-3 bottom-0 h-full flex justify-center items-center"
-                      onClick={() => {
-                        setShowPass((prev) => !prev);
-                      }}
-                    >
-                      <FaEyeSlash className="fill-neutral-400 z-50" />
-                    </span>
-                  )}
-                </div>
-                {errors.password && (
-                  <p className="text-red-500 text-sm">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+
               <div className="flex justify-end mt-6">
                 <CButton
                   loading={btnLoading}
@@ -151,6 +109,56 @@ export default function Login() {
           </div>
         </div>
       </div>
+      <ReusableModal
+        title="Enter OTP"
+        isOpen={showOTPModal}
+        onClose={() => setShowOTPModal(false)}
+      >
+        <form
+          onSubmit={async (e) => {
+            e.preventDefault();
+            try {
+              setBtnLoading(true);
+              const response = await sdk.verifyAdminLogin({
+                email: userEmail,
+                otp,
+                otpKey,
+              });
+
+              if (response) {
+                setToastData({ message: "Login Successful", type: "success" });
+                router.replace("/");
+              }
+            } catch (error: any) {
+              const errorMessage = extractErrorMessage(error);
+              setToastData({
+                type: "error",
+                message: errorMessage,
+              });
+            } finally {
+              setBtnLoading(false);
+            }
+          }}
+        >
+          <label htmlFor="otp">Enter OTP</label>
+          <input
+            type="text"
+            id="otp"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+            className="input input-primary"
+            placeholder="Enter your OTP"
+            required
+          />
+          <CButton
+            loading={btnLoading}
+            variant={ButtonType.Primary}
+            className="w-full mt-4"
+          >
+            Verify OTP
+          </CButton>
+        </form>
+      </ReusableModal>
     </section>
   );
 }

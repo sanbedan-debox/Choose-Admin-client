@@ -6,13 +6,13 @@ import Switch from "react-switch";
 import useGlobalLoaderStore from "@/store/loader";
 import Loading from "@/components/common/Loader/Loader";
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
-import { PlatformStatus } from "@/generated/graphql";
 import { extractErrorMessage, getClickableUrlLink } from "@/util/utils";
 import useGlobalStore from "@/store/global";
 import Link from "next/link";
 import ReusableModal from "@/components/common/modal/modal";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
+import { RestaurantStatus } from "@/generated/graphql";
 
 const formatCategoryArray = (categories: string[]): string => {
   let arr = [];
@@ -99,10 +99,10 @@ const Reports: React.FC = () => {
     setSelectedRestaurantId(rowData._id);
   };
 
-  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+  const renderSwitch = (rowData: { status: RestaurantStatus; _id: string }) => (
     <div>
       <CustomSwitch
-        checked={rowData.status !== PlatformStatus.Blocked}
+        checked={rowData.status !== RestaurantStatus.Blocked}
         onChange={() => toggleStatus(rowData)}
         label={`Toggle switch for ${rowData._id}`}
       />
@@ -144,7 +144,7 @@ const Reports: React.FC = () => {
   const headings = [
     { title: "Toggle Status", dataKey: "status", render: renderSwitch },
     { title: "Status", dataKey: "status" },
-    { title: "Name", dataKey: "name.value" },
+    { title: "Name", dataKey: "name" },
     {
       title: "Website",
       dataKey: "website",
@@ -182,10 +182,10 @@ const Reports: React.FC = () => {
     },
     { title: "Meat Type", dataKey: "meatType" },
     { title: "Address", dataKey: "address.place.displayName" },
-    { title: "City", dataKey: "address.city.value" },
-    { title: "State", dataKey: "address.state.value" },
-    { title: "Timezone", dataKey: "timezone.value" },
-    { title: "Zipcode", dataKey: "address.postcode.value" },
+    { title: "City", dataKey: "address.city" },
+    { title: "State", dataKey: "address.state.stateName" },
+    { title: "Timezone", dataKey: "timezone.timezoneName" },
+    { title: "Zipcode", dataKey: "address.zipcode" },
   ];
   return (
     <div className="w-full mx-auto px-2">

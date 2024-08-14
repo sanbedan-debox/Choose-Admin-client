@@ -6,32 +6,27 @@ import ReusableModal from "@/components/common/modal/modal";
 import {
   AdminRowType,
   AddAdminFormInputs,
-  ChangePasswordInputs,
   ChangeRoleInputs,
   roleOptions,
 } from "./interface";
-import { generateRandomPassword } from "@/util/generatePassword";
 import useGlobalStore from "@/store/global";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { FaTrash, FaEdit, FaShieldAlt } from "react-icons/fa";
-import { PlatformStatus } from "@/generated/graphql";
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import useAuthStore from "@/store/auth";
 import { extractErrorMessage } from "@/util/utils";
+import { AdminStatus } from "@/generated/graphql";
 
 const Admin: React.FC = () => {
   const [members, setMembers] = useState<AdminRowType[]>([]);
   const [loading, setLoading] = useState(true);
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [isChangePassModalOpen, setIsChangePassModalOpen] = useState(false);
   const [selectedAdminId, setSelectedAdminId] = useState<string | null>(null);
   const [showConfirmationModal, setShowConfirmationModal] = useState(false);
   const [selectedAdminStatus, setSelectedAdminStatus] = useState("");
-  const [randomPassword, setRandomPassword] = useState(
-    generateRandomPassword()
-  );
+
   const { userId } = useAuthStore();
   const [isChangeRoleModalOpen, setIsChangeRoleModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -46,14 +41,6 @@ const Admin: React.FC = () => {
     control,
   } = useForm<AddAdminFormInputs>();
 
-  const {
-    register: registerPass,
-    handleSubmit: handleSubmitPass,
-    reset: resetPass,
-    formState: { errors: errorsPass },
-    setValue: setValuePass,
-    control: controlPass,
-  } = useForm<ChangePasswordInputs>();
   const {
     register: registerRole,
     handleSubmit: handleSubmitRole,
@@ -91,7 +78,6 @@ const Admin: React.FC = () => {
               email: el.email,
               createdAt: el.createdAt,
               updatedAt: el.updatedAt,
-              numberOfResetPassword: el.numberOfResetPassword,
               role: el.role,
               status: el.status,
             }))
@@ -119,7 +105,6 @@ const Admin: React.FC = () => {
       const input: AddAdminFormInputs = {
         name: data.name,
         email: data.email,
-        password: data.password,
         role: data.role,
       };
       if (!input.role?.value) {
@@ -130,7 +115,6 @@ const Admin: React.FC = () => {
         input: {
           email: input.email,
           name: input.name,
-          password: input.password,
           role: input.role?.value,
         },
       });
@@ -146,31 +130,6 @@ const Admin: React.FC = () => {
     }
   };
   const [btnLoading, setBtnLoading] = useState(false);
-  const handleChangePassword: SubmitHandler<ChangePasswordInputs> = async (
-    data
-  ) => {
-    if (!selectedAdminId) return;
-    const newPassword = data.newPassword || randomPassword;
-
-    try {
-      setBtnLoading(true);
-      await sdk.resetPasswordAdmin({
-        id: selectedAdminId,
-        password: newPassword,
-      });
-      setIsChangePassModalOpen(false);
-      setCounter((prev) => prev + 1);
-      setToastData({ message: "Password reset successfully", type: "success" });
-    } catch (error: any) {
-      const errorMessage = extractErrorMessage(error);
-      setToastData({
-        type: "error",
-        message: errorMessage,
-      });
-    } finally {
-      setBtnLoading(false);
-    }
-  };
 
   const handleChangeRole: SubmitHandler<ChangeRoleInputs> = async (data) => {
     if (!selectedAdminId || !data.role) return;
@@ -192,44 +151,13 @@ const Admin: React.FC = () => {
     }
   };
 
-  const handleDeleteAdmin = async () => {
-    if (!adminToDelete) return;
-
-    try {
-      setBtnLoading(true);
-      await sdk.DeleteAdmin({ id: adminToDelete.toString() });
-      setIsDeleteModalOpen(false);
-      setAdminToDelete(null);
-      setCounter((prev) => prev + 1);
-      setToastData({ message: "Admin deleted successfully", type: "success" });
-    } catch (error: any) {
-      const errorMessage = extractErrorMessage(error);
-      setToastData({
-        type: "error",
-        message: errorMessage,
-      });
-    } finally {
-      setBtnLoading(false);
-    }
-  };
-
   const openDeleteModal = (id: any) => {
     // console.log(id);
     setAdminToDelete(id);
     setIsDeleteModalOpen(true);
   };
 
-  const openChangePassModal = (adminId: string) => {
-    setSelectedAdminId(adminId);
-    setRandomPassword(generateRandomPassword());
-    setValuePass("newPassword", randomPassword);
-    setIsChangePassModalOpen(true);
-  };
-
-  const handleToggleSwitch = (rowData: {
-    status: PlatformStatus;
-    id: string;
-  }) => {
+  const handleToggleSwitch = (rowData: { status: AdminStatus; id: string }) => {
     setSelectedAdminId(rowData.id);
     setSelectedAdminStatus(rowData.status);
     setShowConfirmationModal(true);
@@ -240,10 +168,10 @@ const Admin: React.FC = () => {
     setShowConfirmationModal(false);
     try {
       setBtnLoading(true);
-      const newStatus: PlatformStatus =
-        selectedAdminStatus === PlatformStatus.Blocked
-          ? PlatformStatus.Active
-          : PlatformStatus.Blocked;
+      const newStatus: AdminStatus =
+        selectedAdminStatus === AdminStatus.Blocked
+          ? AdminStatus.Active
+          : AdminStatus.Blocked;
       const response = await sdk.blockAdmin({
         id: selectedAdminId,
         updateStatus: newStatus,
@@ -269,11 +197,11 @@ const Admin: React.FC = () => {
     setSelectedAdminId(null);
   };
 
-  const renderSwitch = (rowData: { status: PlatformStatus; id: string }) => (
+  const renderSwitch = (rowData: { status: AdminStatus; id: string }) => (
     <div>
       {userId !== rowData.id ? (
         <CustomSwitch
-          checked={rowData.status !== PlatformStatus.Blocked}
+          checked={rowData.status !== AdminStatus.Blocked}
           onChange={() => handleToggleSwitch(rowData)}
           label={`Toggle switch for ${rowData.id}`}
         />
@@ -299,10 +227,6 @@ const Admin: React.FC = () => {
           setSelectedAdminId(rowData.id);
           setIsChangeRoleModalOpen(true);
         }}
-      />
-      <FaShieldAlt
-        className="text-green-500 cursor-pointer"
-        onClick={() => openChangePassModal(rowData.id)}
       />
     </div>
   );
@@ -376,24 +300,7 @@ const Admin: React.FC = () => {
               <p className="text-red-500 text-sm">{errors.email.message}</p>
             )}
           </div>
-          <div className="mb-4">
-            <label className="block text-black">Password</label>
-            <input
-              type="password"
-              placeholder="Enter Password..."
-              {...register("password", {
-                required: "Password is required",
-                minLength: {
-                  value: 6,
-                  message: "Password must be at least 6 characters long",
-                },
-              })}
-              className="input input-primary"
-            />
-            {errors.password && (
-              <p className="text-red-500 text-sm">{errors.password.message}</p>
-            )}
-          </div>
+
           <div className="mb-4">
             <label className="block text-black">Role</label>
             <Controller
@@ -438,56 +345,7 @@ const Admin: React.FC = () => {
           </div>
         </form>
       </ReusableModal>
-      <ReusableModal
-        title="Change Password"
-        comments="Are you sure you want to change user's password ?"
-        isOpen={isChangePassModalOpen}
-        onClose={() => setIsChangePassModalOpen(false)}
-        width="md"
-      >
-        <form onSubmit={handleSubmitPass(handleChangePassword)}>
-          <div className="mb-4">
-            <Controller
-              name="newPassword"
-              control={controlPass}
-              render={({ field }) => (
-                <input
-                  {...field}
-                  placeholder="Enter Password..."
-                  type="text"
-                  className="input input-primary"
-                />
-              )}
-            />
-            {errorsPass.newPassword && (
-              <p className="text-red-500 text-sm">
-                {errorsPass.newPassword.message}
-              </p>
-            )}
-          </div>
-          <div className="flex justify-end mt-4 space-x-2">
-            <button
-              className="btn btn-primary"
-              onClick={(e) => {
-                e.preventDefault();
-                const newPassword = generateRandomPassword();
-                setRandomPassword(newPassword);
-                setValuePass("newPassword", newPassword);
-              }}
-            >
-              Generate Password
-            </button>
 
-            <CButton
-              loading={btnLoading}
-              variant={ButtonType.Primary}
-              onClick={handleSubmitPass(handleChangePassword)}
-            >
-              Change Password
-            </CButton>
-          </div>
-        </form>
-      </ReusableModal>
       <ReusableModal
         title="Change Admin Role"
         comments="Are you sure you want to change Admins role ?"
@@ -538,23 +396,6 @@ const Admin: React.FC = () => {
             loading={btnLoading}
             variant={ButtonType.Primary}
             onClick={handleConfirmation}
-          >
-            Yes
-          </CButton>
-        </div>
-      </ReusableModal>
-      <ReusableModal
-        title="Confirm Deletion"
-        comments="Are you sure you want to delete this admin?"
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        width="md"
-      >
-        <div className="flex justify-end mt-4">
-          <CButton
-            loading={btnLoading}
-            variant={ButtonType.Primary}
-            onClick={handleDeleteAdmin}
           >
             Yes
           </CButton>

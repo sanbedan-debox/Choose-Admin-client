@@ -8,7 +8,6 @@ import CustomSwitch from "@/components/common/customSwitch/customSwitch";
 import {
   BusinessTypeEnum,
   EstimatedRevenueEnum,
-  PlatformStatus,
   StaffCountEnum,
   UserStatus,
 } from "@/generated/graphql";
@@ -165,10 +164,10 @@ const Reports: React.FC = () => {
     setSelectedUserId(_id);
   };
 
-  const renderSwitch = (rowData: { status: PlatformStatus; _id: string }) => (
+  const renderSwitch = (rowData: { status: UserStatus; _id: string }) => (
     <div>
       <CustomSwitch
-        checked={rowData.status !== PlatformStatus.Blocked}
+        checked={rowData.status !== UserStatus.Blocked}
         onChange={() => handleToggleSwitch(rowData)}
         label={`Toggle switch for ${rowData._id}`}
       />
@@ -309,9 +308,9 @@ const Reports: React.FC = () => {
       },
     },
     { title: "Address", dataKey: "businessInfo.address.place.displayName" },
-    { title: "City", dataKey: "businessInfo.address.city.value" },
-    { title: "State", dataKey: "businessInfo.address.state.value" },
-    { title: "Zipcode", dataKey: "businessInfo.address.postcode.value" },
+    { title: "City", dataKey: "businessInfo.address.city" },
+    { title: "State", dataKey: "businessInfo.address.state.stateName" },
+    { title: "Zipcode", dataKey: "businessInfo.address.zipcode" },
     { title: "Created At", dataKey: "createdAt" },
     { title: "Updated At", dataKey: "updatedAt" },
   ];

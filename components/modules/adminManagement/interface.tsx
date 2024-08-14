@@ -39,7 +39,6 @@ export type AdminRowType = {
 export interface AddAdminFormInputs {
   name: string;
   email: string;
-  password: string;
   role: RoleOption | null;
 }
 
@@ -53,10 +52,6 @@ export const roleOptions: RoleOption[] = [
   { value: AdminRole.Master, label: "Master" },
   { value: AdminRole.Normal, label: "Normal" },
 ];
-
-export interface ChangePasswordInputs {
-  newPassword: string;
-}
 
 export interface ChangeRoleInputs {
   role: RoleOption | null;

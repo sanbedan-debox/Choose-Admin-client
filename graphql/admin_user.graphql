@@ -20,7 +20,6 @@ query GetAdmins {
     name
     email
     role
-    numberOfResetPassword
     createdAt
     updatedAt
     status
@@ -28,13 +27,17 @@ query GetAdmins {
 }
 
 # Query to log in an admin
-query AdminLogin($email: String!, $password: String!) {
-  adminLogin(email: $email, password: $password)
+query AdminLogin($email: String!) {
+  adminLogin(email: $email)
+}
+
+query verifyAdminLogin($otpKey: String!, $email: String!, $otp: String!) {
+  verifyAdminLogin(otpKey: $otpKey, email: $email, otp: $otp)
 }
 
 # # Query to get all restaurant users
-query GetAllRestaurantUsers {
-  getAllRestaurantUsers {
+query GetAllRestaurantUsers($page: Float) {
+  getAllRestaurantUsers(page: $page) {
     _id
     email
     phone
@@ -49,21 +52,15 @@ query GetAllRestaurantUsers {
       employeeSize
       businessType
       address {
-        addressLine1 {
-          value
-        }
+        addressLine1
         state {
-          value
+          stateName
         }
         place {
           displayName
         }
-        city {
-          value
-        }
-        postcode {
-          value
-        }
+        city
+        zipcode
       }
     }
   }
@@ -73,31 +70,21 @@ query GetAllRestaurants {
   getAllRestaurants {
     _id
     status
-    name {
-      value
-    }
+    name
     address {
-      addressLine1 {
-        value
-      }
-      addressLine2 {
-        value
-      }
-      city {
-        value
-      }
+      addressLine1
+      addressLine2
+      city
       state {
-        value
+        stateName
       }
-      postcode {
-        value
-      }
+      zipcode
       place {
         displayName
       }
     }
     timezone {
-      value
+      timezoneName
     }
     beverageCategory
     foodType
@@ -106,18 +93,6 @@ query GetAllRestaurants {
     category
     type
   }
-}
-
-# query to reset an admin's password
-query resetPasswordAdmin($id: String!, $password: String!) {
-  resetPasswordAdmin(id: $id, password: $password)
-}
-
-# Mutations
-
-# Mutation to delete an admin by ID
-mutation DeleteAdmin($id: String!) {
-  deleteAdmin(id: $id)
 }
 
 # Mutation to change an admin's role
@@ -133,7 +108,7 @@ mutation changeRestaurantStatus($id: String!) {
   changeRestaurantStatus(id: $id)
 }
 
-mutation blockAdmin($id: String!, $updateStatus: PlatformStatus!) {
+mutation blockAdmin($id: String!, $updateStatus: AdminStatus!) {
   blockAdmin(id: $id, updateStatus: $updateStatus)
 }
 
