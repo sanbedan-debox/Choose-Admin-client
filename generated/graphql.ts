@@ -1184,6 +1184,7 @@ export type Query = {
   getSubCategory: SubCategory;
   getTaxRate: TaxRate;
   getTeamMembers: Array<SubUser>;
+  getUser?: Maybe<User>;
   getUsersForTarget: Scalars['Float']['output'];
   getWaitListUsers: Array<WaitListUser>;
   me: Admin;
@@ -1201,7 +1202,7 @@ export type Query = {
   userLogout: Scalars['Boolean']['output'];
   userRestaurants: Array<RestaurantInfo>;
   userRestaurantsPending: Array<RestaurantInfo>;
-  userSignup: Scalars['Boolean']['output'];
+  userSignup: Scalars['String']['output'];
   userSignupVerification: Scalars['Boolean']['output'];
   verifyAdminLogin: Scalars['String']['output'];
   verifyUserDetails: Scalars['Boolean']['output'];
@@ -1316,6 +1317,11 @@ export type QueryGetSubCategoryArgs = {
 };
 
 
+export type QueryGetUserArgs = {
+  id: Scalars['String']['input'];
+};
+
+
 export type QueryGetUsersForTargetArgs = {
   target: EmailCampaignTargetTypes;
 };
@@ -1369,6 +1375,7 @@ export type QueryUserSignupVerificationArgs = {
 export type QueryVerifyAdminLoginArgs = {
   email: Scalars['String']['input'];
   otp: Scalars['String']['input'];
+  otpId: Scalars['String']['input'];
 };
 
 
@@ -1533,7 +1540,9 @@ export type SubUser = {
   email: Scalars['String']['output'];
   firstName: Scalars['String']['output'];
   lastName: Scalars['String']['output'];
+  permissions: Array<UserPermission>;
   phone: Scalars['String']['output'];
+  restaurants?: Maybe<Array<RestaurantInfo>>;
   role: Scalars['String']['output'];
   status: UserStatus;
   updatedAt: Scalars['DateTimeISO']['output'];
@@ -1707,6 +1716,7 @@ export type User = {
   createdAt: Scalars['DateTimeISO']['output'];
   creatorUser?: Maybe<Scalars['String']['output']>;
   email: Scalars['String']['output'];
+  enable2FA: Scalars['Boolean']['output'];
   firstName: Scalars['String']['output'];
   lastLoggedIn: Scalars['DateTimeISO']['output'];
   lastLoggedOut: Scalars['DateTimeISO']['output'];
@@ -1715,6 +1725,7 @@ export type User = {
   phone: Scalars['String']['output'];
   restaurants?: Maybe<Array<RestaurantInfo>>;
   role: UserRole;
+  secret2FA?: Maybe<Scalars['String']['output']>;
   status: UserStatus;
   statusUpdatedBy?: Maybe<Admin>;
   updatedAt: Scalars['DateTimeISO']['output'];
@@ -1735,16 +1746,18 @@ export type UserInfo = {
 export type UserLoginVerificationInput = {
   emailOrNumber: Scalars['String']['input'];
   otp: Scalars['String']['input'];
+  otpId: Scalars['String']['input'];
 };
 
 export type UserPermission = {
   __typename?: 'UserPermission';
+  id: Scalars['ID']['output'];
   status: Scalars['Boolean']['output'];
   type: PermissionTypeEnum;
 };
 
 export type UserPermissionInput = {
-  _id: Scalars['String']['input'];
+  id: Scalars['String']['input'];
   status: Scalars['Boolean']['input'];
   type: PermissionTypeEnum;
 };
@@ -1772,6 +1785,7 @@ export type UserSignupVerificationInput = {
   firstName: Scalars['String']['input'];
   lastName: Scalars['String']['input'];
   otp: Scalars['String']['input'];
+  otpId: Scalars['String']['input'];
   phone: Scalars['String']['input'];
 };
 
@@ -1842,6 +1856,7 @@ export type AdminLoginQuery = { __typename?: 'Query', adminLogin: string };
 export type VerifyAdminLoginQueryVariables = Exact<{
   email: Scalars['String']['input'];
   otp: Scalars['String']['input'];
+  otpId: Scalars['String']['input'];
 }>;
 
 
@@ -2121,8 +2136,8 @@ export const AdminLoginDocument = gql`
 }
     `;
 export const VerifyAdminLoginDocument = gql`
-    query verifyAdminLogin($email: String!, $otp: String!) {
-  verifyAdminLogin(email: $email, otp: $otp)
+    query verifyAdminLogin($email: String!, $otp: String!, $otpId: String!) {
+  verifyAdminLogin(email: $email, otp: $otp, otpId: $otpId)
 }
     `;
 export const GetAllRestaurantUsersDocument = gql`

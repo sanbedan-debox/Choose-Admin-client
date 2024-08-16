@@ -23,6 +23,7 @@ export default function Login() {
   const [showOTPModal, setShowOTPModal] = React.useState<boolean>(false);
   const [otp, setOtp] = React.useState<string>("");
   const [userEmail, setUserEmail] = React.useState<string>("");
+  const [otpId, setOTPId] = React.useState<string>("");
 
   const {
     register,
@@ -41,6 +42,7 @@ export default function Login() {
         setUserEmail(email);
         setShowOTPModal(true);
         setToastData({ message: "OTP sent to your email", type: "success" });
+        setOTPId(response.adminLogin);
       }
     } catch (error: any) {
       const errorMessage = extractErrorMessage(error);
@@ -117,6 +119,7 @@ export default function Login() {
             try {
               setBtnLoading(true);
               const response = await sdk.verifyAdminLogin({
+                otpId: otpId,
                 email: userEmail,
                 otp,
               });
