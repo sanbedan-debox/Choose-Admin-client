@@ -1,21 +1,20 @@
-import React, { useEffect, useState } from "react";
-import RoopTable from "@/components/common/customTableR/table";
-import { sdk } from "@/util/graphqlClient";
-import useGlobalLoaderStore from "@/store/loader";
-import Loading from "@/components/common/Loader/Loader";
-import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
+import CButton from "@/components/common/button/button";
+import { ButtonType } from "@/components/common/button/interface";
 import CustomSwitch from "@/components/common/customSwitch/customSwitch";
+import RoopTable from "@/components/common/customTableR/table";
+import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
 import {
   BusinessTypeEnum,
   EstimatedRevenueEnum,
   StaffCountEnum,
   UserStatus,
 } from "@/generated/graphql";
-import { Controller, useForm } from "react-hook-form";
 import useGlobalStore from "@/store/global";
+import useGlobalLoaderStore from "@/store/loader";
+import { sdk } from "@/util/graphqlClient";
 import { extractErrorMessage, formatDateString } from "@/util/utils";
-import CButton from "@/components/common/button/button";
-import { ButtonType } from "@/components/common/button/interface";
+import React, { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 
 const Reports: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
@@ -25,6 +24,7 @@ const Reports: React.FC = () => {
   const [showApproveModal, setShowApproveModal] = useState(false);
   const [showRejectModal, setShowRejectModal] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState<string>("");
+  const [selectedStatus, setSelectedStatus] = useState<boolean>(false);
   const [lastRectectedConfirmation, setLastRejectedConfirmation] =
     useState(false);
   const [reason, setreson] = useState<string>("");
@@ -60,14 +60,19 @@ const Reports: React.FC = () => {
   const handleToggleSwitch = (rowData: { status: string; _id: string }) => {
     setShowConfirmationModal(true);
     setSelectedUserId(rowData._id);
+    setSelectedStatus(rowData.status === UserStatus.Active ? true : false);
   };
   const [btnLoading, setBtnLoading] = useState(false);
 
   const handleConfirmation = async () => {
     setShowConfirmationModal(false);
     try {
-      setBtnLoading(true);
-      const response = await sdk.changeUserStatus({ id: selectedUserId });
+      const response = await sdk.changeUserStatus({
+        input: {
+          block: selectedStatus,
+          id: selectedUserId,
+        },
+      });
       if (response && response.changeUserStatus) {
         setCounter((prev) => prev + 1);
       }

@@ -1,17 +1,16 @@
-import * as React from "react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import logo1 from "../assets/logo/logoDark.png";
-import { sdk } from "@/util/graphqlClient";
-import useGlobalStore from "@/store/global";
-import { useForm, SubmitHandler } from "react-hook-form";
-import { GetServerSideProps } from "next";
-import { parseCookies } from "nookies";
-import { extractErrorMessage } from "@/util/utils";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
 import ReusableModal from "@/components/common/modal/modal";
+import useGlobalStore from "@/store/global";
+import { sdk } from "@/util/graphqlClient";
+import { extractErrorMessage } from "@/util/utils";
+import { GetServerSideProps } from "next";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { parseCookies } from "nookies";
+import * as React from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
+import logo1 from "../assets/logo/logoDark.png";
 
 interface IFormInput {
   email: string;
@@ -23,8 +22,7 @@ export default function Login() {
   const { setToastData } = useGlobalStore();
   const [showOTPModal, setShowOTPModal] = React.useState<boolean>(false);
   const [otp, setOtp] = React.useState<string>("");
-  const [otpKey, setOtpKey] = React.useState<string>("");
-  const [userEmail, setUserEmail] = React.useState<string>(""); // store the email
+  const [userEmail, setUserEmail] = React.useState<string>("");
 
   const {
     register,
@@ -41,7 +39,6 @@ export default function Login() {
 
       if (response && response.adminLogin) {
         setUserEmail(email);
-        setOtpKey(response.adminLogin);
         setShowOTPModal(true);
         setToastData({ message: "OTP sent to your email", type: "success" });
       }
@@ -122,7 +119,6 @@ export default function Login() {
               const response = await sdk.verifyAdminLogin({
                 email: userEmail,
                 otp,
-                otpKey,
               });
 
               if (response) {

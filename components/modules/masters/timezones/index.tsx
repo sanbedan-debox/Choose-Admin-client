@@ -1,19 +1,15 @@
-import React, { useEffect, useState } from "react";
-import RoopTable from "@/components/common/customTableR/table";
-import { sdk } from "@/util/graphqlClient";
-import useGlobalLoaderStore from "@/store/loader";
-import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
-import CustomSwitch from "@/components/common/customSwitch/customSwitch";
-import {
-  AddStateInput,
-  AddTimezoneInput,
-  PlatformStatus,
-} from "@/generated/graphql";
-import useGlobalStore from "@/store/global";
-import { extractErrorMessage, formatDateString } from "@/util/utils";
-import { useForm, SubmitHandler } from "react-hook-form";
 import CButton from "@/components/common/button/button";
 import { ButtonType } from "@/components/common/button/interface";
+import CustomSwitch from "@/components/common/customSwitch/customSwitch";
+import RoopTable from "@/components/common/customTableR/table";
+import ReusableModal from "@/components/common/modal/modal"; // Import your reusable modal
+import { AddTimezoneInput } from "@/generated/graphql";
+import useGlobalStore from "@/store/global";
+import useGlobalLoaderStore from "@/store/loader";
+import { sdk } from "@/util/graphqlClient";
+import { extractErrorMessage, formatDateString } from "@/util/utils";
+import React, { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 
 const MasterTimezones: React.FC = () => {
   const [restaurantUsers, setRestaurantUsers] = useState<any[]>([]);
