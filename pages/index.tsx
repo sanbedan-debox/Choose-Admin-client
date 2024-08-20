@@ -1,12 +1,12 @@
 import UnlayerEditor from "@/components/modules/campaign/email/unlayer/editor";
+import PreviewEditor from "@/components/modules/campaign/email/unlayer/preview";
 import Layout from "@/components/navigation/layout";
-import useGlobalStore from "@/store/global";
-import React, { useEffect } from "react";
-import { sdk } from "@/util/graphqlClient";
 import useAuthStore from "@/store/auth";
+import useGlobalStore from "@/store/global";
+import { sdk } from "@/util/graphqlClient";
 import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 import { parseCookies } from "nookies";
-import PreviewEditor from "@/components/modules/campaign/email/unlayer/preview";
+import React, { useEffect } from "react";
 
 type HomePageProps = {
   repo: {
@@ -53,7 +53,6 @@ export const getServerSideProps: GetServerSideProps<HomePageProps> = async (
   const cookies = parseCookies(context);
   const token = cookies.accessToken;
   if (!token) {
-    console.error("No authentication token found");
     return {
       redirect: {
         destination: "/login",

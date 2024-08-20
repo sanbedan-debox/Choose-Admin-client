@@ -60,12 +60,14 @@ export default function Login() {
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <div className="w-full rounded-lg bg-white md:mt-0 sm:max-w-md xl:p-0">
           <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
-            <div className="relative z-10 flex items-center gap-16 justify-center">
-              <Image className="mb-4" src={logo1} alt="Logo" width={200} />
+            <div>
+              <div className="relative z-10 flex items-center gap-16 justify-center">
+                <Image className="mb-4" src={logo1} alt="Logo" width={200} />
+              </div>
+              <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-black text-center">
+                Sign in to your account
+              </h1>
             </div>
-            <h1 className="text-xl font-bold leading-tight tracking-tight md:text-2xl text-black">
-              Sign in to your account
-            </h1>
             <form
               className="space-y-4 md:space-y-6"
               onSubmit={handleSubmit(onSubmit)}
