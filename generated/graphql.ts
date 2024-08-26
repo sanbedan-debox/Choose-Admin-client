@@ -111,6 +111,7 @@ export type AddModifierGroupInput = {
   desc: Scalars['String']['input'];
   maxSelections: Scalars['Float']['input'];
   minSelections: Scalars['Float']['input'];
+  multiSelect: Scalars['Boolean']['input'];
   name: Scalars['String']['input'];
   optional: Scalars['Boolean']['input'];
   price: Scalars['Float']['input'];
@@ -655,6 +656,7 @@ export type ModifierGroup = {
   maxSelections: Scalars['Float']['output'];
   minSelections: Scalars['Float']['output'];
   modifiers: Array<ModifierInfo>;
+  multiSelect: Scalars['Boolean']['output'];
   name: Scalars['String']['output'];
   optional: Scalars['Boolean']['output'];
   price: Scalars['Float']['output'];
@@ -728,6 +730,7 @@ export type Mutation = {
   removeRestaurantSubuser: Scalars['Boolean']['output'];
   restaurantOnboarding: Scalars['Boolean']['output'];
   sendTestEmails: Scalars['Boolean']['output'];
+  tokensRefresh: Scalars['Boolean']['output'];
   updateCategory: Scalars['Boolean']['output'];
   updateConfig: Scalars['Boolean']['output'];
   updateCuisineStatus: Scalars['Boolean']['output'];
@@ -1643,6 +1646,7 @@ export type UpdateModifierGroupInput = {
   desc?: InputMaybe<Scalars['String']['input']>;
   maxSelections: Scalars['Float']['input'];
   minSelections: Scalars['Float']['input'];
+  multiSelect?: InputMaybe<Scalars['Boolean']['input']>;
   name?: InputMaybe<Scalars['String']['input']>;
   optional?: InputMaybe<Scalars['Boolean']['input']>;
   price?: InputMaybe<Scalars['Float']['input']>;

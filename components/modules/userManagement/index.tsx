@@ -107,7 +107,7 @@ const Reports: React.FC = () => {
       const response = await sdk.AdminUserDetailsVerification({
         id: selectedUserId,
       });
-      if (response && response.adminUserDetailsVerification) {
+      if (response && response?.adminUserDetailsVerification) {
         setToastData({
           message: "User status updated successfully !",
           type: "success",
@@ -290,7 +290,9 @@ const Reports: React.FC = () => {
       dataKey: "estimatedRevenue",
       render: (rowData: { businessInfo: { estimatedRevenue: string } }) => {
         return (
-          <p>{formatEstimatedRevinue(rowData.businessInfo.estimatedRevenue)}</p>
+          <p>
+            {formatEstimatedRevinue(rowData?.businessInfo?.estimatedRevenue)}
+          </p>
         );
       },
     },
@@ -298,7 +300,9 @@ const Reports: React.FC = () => {
       title: "Employee Size",
       dataKey: "Employee Size",
       render: (rowData: { businessInfo: { employeeSize: StaffCountEnum } }) => {
-        return <p>{formatStaffCountEnum(rowData.businessInfo.employeeSize)}</p>;
+        return (
+          <p>{formatStaffCountEnum(rowData?.businessInfo?.employeeSize)}</p>
+        );
       },
     },
     {
@@ -308,7 +312,7 @@ const Reports: React.FC = () => {
         businessInfo: { businessType: BusinessTypeEnum };
       }) => {
         return (
-          <p>{formatBusinessTypeEnum(rowData.businessInfo.businessType)}</p>
+          <p>{formatBusinessTypeEnum(rowData?.businessInfo?.businessType)}</p>
         );
       },
     },
